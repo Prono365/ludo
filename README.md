@@ -1,2 +1,2 @@
-# repository1
-ini adalah deksripsi
+# klompok ludo kren
+hebat
