@@ -1,4 +1,3 @@
 #  ESCAPE FROM EIPSTEIN ISLAND
-NINO X ERIS
 
-Roti O Lempuyangan
+ Roti O Lempuyangan Aseli Vale
