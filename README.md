@@ -1,3 +1,2 @@
-# klompok ludo kren
-hebat
-yess kingg
+#  ESCAPE FROM EIPSTEIN ISLAND
+VALE LOVE YASMIN
