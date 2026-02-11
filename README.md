@@ -70,6 +70,7 @@ Di dalamnya, kamu wajib melihat dua file penting ini:
     story.json (Database ceritanya). 
 
 Jika kamu tidak melihat story.json, kemungkinan game tidak akan berjalan atau akan error. 
+
 3. Cara Menjalankan (Running) 
 
 Setelah folder terbuka, buka Terminal atau Command Prompt di lokasi folder tersebut sesuai sistem operasimu: 
