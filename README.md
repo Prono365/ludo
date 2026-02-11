@@ -5,7 +5,7 @@ Cursed Island adalah permainan petualangan teks (text-based adventure) berbasis 
 Proyek ini dibuat sebagai tugas akhir (Proyek Akhir Python CLI - Kelas X RPL 1 SMKN 2 JAKARTA) dan kegabutan para kontributornya.
 
 Download disini
-https://github.com/Prono365/ludo/releases/tag/CLI_version
+https://github.com/Prono365/ludo/releases/tag/CLI_version](https://github.com/Prono365/ludo/releases)
 
 Game ini menggunakan antarmuka Command Line Interface (CLI), jadi kontrolnya dilakukan menggunakan keyboard: 
 
