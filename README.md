@@ -28,7 +28,7 @@ Mekanisme Permainan:
          
      Bercabang (Branching Story):
          Pilihanmu menentukan nasib. Pilihan yang salah bisa membuat kamu kehilangan teman, membuang waktu, atau berujung pada jalan buntu.
-         Ada beberapa Ending yang bisa kamu dapatkan, termasuk ending baru dengan Perahu Karet.
+         Ada beberapa Ending yang bisa kamu dapatkan.
 
 Cara Memainkannya:
 
