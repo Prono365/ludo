@@ -33,22 +33,22 @@ Mekanisme Permainan:
 Cara Memainkannya:
 
 1. Siapkan File 
-Pastikan kamu memiliki dua file penting ini di dalam satu folder yang sama (misalnya di folder Game di Desktop):
+ Pastikan kamu memiliki dua file penting ini di dalam satu folder yang sama (misalnya di folder Game di Desktop):
     main.py (File kode program utamanya). 
    
 3. Buka Terminal / Command Prompt 
-Buka folder tempat kamu menyimpan file tadi, lalu buka terminal di situ. 
+ Buka folder tempat kamu menyimpan file tadi, lalu buka terminal di situ. 
      Windows: Klik kanan pada ruang kosong di dalam folder > pilih "Open in Terminal" atau "Open PowerShell window here".
      Mac/Linux: Klik kanan > pilih "New Terminal at Folder".
 
 4. Jalankan Perintah 
 Ketik perintah berikut di terminal lalu tekan Enter:
 
-python main.py (diterminal)
+ python main.py (diterminal)
 
-(Jika perintah di atas tidak jalan, coba gunakan python3 main.py).
+ (Jika perintah di atas tidak jalan, coba gunakan python3 main.py).
 
-6. Game Berjalan 
-Layar terminal akan bersih dan tampilan judul game akan muncul. Kamu bisa mulai bermain dari situ. 
+5. Game Berjalan 
+ Layar terminal akan bersih dan tampilan judul game akan muncul. Kamu bisa mulai bermain dari situ. 
          
      
