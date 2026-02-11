@@ -93,7 +93,6 @@ Windows
     Ketik cd  (spasi), lalu seret dan lepas folder game ke jendela Terminal. 
     Tekan Enter. 
     Ketik perintah:
-    bash
      
       
      
