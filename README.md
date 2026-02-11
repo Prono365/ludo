@@ -42,11 +42,13 @@ Buka folder tempat kamu menyimpan file tadi, lalu buka terminal di situ.
      Mac/Linux: Klik kanan > pilih "New Terminal at Folder".
 
 4. Jalankan Perintah 
-Ketik perintah berikut di terminal lalu tekan Enter: 
-python main.py
+Ketik perintah berikut di terminal lalu tekan Enter:
+
+python main.py (diterminal)
+
 (Jika perintah di atas tidak jalan, coba gunakan python3 main.py).
 
-5. Game Berjalan 
+6. Game Berjalan 
 Layar terminal akan bersih dan tampilan judul game akan muncul. Kamu bisa mulai bermain dari situ. 
          
      
