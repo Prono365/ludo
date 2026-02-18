@@ -13,7 +13,7 @@
 
 **Cursed Island** adalah sebuah permainan petualangan teks (*text-based adventure*) berbasis Command Line Interface (CLI) yang dibangun menggunakan bahasa pemrograman Python. Pemain berperan sebagai salah satu dari lima karakter unik yang terjebak di sebuah pulau misterius.
 
-Tujuan utama pemain adalah melarikan diri dari pulau dalam batas waktu tertentu (48 jam) dengan cara mengumpulkan anggota tim, mencari item kunci, memecahkan misteri, dan mengalahkan musuh menggunakan strategi kombinasi kartu poker. Proyek ini merupakan tugas akhir dari kelas **X RPL 1 SMKN 2 JAKARTA** dan kegabutan para contributornya.
+Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara mengumpulkan anggota tim, mencari item kunci, memecahkan misteri, dan mengalahkan musuh menggunakan strategi kombinasi kartu poker. Proyek ini merupakan tugas akhir dari kelas **X RPL 1 SMKN 2 JAKARTA** dan kegabutan para contributornya.
 
 ---
 
