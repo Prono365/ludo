@@ -2,7 +2,7 @@
 
 <img width="3780" height="1890" alt="CURSED(1)" src="https://github.com/user-attachments/assets/a6bd0ded-f651-48ea-a334-554426b8d1f0" />
 
-**Text-Based Adventure Game dengan Sistem Pertarungan Kartu (Poker) & Mekanisme Branching Story.**
+**RPG Adventure Game dengan Sistem Pertarungan Kartu (Poker) Berbasis Command Line Interface (CLI)**
 
 ![Python](https://img.shields.io/badge/Python-3.6%2B-blue)
 ![License](https://img.shields.io/badge/License-Educational-green)
@@ -11,7 +11,7 @@
 
 ## Deskripsi Singkat
 
-**Cursed Island** adalah sebuah permainan petualangan teks (*text-based adventure*) berbasis Command Line Interface (CLI) yang dibangun menggunakan bahasa pemrograman Python. Pemain berperan sebagai salah satu dari lima karakter unik yang terjebak di sebuah pulau misterius.
+**Cursed Island** adalah sebuah permainan petualangan RPG berbasis Command Line Interface (CLI) yang dibangun menggunakan bahasa pemrograman Python. Pemain berperan sebagai salah satu dari lima karakter unik yang terjebak di sebuah pulau misterius.
 
 Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara mengumpulkan anggota tim, mencari item kunci, memecahkan misteri, dan mengalahkan musuh menggunakan strategi kombinasi kartu poker. Proyek ini merupakan tugas akhir dari kelas **X RPL 1 SMKN 2 JAKARTA** dan kegabutan para contributornya.
 
@@ -21,7 +21,6 @@ Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara me
 
 - **Sistem Karakter Unik:** 5 karakter pilihan (Vio, Haikaru, Ao Lin, Arganta, Ignatius) dengan latar belakang, stats, dan skill spesifik.
 - **Mekanisme Combat Kartu:** Sistem pertarungan turn-based menggunakan logika poker (High Card, Pair, Flush, Straight Flush, dll).
-- **Branching Story:** Pilihan pemain mempengaruhi alur cerita dan ending yang akan didapatkan.
 - **Sistem Waktu & Inventory:** Manajemen waktu (48 jam) dan pengelolaan item kunci untuk memecahkan puzzle.
 - **Peta Eksplorasi:** Sistem pergerakan pemain di peta 2D dengan musuh, NPC, dan interaksi objek.
 - **Save/Load System:** Kemampuan untuk menyimpan dan memuat progres permainan.
