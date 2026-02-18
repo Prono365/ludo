@@ -1,140 +1,111 @@
-#  CURSED ISLAND
+#  CURSED ISLAND ESCAPE
 
 <img width="3780" height="1890" alt="CURSED(1)" src="https://github.com/user-attachments/assets/a6bd0ded-f651-48ea-a334-554426b8d1f0" />
 
-Cursed Island adalah permainan petualangan teks (text-based adventure) berbasis Python. Pemain berperan sebagai karakter utama yang terjebak di sebuah pulau misterius bersama 5 teman lainnya. Tantangan utama adalah melarikan diri dalam batas waktu 48 jam dengan cara mengumpulkan tim, mencari item kunci, dan memecahkan misteri pulau tersebut. 
+**Text-Based Adventure Game dengan Sistem Pertarungan Kartu (Poker) & Mekanisme Branching Story.**
 
-Proyek ini dibuat sebagai tugas akhir (Proyek Akhir Python CLI - Kelas X RPL 1 SMKN 2 JAKARTA) dan kegabutan para kontributornya.
+![Python](https://img.shields.io/badge/Python-3.6%2B-blue)
+![License](https://img.shields.io/badge/License-Educational-green)
 
-Download disini ->
-https://github.com/Prono365/ludo/releases
+---
 
-Game ini menggunakan antarmuka Command Line Interface (CLI), jadi kontrolnya dilakukan menggunakan keyboard: 
+## Deskripsi Singkat
 
- Membaca Cerita: Baca narasi dan dialog yang muncul di layar. 
- Membuat Pilihan: Setiap adegan akan menampilkan beberapa pilihan (biasanya ditandai dengan angka 1, 2, 3, dst). 
- Input: Ketik angka dari pilihan yang kamu inginkan, lalu tekan [Enter]. 
- Lanjut: Untuk melanjutkan teks yang sedang diketik (efek mengetik) atau menutup jendela informasi, cukup tekan [Enter]. 
+**Cursed Island** adalah sebuah permainan petualangan teks (*text-based adventure*) berbasis Command Line Interface (CLI) yang dibangun menggunakan bahasa pemrograman Python. Pemain berperan sebagai salah satu dari lima karakter unik yang terjebak di sebuah pulau misterius.
 
-Mekanisme Permainan:
+Tujuan utama pemain adalah melarikan diri dari pulau dalam batas waktu tertentu (48 jam) dengan cara mengumpulkan anggota tim, mencari item kunci, memecahkan misteri, dan mengalahkan musuh menggunakan strategi kombinasi kartu poker. Proyek ini merupakan tugas akhir dari kelas **X RPL 1 SMKN 2 JAKARTA**.
 
- Sistem Waktu (48 Jam):
-         Perhatikan Time Bar di bagian atas layar.
-         Setiap kali kamu berpindah scene atau melakukan aksi (seperti memeriksa ruangan), waktu akan berkurang (misalnya -1 jam, -2 jam).
-         Jangan buang-buang waktu untuk pilihan yang tidak berguna, atau kamu akan kehabisan waktu sebelum sampai ke dermaga!
-         
- Sistem Inventory:
-         Kamu bisa menemukan item penting selama perjalanan (seperti Kunci Rekreasi, Peta Dermaga, Kalkulator Vio, dll).
-         Item tertentu diperlukan untuk membuka jalur cerita spesifik (misalnya butuh Kartu Akses untuk naik Lift).
-         Cek inventory secara berkala untuk melihat apa yang kamu miliki.
-         
- Bercabang (Branching Story):
-         Pilihanmu menentukan nasib. Pilihan yang salah bisa membuat kamu kehilangan teman, membuang waktu, atau berujung pada jalan buntu.
-         Ada beberapa Ending yang bisa kamu dapatkan.
+---
 
-Cara Memainkannya:
+## Fitur Utama
 
-1. Ekstrak File ZIP 
+- **Sistem Karakter Unik:** 5 karakter pilihan (Vio, Haikaru, Ao Lin, Arganta, Ignatius) dengan latar belakang, stats, dan skill spesifik.
+- **Mekanisme Combat Kartu:** Sistem pertarungan turn-based menggunakan logika poker (High Card, Pair, Flush, Straight Flush, dll).
+- **Branching Story:** Pilihan pemain mempengaruhi alur cerita dan ending yang akan didapatkan.
+- **Sistem Waktu & Inventory:** Manajemen waktu (48 jam) dan pengelolaan item kunci untuk memecahkan puzzle.
+- **Peta Eksplorasi:** Sistem pergerakan pemain di peta 2D dengan musuh, NPC, dan interaksi objek.
+- **Save/Load System:** Kemampuan untuk menyimpan dan memuat progres permainan.
+- **Multi-language UI:** Antarmuka mendukung karakter UTF-8 untuk visualisasi peta dan warna.
 
-Pertama, kamu harus mengeluarkan isi file ZIP agar komputer bisa membacanya. 
+---
 
-     
+## Cara Menjalankan Program
 
-    Windows: 
-        Klik kanan pada file ZIP yang kamu download. 
-        Pilih Extract All (Ekstrak Semua). 
-        Pilih lokasi tempat kamu ingin menyimpan foldernya (contoh: Desktop atau Documents). 
-        Klik Extract. 
-     
+### Prasyarat (Requirements)
+- **Python 3.6 atau versi lebih baru** terinstal di komputer Anda.
+- Terminal atau Command Prompt (Windows/Linux/macOS).
 
-    Mac: 
-        Klik dua kali file ZIP. 
-        Folder baru yang berisi game akan otomatis terbuka. 
-     
+### Langkah Instalasi & Menjalankan
 
-    Linux (Ubuntu, Debian, Fedora, dll): 
-        Buka File Manager. 
-        Klik kanan file ZIP -> pilih Extract Here atau Extract to. 
-        Pastikan folder hasil ekstrak sudah siap. 
-     
+1.  **Clone Repository**
+    Unduh atau clone repository ini ke komputer lokal Anda.
+    ```bash
+    git clone https://github.com/Prono365/ludo.git
+    cd ludo
+    ```
+    *(Jika menggunakan file ZIP, ekstrak file tersebut dan buka foldernya).*
 
-    HP (Android/iOS): 
-        Kamu memerlukan aplikasi manajer file (seperti ZArchiver atau Files). 
-        Buka file ZIP, lalu pilih menu Extract atau Unzip. 
-     
+2.  **Verifikasi File**
+    Pastikan file utama `main.py` dan file pendukung lainnya (`characters.py`, `story.py`, `combat.py`, dll.) berada dalam satu folder yang sama.
 
-2. Buka Folder Game 
+3.  **Jalankan Game**
+    Buka terminal di dalam folder proyek, lalu ketik perintah berikut:
 
-Masuk ke folder yang baru saja diekstrak tadi.
-Di dalamnya, kamu wajib melihat dua file penting ini: 
-
-    main.py (Kode program utamanya). 
-    story.json (Database ceritanya). 
-
-Jika kamu tidak melihat story.json, kemungkinan game tidak akan berjalan atau akan error. 
-
-3. Cara Menjalankan (Running) 
-
-Setelah folder terbuka, buka Terminal atau Command Prompt di lokasi folder tersebut sesuai sistem operasimu: 
-Windows 
-
-    Klik kanan pada ruang kosong di dalam folder game. 
-    Pilih "Open in Terminal" atau "Open PowerShell window here". 
-    Ketik perintah berikut lalu tekan Enter:
-     
-      
-     
+    ```bash
     python main.py
-     
-     
-     
-    (Jika error, coba: python3 main.py) 
+    ```
+    *(Jika perintah di atas tidak bekerja, coba gunakan `python3 main.py`).*
 
- Mac 
+4.  **Mulai Bermain**
+    Game akan membersihkan layar terminal dan memulai dengan menu utama. Ikuti petunjuk pada layar untuk memilih karakter dan memulai petualangan.
 
-    Buka aplikasi Terminal. 
-    Ketik cd  (spasi), lalu seret dan lepas folder game ke jendela Terminal. 
-    Tekan Enter. 
-    Ketik perintah:
-     
-      
-     
-    python3 main.py
-     
-     
-      
+---
 
-Linux 
+## Struktur Folder/File
 
-    Buka folder game di File Manager. 
-    Klik kanan ruang kosong -> pilih "Open in Terminal" (atau "Buka di Terminal"). 
-    Ketik perintah berikut lalu tekan Enter:
-    bash
-     
-      
-     
-    python3 main.py
-     
-     
-     
-    (Jika belum ada Python, install dulu: sudo apt install python3) 
+Berikut adalah penjelasan singkat mengenai struktur utama proyek ini:
 
-HP (Android/iOS) 
+```
+.
+├── main.py                # Entry point utama program, loop game, dan menu.
+├── characters.py          # Database karakter, stats, skill, dan data NPC.
+├── enemies.py             # Data musuh, boss, dan logika spawn musuh.
+├── exploration.py         # Logika pembuatan peta (GameMap), pergerakan, dan eksplorasi.
+├── combat.py              # Sistem pertarungan, logika kartu poker, dan damage calculation.
+├── story.py               # Database narasi cerita, dialog, dan ending.
+├── character_routes.py    # Konfigurasi rute spesifik per karakter dan quest NPC.
+├── sprites.py             # Definisi warna ANSI dan karakter ASCII untuk UI.
+├── gamestate.py           # Kelas `GameState` untuk manajemen data pemain (HP, Inventory, Save/Load).
+├── utils.py               # Fungsi utilitas bantu (clear screen, input handling).
+├── constants.py           # Konstanta global game (versi, ukuran terminal, dll).
+├── tutorial.py            # Modul tutorial interaktif untuk pemain baru.
+└── README.md              # Dokumentasi proyek (file ini).
+```
 
-    Buka aplikasi menjalankan Python (seperti Pydroid 3 atau Termux). 
-    Buka file main.py melalui aplikasi tersebut. 
-    Tekan tombol Run atau Play. 
+---
 
-4. Selamat Bermain! 
+## Anggota Kelompok
 
-Setelah kamu menekan Enter/Run, layar hitam (terminal) akan membersihkan diri dan judul CURSED ISLAND akan muncul. 
+Proyek ini dikembangkan oleh siswa **SMKN 2 JAKARTA Kelas X RPL 1**:
 
-Cara Bermain: 
+1.  **Ahmad Haikal Ramadhan**
+2.  **Alif Rizky Ramadhan Atmadja**
+3.  **M Vallerian Aprilio Gunawan**
+4.  **Ignatius Nino Jumantoro**
+5.  **Evan Arganta**
 
-     Baca cerita yang muncul di layar.
-     Ketik angka dari pilihan yang kamu inginkan (misal: 1 untuk jalan kiri, 2 untuk jalan kanan).
-     Tekan Enter.
-     Perhatikan Waktu (Jam) di bagian atas. Jangan sampai waktu habis sebelum kamu berhasil kabur!
-     
-         
-     
+---
+
+## 🎮 Cara Bermain (Singkat)
+
+- **Navigasi:** Gunakan tombol `W`, `A`, `S`, `D` untuk bergerak di peta.
+- **Interaksi:** Tekan `I` untuk Inventory, `P` untuk Party, `X` untuk Save.
+- **Combat:** Pilih kartu dengan memasukkan nomor indeks (contoh: `0,1,2` untuk memainkan 3 kartu sekaligus).
+- **Skill:** Tekan `S` saat bertarung untuk menggunakan kemampuan khusus karakter.
+- **Tujuan:** Selesaikan quest utama setiap chapter, rekrut teman, dan kalahkan boss untuk melarikan diri.
+
+---
+
+## 📄 Lisensi
+
+Proyek ini dibuat sebagai tugas sekolah (Edukasi).
