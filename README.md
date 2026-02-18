@@ -109,3 +109,5 @@ Proyek ini dikembangkan oleh siswa **SMKN 2 JAKARTA Kelas X RPL 1**:
 ## Lisensi
 
 Proyek ini dibuat sebagai tugas sekolah (Edukasi).
+
+# Justice For Victims
