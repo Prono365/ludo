@@ -21,7 +21,7 @@ Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara me
 
 - **Sistem Karakter Unik:** 5 karakter pilihan (Vio, Haikaru, Ao Lin, Arganta, Ignatius) dengan latar belakang, stats, dan skill spesifik.
 - **Mekanisme Combat Kartu:** Sistem pertarungan turn-based menggunakan logika poker (High Card, Pair, Flush, Straight Flush, dll).
-- **Sistem Waktu & Inventory:** Manajemen waktu (48 jam) dan pengelolaan item kunci untuk memecahkan puzzle.
+- **Inventory:** Pengelolaan item kunci untuk memecahkan puzzle.
 - **Peta Eksplorasi:** Sistem pergerakan pemain di peta 2D dengan musuh, NPC, dan interaksi objek.
 - **Save/Load System:** Kemampuan untuk menyimpan dan memuat progres permainan.
 - **Multi-language UI:** Antarmuka mendukung karakter UTF-8 untuk visualisasi peta dan warna.
