@@ -11,9 +11,9 @@
 
 ## Deskripsi Singkat
 
-**Cursed Island** adalah sebuah permainan petualangan RPG berbasis Command Line Interface (CLI) yang dibangun menggunakan bahasa pemrograman Python. Pemain berperan sebagai salah satu dari lima karakter unik yang terjebak di sebuah pulau misterius.
+Cursed Island adalah sebuah permainan petualangan RPG berbasis Command Line Interface (CLI) yang dibangun menggunakan bahasa pemrograman Python. Pemain berperan sebagai salah satu dari lima karakter unik yang terjebak di sebuah pulau misterius.
 
-Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara mengumpulkan anggota tim, mencari item kunci, memecahkan misteri, dan mengalahkan musuh menggunakan strategi kombinasi kartu poker. Proyek ini merupakan tugas akhir dari kelas **X RPL 1 SMKN 2 JAKARTA** dan kegabutan para contributornya.
+Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara mengumpulkan anggota tim, mencari item kunci, memecahkan misteri, dan mengalahkan musuh menggunakan strategi kombinasi kartu poker. Proyek ini merupakan tugas akhir dari kelas X RPL 1 SMKN 2 JAKARTA dan kegabutan para contributornya.
 
 ---
 
@@ -65,7 +65,6 @@ Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara me
 Berikut adalah penjelasan singkat mengenai struktur utama proyek ini:
 
 ```
-.
 ├── main.py                # Entry point utama program, loop game, dan menu.
 ├── characters.py          # Database karakter, stats, skill, dan data NPC.
 ├── enemies.py             # Data musuh, boss, dan logika spawn musuh.
@@ -73,11 +72,13 @@ Berikut adalah penjelasan singkat mengenai struktur utama proyek ini:
 ├── combat.py              # Sistem pertarungan, logika kartu poker, dan damage calculation.
 ├── story.py               # Database narasi cerita, dialog, dan ending.
 ├── character_routes.py    # Konfigurasi rute spesifik per karakter dan quest NPC.
+├── npc_interactions.py    # Dialog panjang untuk interaksi NPC (Side Quest & Story).
 ├── sprites.py             # Definisi warna ANSI dan karakter ASCII untuk UI.
-├── gamestate.py           # Kelas `GameState` untuk manajemen data pemain (HP, Inventory, Save/Load).
+├── gamestate.py           # Kelas GameState untuk manajemen data pemain (HP, Inventory, Save/Load).
 ├── utils.py               # Fungsi utilitas bantu (clear screen, input handling).
 ├── constants.py           # Konstanta global game (versi, ukuran terminal, dll).
 ├── tutorial.py            # Modul tutorial interaktif untuk pemain baru.
+├── card_dialogs.json      # Database dialog singkat saat combat (kutipan kartu).
 └── README.md              # Dokumentasi proyek (file ini).
 ```
 
@@ -98,7 +99,7 @@ Proyek ini dikembangkan oleh siswa **SMKN 2 JAKARTA Kelas X RPL 1**:
 ## Cara Bermain (Singkat)
 
 - **Navigasi:** Gunakan tombol `W`, `A`, `S`, `D` untuk bergerak di peta.
-- **Interaksi:** Tekan `I` untuk Inventory, `P` untuk Party, `X` untuk Save.
+- **Interaksi:** Tekan `I` untuk Inventory,`X` untuk Save.
 - **Combat:** Pilih kartu dengan memasukkan nomor indeks (contoh: `0,1,2` untuk memainkan 3 kartu sekaligus).
 - **Skill:** Tekan `S` saat bertarung untuk menggunakan kemampuan khusus karakter.
 - **Tujuan:** Selesaikan quest utama setiap chapter, rekrut teman, dan kalahkan boss untuk melarikan diri.
