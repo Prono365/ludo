@@ -1,6 +1,4 @@
-"""
-CURSED ISLAND ESCAPE — MAIN FILE/FILE UTAMA
-"""
+# Entry point dan menu utama
 
 import os
 import sys
@@ -26,7 +24,7 @@ try:
     from character_routes import (display_route_intro, apply_route_bonuses, 
                                   check_chapter_complete, advance_chapter)
     from utils import (clear_screen as clear, wait_input as wait, separator, header, 
-                      check_terminal_compatibility, print_slow, flush_input)
+                      check_terminal_compatibility, print_slow, flush_input, get_term_width)
     from constants import MIN_TERMINAL_WIDTH, MIN_TERMINAL_HEIGHT, GAME_VERSION
 except ImportError as e:
     print(f"ERROR: {e}")
@@ -35,15 +33,34 @@ except ImportError as e:
 VERSI = GAME_VERSION
 FILE_SAVE = "data.txt"
 
+def _tw():
+    """Terminal width saat ini."""
+    return get_term_width()
+
 def get_title_simple(version):
-    """Get simple title display"""
-    return f"""{Warna.CYAN + Warna.TERANG}
-  ╔═══════════════════════════════════╗
-  ║      CURSED ISLAND ESCAPE         ║
-  ║   Petualangan Melarikan Diri      ║
-  ║{Warna.ABU_GELAP}          v{version}{Warna.CYAN + Warna.TERANG}                     ║
-  ╚═══════════════════════════════════╝
-{Warna.RESET}"""
+    """Title box yang auto-fit ke lebar terminal."""
+    import shutil
+    tw = max(44, shutil.get_terminal_size(fallback=(80, 24)).columns)
+    inner = tw - 4   # ruang dalam box (mengurangi '  ║' dan '║')
+
+    def _center(text, w):
+        pad = max(0, w - len(text))
+        l = pad // 2
+        r = pad - l
+        return ' ' * l + text + ' ' * r
+
+    top    = '  ╔' + '═' * inner + '╗'
+    bot    = '  ╚' + '═' * inner + '╝'
+    def row(text): return f"  ║{_center(text, inner)}║"
+
+    lines = [
+        top,
+        row('CURSED ISLAND ESCAPE'),
+        row('Petualangan Melarikan Diri'),
+        row(f'v{version}'),
+        bot,
+    ]
+    return f"{Warna.CYAN + Warna.TERANG}\n" + '\n'.join(lines) + f"\n{Warna.RESET}"
 
 SETTINGS = {
     'dialog_speed': 0.03,
@@ -96,7 +113,7 @@ def mainkan_prolog():
     
     clear()
     separator('═')
-    print(f"{Warna.PUTIH}CERITAMU DIMULAI{Warna.RESET}".center(70))
+    print(f"{Warna.PUTIH}CERITAMU DIMULAI{Warna.RESET}".center(_tw()))
     separator('═')
     wait()
 
@@ -161,7 +178,7 @@ def _apply_character_stats(gs, char_id):
     gs.defense  = cd['stats']['defense']
     gs.speed    = cd['stats']['speed']
 
-    base_energy = 40 + cd['stats'].get('speed', 10)
+    base_energy = 20 + cd['stats'].get('speed', 10) // 2
     gs.energy     = base_energy
     gs.max_energy = base_energy
 
@@ -287,7 +304,7 @@ def muat_game(gs):
                 if char_data and 'player_skills' not in gs.story_flags:
                     gs.story_flags['player_skills'] = char_data.get('skills', {})
                 if not hasattr(gs, 'energy') or gs.energy == 0:
-                    base_energy = 40 + char_data.get('stats', {}).get('speed', 10)
+                    base_energy = 20 + char_data.get('stats', {}).get('speed', 10) // 2
                     gs.energy     = base_energy
                     gs.max_energy = base_energy
                 # Pastikan level-up gains selalu sinkron dengan karakter
@@ -392,7 +409,7 @@ def loop_game(gs):
         if check_chapter_complete(gs) and current_chapter < 3:
             clear()
             separator('═')
-            print(f"{Warna.HIJAU}CHAPTER {current_chapter} SELESAI!{Warna.RESET}".center(70))
+            print(f"{Warna.HIJAU}CHAPTER {current_chapter} SELESAI!{Warna.RESET}".center(_tw()))
             separator('═')
             wait()
             
@@ -415,38 +432,79 @@ def loop_game(gs):
 def layar_game_over(gs):
     """Display game over screen with final stats"""
     clear()
-    separator('═')
-    print(f"{Warna.MERAH}GAME OVER{Warna.RESET}".center(70))
-    separator('═')
-    
-    print(f"\n{Warna.CYAN}Statistik:{Warna.RESET}")
-    print(f"  Level: {gs.level}")
-    print(f"  Battles: {gs.battles_won}")
-    print(f"  Time: {gs.get_playtime_string()}")
-    
+    tw = _tw()
+    sep = Warna.MERAH + '═' * (tw - 1) + Warna.RESET
+    print(sep)
+    print(f"{Warna.MERAH + Warna.TERANG}{'💀  GAME OVER  💀'.center(tw)}{Warna.RESET}")
+    print(sep)
+
+    try:
+        from characters import get_character_name
+        char_name = get_character_name(gs.player_character)
+    except Exception:
+        char_name = (gs.player_character or '?').upper()
+
+    print(f"\n  {Warna.CYAN}Karakter:{Warna.RESET} {char_name}")
+    print(f"  {Warna.CYAN}Level:{Warna.RESET}    {gs.level}")
+    print(f"  {Warna.CYAN}Battle:{Warna.RESET}   {gs.battles_won} menang")
+    print(f"  {Warna.CYAN}Chapter:{Warna.RESET}  {gs.story_flags.get('current_chapter', 1)}")
+    print(f"  {Warna.CYAN}Waktu:{Warna.RESET}    {gs.get_playtime_string()}")
+    print(f"\n  {Warna.ABU_GELAP}Jangan menyerah — coba lagi!{Warna.RESET}\n")
+    print(sep)
     wait()
 
 def layar_kemenangan(gs):
-    # Menampilkan layar kemenangan akhir game
-    """Display victory screen and ending"""
+    """Display victory screen dan ending karakter."""
     clear()
-    separator('═')
-    print(f"{Warna.HIJAU}VICTORY{Warna.RESET}".center(70))
-    separator('═')
-    
+    tw = _tw()
+
+    try:
+        from characters import get_character_name
+        char_name = get_character_name(gs.player_character)
+    except Exception:
+        char_name = (gs.player_character or '?').upper()
+
+    sep_gold = Warna.KUNING + '═' * (tw - 1) + Warna.RESET
+    print(sep_gold)
+    print(f"{Warna.KUNING + Warna.TERANG}{'🏆  CURSED ISLAND ESCAPE — TAMAT  🏆'.center(tw)}{Warna.RESET}")
+    print(f"{Warna.HIJAU + Warna.TERANG}{char_name.upper().center(tw)}{Warna.RESET}")
+    print(sep_gold)
+
+    # Tunjukkan sidequest yang diselesaikan
+    sq_done = sum(1 for k, v in gs.story_flags.items()
+                  if k.startswith('sidequest_') and k.endswith('_complete') and v)
+    sq_pct  = int((sq_done / 5) * 100)
+    grade   = 'S' if sq_done >= 5 else ('A' if sq_done >= 3 else ('B' if sq_done >= 1 else 'C'))
+    print(f"\n  {Warna.CYAN}Statistik Akhir:{Warna.RESET}")
+    print(f"  {'─' * 25}")
+    print(f"  Level          : {Warna.KUNING}{gs.level}{Warna.RESET}")
+    print(f"  Battle Menang  : {Warna.KUNING}{gs.battles_won}{Warna.RESET}")
+    print(f"  Boss Dikalahkan: {Warna.KUNING}{getattr(gs, 'bosses_defeated', '?')}/6{Warna.RESET}")
+    print(f"  Sidequest      : {Warna.HIJAU}{sq_done}/5{Warna.RESET} ({sq_pct}%)")
+    print(f"  Grade          : {Warna.KUNING + Warna.TERANG}{grade}{Warna.RESET}")
+    print(f"  Waktu          : {gs.get_playtime_string()}")
+    print(f"  {'─' * 25}")
+
+    wait(prompt="[ENTER untuk lihat ending karakter] ")
+    clear()
+
+    # Mainkan ending karakter
     try:
         from story import play_route_ending
         play_route_ending(gs.player_character, skip_delays=False)
-    except Exception:
-        from story import display_chapter
-        display_chapter("epilogue_good", skip_delays=True)
-    
-    print(f"\n{Warna.CYAN}Final Statistik:{Warna.RESET}")
-    print(f"  Level: {gs.level}")
-    print(f"  Battles: {gs.battles_won}")
-    print(f"  Bosses: {gs.bosses_defeated}/6")
-    print(f"  Time: {gs.get_playtime_string()}")
-    
+    except Exception as e:
+        # Fallback: tampilkan pesan ending generic
+        print(sep_gold)
+        print(f"{Warna.HIJAU + Warna.TERANG}{'KEBEBASAN!'.center(tw)}{Warna.RESET}")
+        print(sep_gold)
+        print(f"\n  {char_name} berhasil melarikan diri dari Cursed Island!")
+        print(f"  Keberanian dan kecerdikan telah mengalahkan sistem yang korup.")
+        print(f"\n  {Warna.ABU_GELAP}(Ending detail tidak dapat dimuat: {e}){Warna.RESET}\n")
+
+    print(f"\n{sep_gold}")
+    print(f"{Warna.KUNING + Warna.TERANG}{'TERIMA KASIH SUDAH BERMAIN!'.center(tw)}{Warna.RESET}")
+    print(f"{Warna.ABU_GELAP}{'Cursed Island Escape — by AoLinh Dev'.center(tw)}{Warna.RESET}")
+    print(sep_gold)
     wait()
 
 def dapatkan_nama_karakter(char_id):

@@ -1,6 +1,4 @@
-"""
-MODE DEMO UNTUK PRESENTASI ATAU UJICOBA MUNGKIN BIARKAN SAJA FILE INI
-"""
+# Mode demo untuk presentasi
 
 import sys
 import time
@@ -190,9 +188,9 @@ def demo_combat(char_id):
         "attack": s['attack'], "defense": s['defense'], "level": 1
     }
     enemy = {
-        "name": "Security Guard \u2013 Veteran",
+        "name": "Security Guard – Veteran",
         "hp": 120, "max_hp": 120,
-        "attack": 40, "defense": 18,
+        "attack": 18, "defense": 10,
     }
 
     clear()
@@ -240,14 +238,15 @@ def demo_combat(char_id):
     separator('\u2500')
     print()
 
-    print(f"  {Warna.KUNING}Aksi lain dalam pertarungan:{Warna.RESET}\n")
+    print(f"  {Warna.KUNING}Aksi yang tersedia dalam pertarungan:{Warna.RESET}\n")
     for key, col, desc in [
-        ("S \u2013 Skill",     Warna.CYAN,      "Gunakan skill karakter (cost HP, damage tinggi)"),
-        ("A \u2013 Ally Help", Warna.UNGU,      "Minta bantuan party (skill / kirim kartu kuat)"),
-        ("D \u2013 Discard",   Warna.KUNING,    "Buang kartu buruk, tarik kartu baru dari deck"),
-        ("I \u2013 Item",      Warna.HIJAU,     "Pakai Health Potion / Bomb dari inventory"),
-        ("F \u2013 Flee",      Warna.MERAH,     "25% berhasil kabur; 75% gagal = kena 25 damage"),
-        ("P \u2013 Pass",      Warna.ABU_GELAP, "Lewati giliran"),
+        ("0,1,2...  – Main Kartu", Warna.HIJAU,    "Mainkan kombinasi kartu poker untuk damage"),
+        ("D 0,1     – Discard",    Warna.KUNING,    "Buang kartu buruk, tarik kartu baru (3 slot/battle)"),
+        ("S         – Skill",      Warna.CYAN,      "Gunakan skill karakter (buff/debuff/heal)"),
+        ("I         – Item",       Warna.HIJAU,     "Pakai Health Potion / item dari inventory"),
+        ("P         – Pass",       Warna.ABU_GELAP, "Lewati giliran, regen +5 Energy"),
+        ("OT        – Overtime",   Warna.MERAH,     "Aktifkan Overtime: kebal 2t + Damage ×1.75 (isi bar dulu!)"),
+        ("F         – Flee",       Warna.MERAH,     "25% berhasil kabur; BOSS tidak bisa dikaburi!"),
     ]:
         print(f"  {col}[{key}]{Warna.RESET}  {desc}")
 
@@ -275,14 +274,18 @@ def _build_player_stats(char_id):
 
 def _handle_combat_result(result):
     """
-    run_combat bisa return tuple (True/False, player, inventory)
-    atau string 'fled'. Normalkan keduanya ke string 'victory'/'defeat'/'fled'.
+    Normalkan return value dari run_combat ke string 'victory'/'defeat'/'fled'.
+    run_combat sekarang return: 'victory', 'player_dead', atau 'fled'
     """
     if result == 'fled':
         return 'fled'
-    if isinstance(result, tuple):
-        won, _, _ = result
-        return 'victory' if won else 'defeat'
+    if result == 'victory':
+        return 'victory'
+    if result == 'player_dead':
+        return 'defeat'
+    # Backward compat: handle tuple format lama (True/False, player, inventory)
+    if isinstance(result, tuple) and len(result) >= 1:
+        return 'victory' if result[0] else 'defeat'
     return 'defeat'
 
 def _show_encounter_dialog(enemy_data):
@@ -386,7 +389,7 @@ def demo_lawan_enemy(char_id):
         return
 
     player_stats = _build_player_stats(char_id)
-    inventory    = ['Health Potion', 'Health Potion', 'Molotov Cocktail']
+    inventory    = ['Health Potion', 'Health Potion', 'Med Kit']
 
 
     clear()
@@ -462,7 +465,7 @@ def demo_lawan_boss(char_id):
         return
 
     player_stats = _build_player_stats(char_id)
-    inventory    = ['Health Potion', 'Health Potion', 'Health Potion', 'Molotov Cocktail']
+    inventory    = ['Health Potion', 'Health Potion', 'Health Potion', 'Med Kit']
     c            = CHAR_COLOR.get(char_id, Warna.PUTIH)
 
 

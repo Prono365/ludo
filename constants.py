@@ -1,6 +1,4 @@
-"""
-CONSTANTS - Global constants untuk menghindari inkonsistensi data
-"""
+# Konstanta global game
 
 # Currency System
 CURRENCY_NAME = "Dollars"

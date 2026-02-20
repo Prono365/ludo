@@ -1,6 +1,4 @@
-"""
-ENEMY - Database musuh dengan stats, XP, loot, dan perilaku AI
-"""
+# Database musuh dan boss
 
 from sprites import Warna
 import random
@@ -177,6 +175,7 @@ ENEMIES = {
 }
 
 
+# Data boss
 BOSSES = {
     "maxwell_enforcer": {
         "id": "maxwell_enforcer",
@@ -640,24 +639,7 @@ BOSSES = {
     }
 }
 
-def create_enemy_instance(enemy_id):
-    # Membuat instance enemy dengan variasi stats
-    """Create enemy with slight variance"""
-    if enemy_id in ENEMIES:
-        enemy = ENEMIES[enemy_id].copy()
-    elif enemy_id in BOSSES:
-        enemy = BOSSES[enemy_id].copy()
-    else:
-        return None
-
-    if not enemy.get('boss', False):
-        variance = random.uniform(0.9, 1.1)
-        enemy['hp'] = int(enemy['hp'] * variance)
-        enemy['max_hp'] = enemy['hp']
-        enemy['attack'] = int(enemy['attack'] * variance)
-        enemy['defense'] = int(enemy['defense'] * variance)
-
-    return enemy
+# create_enemy_instance: lihat definisi lengkap di bawah (dengan chapter scaling)
 
 
 def create_boss_instance(boss_id):
@@ -666,7 +648,6 @@ def create_boss_instance(boss_id):
     return boss.copy() if boss else None
 
 def get_enemy_for_location(location, chapter=1):
-    # Mengembalikan tipe enemy yang sesuai dengan lokasi dan chapter
     """Get appropriate enemy for location based on chapter progression"""
     
     if chapter == 1:
@@ -705,7 +686,6 @@ def get_enemy_for_location(location, chapter=1):
     return random.choice(enemies)
 
 def get_boss_for_location(location):
-    # Mengembalikan boss yang sesuai dengan lokasi
     """Get boss for specific location"""
     boss_map = {
         "dock": "maxwell_enforcer",
@@ -718,6 +698,7 @@ def get_boss_for_location(location):
     
     return boss_map.get(location)
 
+# Probabilitas spawn musuh per lokasi per chapter
 SPAWN_RATES = {
     1: {
         "island": 0.08,
@@ -750,7 +731,6 @@ SPAWN_RATES = {
 }
 
 def should_spawn_enemy(location, chapter=1):
-    # Mengecek apakah enemy perlu spawn di lokasi berdasarkan chapter
     """Check if enemy should spawn based on chapter"""
     # Safe zone adalah area aman — tidak ada enemy yang spawn di sini
     if location == 'safe_zone':
@@ -766,3 +746,67 @@ def get_all_boss_ids():
 def get_boss_count():
     """Get total number of bosses"""
     return len(BOSSES)
+
+
+
+def scale_enemy_for_chapter(enemy, chapter, player_level=1):
+    """
+    Scale enemy stats berdasarkan chapter dan player level.
+    Semakin tinggi chapter/level, musuh makin kuat.
+    Factor: tiap chapter +15% stats, tiap 3 level player +10%.
+    """
+    import copy
+    e = copy.deepcopy(enemy)
+    ch_factor  = 1.0 + (max(1, int(chapter)) - 1) * 0.15
+    lv_factor  = 1.0 + (max(1, int(player_level)) // 3) * 0.10
+    total      = ch_factor * lv_factor
+
+    e['hp']      = max(e.get('hp', 50),      int(e['hp'] * total))
+    e['max_hp']  = e['hp']
+    e['attack']  = max(e.get('attack', 10),  int(e['attack'] * total))
+    e['defense'] = max(e.get('defense', 5),  int(e['defense'] * total))
+    e['speed']   = max(e.get('speed', 10),   int(e['speed'] * total))
+    e['xp']      = int(e.get('xp', 10) * total)
+    return e
+
+
+def create_enemy_instance(enemy_id, chapter=1, player_level=1):
+    """Buat enemy instance dengan scaling berdasarkan chapter & player level."""
+    if enemy_id in ENEMIES:
+        base = ENEMIES[enemy_id].copy()
+    elif enemy_id in BOSSES:
+        base = BOSSES[enemy_id].copy()
+    else:
+        return None
+    # Tambah variance kecil ±10%
+    import random
+    variance = random.uniform(0.90, 1.10)
+    base['hp']     = int(base.get('hp', 50)     * variance)
+    base['max_hp'] = base['hp']
+    # Scale berdasarkan chapter/level
+    return scale_enemy_for_chapter(base, chapter, player_level)
+
+
+
+# Secret NPC Candala
+CANDALA_NPC = {
+    "id": "candala",
+    "name": "Candala",
+    "title": "The Witness in the Shadows",
+    "intro": [
+        "Candala: '...Saya sudah menunggu seseorang yang mau mendengar.'",
+        "Candala: 'Saya tahu segalanya tentang tempat ini. Saya pernah bekerja di sini.'",
+        "Candala: 'Telepon itu... kamu menemukannya. Berarti kamu sudah lihat.'",
+        "Candala: 'Nama-nama dalam kontak itu... simpan baik-baik. Dunia perlu tahu.'",
+    ],
+    "secret_dialog": [
+        "Candala: 'Ada ruangan yang tidak ada di peta resmi. Basement sub-level 2.'",
+        "Candala: 'Di sana tersimpan semua rekaman asli. Jangan dibiarkan hancur.'",
+        "Candala: 'Satu lagi... jika kamu bertemu seseorang bernama Maxwell di luar...'",
+        "Candala: '...beritahu dia bahwa Candala masih ingat segalanya.'",
+        "Candala: 'Sekarang pergi. Sebelum dia kembali.'",
+        "*Candala menghilang ke sudut gelap. Hanya bayangan yang tersisa.*",
+    ],
+    "reward_flag": "candala_secret_obtained",
+    "reward_item": "Rekaman Candala",
+}

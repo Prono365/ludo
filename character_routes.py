@@ -1,7 +1,4 @@
-"""
-CHARACTER ROUTES — v0.3
-Sistem 6 chapter, boss tiap 2 chapter, NPC sebagai sidequest (bukan party).
-"""
+# Rute dan chapter tiap karakter
 
 from sprites import Warna
 from contextlib import suppress
@@ -19,9 +16,9 @@ from constants import (
 )
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 #  CHAPTER OBJECTIVES — narasi singkat per chapter
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 CHAPTER_OBJECTIVES = {
     1: "Escape dari area awal — selesaikan quest awal sebelum bisa lanjut",
     2: "Eksplorasi pulau, cari info, kalahkan Kepala Penjaga",
@@ -32,9 +29,9 @@ CHAPTER_OBJECTIVES = {
 }
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 #  BOSS DATA
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 BOSS_DATA = {
     'kepala_penjaga': {
         'name':       'Kepala Penjaga',
@@ -108,11 +105,11 @@ BOSS_DATA = {
 }
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 #  MAP ITEM → CH1 OBJECTIVE + DIALOG
 #  Saat player pickup item tertentu di ch1, otomatis trigger progress + dialog
 #  Format: { char_id: { item_name: (objective_id, dialog_line) } }
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 CH1_ITEM_OBJECTIVE_MAP = {
     'vio': {
         'Keycard Level 1': ('hack_terminal',
@@ -170,11 +167,11 @@ CH1_ITEM_OBJECTIVE_MAP = {
     },
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 #  PRE-BOSS DIALOG CH1 — dialog cinematic sebelum boss battle
 #  Muncul 1x saat player pertama kali mendekati boss di chapter 1
 #  Format: list of (kind, text) — kind: 'narasi'|'dialog'|'inner'|'system'
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 CH1_PRE_BOSS_DIALOGS = {
     'vio': {
         'maxwell_enforcer': [
@@ -241,9 +238,9 @@ CH1_PRE_BOSS_DIALOGS = {
     },
 }
 
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 #  CHAPTER 1 QUESTS — spesifik per karakter, di lokasi starting mereka
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 CH1_QUESTS = {
     'vio': {
         'title':       'Hack & Escape: Mansion Server Room',
@@ -405,10 +402,10 @@ CH1_QUESTS = {
 }
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 #  CHAPTER PROGRESSION REQUIREMENTS
 #  Apa yang dibutuhkan untuk unlock chapter berikutnya
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 CHAPTER_REQUIREMENTS = {
     2: {
         'description': 'Selesaikan quest Chapter 1 dan kabur dari area starting',
@@ -448,9 +445,9 @@ CHAPTER_REQUIREMENTS = {
 }
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 #  LOCATION AVAILABILITY PER CHAPTER
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 CHAPTER_LOCATIONS = {
     1: {
         # Ch1: hanya area starting + safe zone
@@ -487,9 +484,9 @@ CHAPTER_LOCATIONS = {
 }
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 #  CHARACTER ROUTE CONFIGS
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 def get_character_route(char_id):
     # Mengambil konfigurasi route untuk setiap karakter
     """Return route configuration untuk setiap karakter."""
@@ -594,9 +591,9 @@ def get_character_route(char_id):
     return routes.get(char_id, routes['haikaru'])
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 #  FUNGSI CHAPTER 1 QUEST
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 
 def get_ch1_quest(char_id):
     """Return data quest Chapter 1 untuk karakter yang dipilih."""
@@ -771,10 +768,10 @@ def get_ch1_next_incomplete_objective(game_state):
     return None, None
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 #  DIALOG OBJECTIVE SELESAI + INTRO OBJECTIVE BERIKUTNYA
 #  Format: { char_id: { obj_id: [baris dialog, ...] } }
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 CH1_OBJECTIVE_COMPLETE_DIALOGS = {
     'vio': {
         'hack_terminal': [
@@ -899,9 +896,9 @@ def display_ch1_completion(game_state):
     wait_input("Tekan ENTER untuk lanjut ke Chapter 2... ")
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 #  CHAPTER PROGRESSION
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 
 def get_current_chapter(game_state):
     """Return current chapter sebagai int."""
@@ -1017,9 +1014,9 @@ def get_chapter_progress_info(game_state):
     return info
 
 
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 #  ROUTE UTILITIES
-# ─────────────────────────────────────────────────────────────────────────────
+#───────────────────────────
 
 def display_route_intro(char_id):
     """Tampilkan intro awal Chapter 1 untuk karakter yang dipilih."""
@@ -1127,3 +1124,29 @@ def get_npc_display_name(npc_id):
         'vio':      'Vio',
     }
     return names.get(npc_id, npc_id.capitalize())
+
+
+def check_candala_encounter(game_state):
+    """
+    Cek apakah harus trigger encounter 'Candala' (NPC misterius) setelah victory.
+    Candala muncul sekali setelah beberapa battle di chapter 2+.
+    Saat ini: stub yang bisa dikembangkan untuk event story.
+    """
+    chapter = int(game_state.story_flags.get('current_chapter', 1))
+    if chapter < 2:
+        return
+
+    battles = game_state.battles_won
+    already_met = game_state.story_flags.get('candala_encountered', False)
+    if not already_met and battles >= 5 and chapter >= 2:
+        # Trigger dialog misterius
+        game_state.story_flags['candala_encountered'] = True
+        try:
+            from sprites import Warna
+            import time
+            print(f"\n  {Warna.UNGU}*Sebuah pesan muncul di layar terdekat...{Warna.RESET}")
+            time.sleep(0.5)
+            print(f"  {Warna.UNGU + Warna.TERANG}??? : \"Kamu lebih jauh dari yang mereka kira. Hati-hati.\"{Warna.RESET}")
+            time.sleep(1.5)
+        except Exception:
+            pass

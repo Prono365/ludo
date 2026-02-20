@@ -1,10 +1,4 @@
-"""
-NPC INTERACTIONS
- NPC dialogs and sidequest system - give key items to progress chapters
-
-Mengelola dialog intro, sidequest briefing, dan completion dialog untuk setiap NPC.
-NPC tidak join party — mereka kasih key item yang dibutuhkan untuk lanjut chapter.
-"""
+# Interaksi NPC dan sidequest
 
 from sprites import Warna
 import time
@@ -13,7 +7,6 @@ from utils import clear_screen, wait_input, separator, flush_input
 
 
 #  NPC sidequest data - available_chapter, reward_item, chapter_unlock tracking
-# ─────────────────────────────────────────────────────────────────────────────
 #  DATA SIDEQUEST NPC
 #  Setiap NPC punya:
 #    available_chapter   : minimum chapter agar bisa ditemui
@@ -23,7 +16,6 @@ from utils import clear_screen, wait_input, separator, flush_input
 #    required_item / required_action : syarat penyelesaian sidequest
 #    main_quest_impact   : kalimat singkat dampak ke main quest
 #    chapter_unlock      : sidequest ini membuka akses ke chapter ini
-# ─────────────────────────────────────────────────────────────────────────────
 NPC_SIDEQUEST_DATA = {
     'haikaru': {
         'name':             'Haikaru Fumika',
@@ -330,9 +322,7 @@ NPC_SIDEQUEST_DATA = {
 }
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 #  FUNGSI DISPLAY DIALOG
-# ─────────────────────────────────────────────────────────────────────────────
 
 def _print_dialog_line(speaker, line, delay=0.035):
     """Print satu baris dialog dengan format yang sesuai."""
@@ -463,14 +453,7 @@ def display_npc_quest_briefing(npc_id, game_state=None):
 
 
 def display_npc_completion(npc_id, game_state=None):
-    """
-    Tampilkan dialog completion NPC dan berikan reward item.
-
-    PENTING — urutan operasi:
-      1. Set story_flags + add_item DULU sebelum dialog mulai
-         → Kalau Ctrl+C saat dialog, state sudah tersimpan, tidak ada duplikasi
-      2. Baru tampilkan dialog dan reward UI
-    """
+    """Tampilkan dialog completion NPC dan berikan reward item."""
     npc_data = NPC_SIDEQUEST_DATA.get(npc_id)
     if not npc_data:
         return False, None
@@ -523,13 +506,7 @@ def display_npc_completion(npc_id, game_state=None):
 
 
 def display_npc_repeat_talk(npc_id, game_state=None):
-    """
-    Dialog saat player kembali berbicara dengan NPC setelah quest selesai.
-
-    State machine:
-      1. after_complete_dialog — ditampilkan SEKALI (lengkap, ada narasi)
-      2. brief 'done' line — ditampilkan setiap kunjungan berikutnya (satu baris)
-    """
+    """Dialog saat player kembali berbicara dengan NPC setelah quest selesai."""
     npc_data = NPC_SIDEQUEST_DATA.get(npc_id)
     if not npc_data:
         return
@@ -569,9 +546,7 @@ def display_npc_repeat_talk(npc_id, game_state=None):
     wait_input()
 
 
-# ─────────────────────────────────────────────────────────────────────────────
 #  HELPER — CEK STATUS SIDEQUEST
-# ─────────────────────────────────────────────────────────────────────────────
 
 def can_trigger_sidequest(npc_id, game_state):
     """Return True jika sidequest NPC bisa dimulai sekarang."""
@@ -601,14 +576,7 @@ def is_sidequest_complete(npc_id, game_state):
 
 
 def get_npc_display_name(npc_id):
-    """Nama tampilan NPC dengan fallback yang aman.
-    
-    Terlebih dahulu mengecek NPC_SIDEQUEST_DATA, lalu cek game_state cache,
-    kemudian fallback ke capitalize() sebagai pilihan terakhir.
-    
-    CATATAN: Jika NPC baru ditambah ke constants.py tapi lupa di NPC_SIDEQUEST_DATA,
-    sistem ini masih akan menampilkan nama dengan benar (meski tidak ideal).
-    """
+    """Terlebih dahulu mengecek NPC_SIDEQUEST_DATA, lalu cek game_state cache,"""
     # Priority 1: Check NPC_SIDEQUEST_DATA
     data = NPC_SIDEQUEST_DATA.get(npc_id)
     if data:
@@ -653,3 +621,320 @@ def get_sidequest_summary(game_state):
             'impact': data.get('main_quest_impact', ''),
         })
     return result
+
+
+#  ENCOUNTER DIALOGS — dialog saat ketemu enemy & masuk lokasi baru
+#  Terintegrasi langsung di npc_interactions.py sesuai permintaan.
+
+import random as _random
+
+# ── Dialog musuh saat encounter ─────────────────────────────────────────────
+_ENEMY_ENCOUNTER_LINES = {
+    "guard_novice": [
+        "Hei! Berhenti di situ, tahanan!",
+        "Kamu pikir bisa kabur? Tidak di sini!",
+        "Shift baru dimulai dan sudah ada masalah... TANGKAP!",
+        "Stop! Atau aku tidak bertanggung jawab atas yang terjadi!",
+        "Alarm! Ada kabur-kaburan! Kejar!",
+    ],
+    "guard_veteran": [
+        "Sudah lihat seribu orang coba hal yang sama. Tidak ada yang berhasil.",
+        "Berhenti. Sebelum kamu bikin situasi lebih buruk.",
+        "Dua puluh tahun di sini. Kamu bukan yang pertama.",
+        "Kalian anak zaman sekarang... selalu sok jagoan.",
+        "Mau kabur? Boleh coba. Tapi aku lebih tahu pulau ini.",
+    ],
+    "guard_elite": [
+        "Target teridentifikasi. Protokol netralisasi diaktifkan.",
+        "Unit elite tidak berdialog dengan target. Menyerah atau konsekuensinya.",
+        "Kamu tidak punya peluang melawan unit khusus.",
+        "Backup dalam 2 menit. Mau tunggu atau menyerah?",
+    ],
+    "mercenary_thug": [
+        "Ha! Satu lagi bocah yang sok berani.",
+        "Maxwell bayar ekstra buat yang tangkap tahanan kabur. Lucky me!",
+        "Mau ke mana, anak? Pantai? *Tawa kasar* Lucu sekali.",
+        "Aku butuh uang tambahan bulan ini. Makasih udah jadi bonusnya.",
+        "Jangan lari. Itu cuma bikin aku kesal.",
+    ],
+    "mercenary_sniper": [
+        "Dari tadi sudah kuintai kamu. Gerak satu langkah lagi — tamat.",
+        "*Suara klik senjata* Tidak ada tempat bersembunyi.",
+        "Sniper tidak suka target yang bergerak. Berhentilah.",
+        "Jarak 40 meter. Kamu tidak bisa lari lebih cepat dari peluru.",
+    ],
+    "scientist": [
+        "Subjek melarikan diri! Eksperimen belum selesai! TANGKAP!",
+        "Data kamu masih dibutuhkan. Kembali ke lab sekarang!",
+        "Maxwell tidak akan senang kalau subjek utama kabur!",
+        "Kamu tidak akan mengerti pentingnya penelitian ini.",
+    ],
+    "tech_guard": [
+        "ALERT: Intrusi area restricted! Hentikan gerakan!",
+        "Sistem keamanan mendeteksi target. Identifikasi gagal. Netralisasi!",
+        "Area restricted! Apa bagian 'DILARANG MASUK' tidak kamu mengerti?",
+    ],
+    "mansion_guard": [
+        "Area privat! Siapa yang mengizinkan kamu masuk?!",
+        "Tamu tidak diundang di sayap ini. Ada konsekuensinya.",
+        "Tuan Maxwell tidak menerima tamu tanpa janji.",
+        "Sekuriti mansion level tertinggi. Kamu salah tempat, kawan.",
+    ],
+    "maxwell_enforcer": [
+        "Jadi kamu yang menyebabkan semua keributan ini. Menarik.",
+        "Maxwell memberi instruksi jelas tentang kamu.",
+        "Sudah cukup jauh untuk anak seusia kamu. Tapi berakhir di sini.",
+    ],
+    "warden_elite": [
+        "Tidak satu pun yang pernah kabur selama saya bertugas.",
+        "Dua puluh tahun zero escape rate. Kamu tidak akan jadi pengecualian.",
+        "Warden Elite tidak kehilangan tahanan. Tidak pernah.",
+    ],
+    "theater_master": [
+        "Pertunjukan hampir selesai. Dan kamu bukan bagian dari naskahnya.",
+        "Penonton tidak boleh naik ke panggung. Aturan nomor satu.",
+        "Ah, pengganggu. *Bertepuk tangan pelan* Drama entrance, tapi pihak yang salah.",
+    ],
+    "harbor_captain": [
+        "Tidak ada kapal yang keluar tanpa izin tertulis dari saya.",
+        "Dermaga restricted. Kamu punya pass? Tidak? Kita punya masalah.",
+        "Kapten dermaga ini saya. Dan saya bilang: kamu tidak boleh lewat.",
+    ],
+    "security_bot": [
+        ">> UNAUTHORIZED PERSONNEL DETECTED",
+        ">> INITIATING ELIMINATION PROTOCOL",
+        ">> TARGET ACQUIRED — STAND BY",
+    ],
+}
+
+# ── Reaksi player saat encounter musuh ───────────────────────────────────────
+_PLAYER_REACTIONS = {
+    "vio": [
+        "...Ini kayak random encounter di game. Annoying tapi manageable.",
+        "*Tersenyum tipis* Stat musuh ini sudah aku analisa. RNG-ku tidak akan mengkhianati.",
+        "Gacha player tahu: selalu ada pattern di setiap boss.",
+        "*Dalam hati* Kalau kalah di sini, respawn-nya pasti jauh...",
+        "Fine. Anggap ini mini-boss sebelum stage utama.",
+    ],
+    "haikaru": [
+        "*Kalkulasi cepat* 3,7 detik sampai jarak serang. Dua skenario optimal siap.",
+        "Pola gerakannya sudah aku prediksi dua langkah yang lalu.",
+        "Kelemahan: reaksi lambat di sisi kiri. Ini akan efisien.",
+        "*Diam sebentar, mengangguk* Data cukup. Mulai.",
+        "Semakin banyak rintangan, semakin banyak data yang kukumpulkan.",
+    ],
+    "aolinh": [
+        "E-eh?! K-kita tidak bisa... negosiasi ya? *Menarik napas* 加油, Aolinh!",
+        "*Gemetar tapi bertekad* Aku tidak akan menyerah. Jiejie masih menungguku.",
+        "Maaf ya... tapi aku tidak bisa berhenti di sini.",
+        "音乐给我力量! Selagi aku bisa merasakannya... aku bisa!",
+        "*Memejamkan mata* Ini untuk Jiejie. Aku tidak akan kalah.",
+    ],
+    "arganta": [
+        "*Menggenggam pisau* Fermo. Aku sudah siap untuk ini.",
+        "Per famiglia. Per Nonno. Aku tidak mundur.",
+        "Di Napoli, kami belajar: hadapi masalah, jangan lari.",
+        "*La via è sempre avanti* Jalan ada di depan. Ini cuma halangan.",
+        "Anggap pemanasan sebelum menemukan jalan keluar sesungguhnya.",
+    ],
+    "ignatius": [
+        "*Menilai situasi* Kalkulasi odds. Parameter dinilai. Proceed.",
+        "Tidak ada waktu untuk teori panjang. Ini saatnya praktikum.",
+        "Otak insinyur tidak pernah berhenti — bahkan dalam kondisi ini.",
+        "*Menyiapkan alat* Saatnya aksi.",
+        "Setiap sistem punya kelemahan. Ini juga.",
+    ],
+}
+
+# ── Dialog masuk lokasi baru (pertama kali) ──────────────────────────────────
+_MAP_ENTRY_DIALOGS = {
+    "island": {
+        "vio":      [(None, "Pulau utama terbuka lebar."),
+                     ("Vio", "Server pusat pasti ada di salah satu bangunan ini. Tinggal cari sinyalnya.")],
+        "haikaru":  [(None, "Haikaru berdiri di tengah pulau, angin menggerakkan rambutnya."),
+                     ("Haikaru", "Topografi diverifikasi. Enam zona, empat jalur patroli utama. Akurasi rencana: 91%.")],
+        "aolinh":   [(None, "Angin laut menyentuh wajah Aolinh. Sebentar dia menutup mata."),
+                     ("Aolinh", "Jiejie... kamu di mana? Apakah kamu melihat laut yang sama ini?"),
+                     ("Aolinh", "*Menekan earphone* Selama musikku masih ada... aku tidak akan menyerah.")],
+        "arganta":  [(None, "Arganta membuka kompas tuanya, mencermati arah dengan serius."),
+                     ("Arganta", "La via è sempre avanti. Ayo cari jalur yang tidak ada di peta resmi.")],
+        "ignatius": [(None, "Ignatius memindai infrastruktur pulau dengan mata terlatih."),
+                     ("Ignatius", "Satu EMP yang tepat di junction utama... seluruh sistem keamanan mati.")],
+    },
+    "prison_north": {
+        "vio":      [("Vio", "Keamanan 3 lapis. Tapi setiap sistem punya backdoor — kalau tahu caranya."),
+                     ("Vio", "Dan aku selalu tahu caranya.")],
+        "haikaru":  [(None, "Kembali ke penjara ini terasa... ironis."),
+                     ("Haikaru", "Tidak ada waktu untuk nostalgia. Fokus.")],
+        "aolinh":   [(None, "Koridor penjara dingin dan sempit. Aolinh menggigil."),
+                     ("Aolinh", "Tempat ini gelap. Tapi mungkin ada yang butuh bantuan di dalam. Ayo masuk.")],
+        "arganta":  [("Arganta", "Penjara. Hampir berakhir di sini dulu. Hampir."),
+                     ("Arganta", "Per Nonno — hati-hati, tapi jangan ragu.")],
+        "ignatius": [(None, "Ignatius memeriksa panel listrik di koridor pertama."),
+                     ("Ignatius", "Kalau panel darurat ini dimatikan... semua sel terbuka otomatis. Berguna.")],
+    },
+    "mansion": {
+        "vio":      [(None, "Mansion mewah. Server utama ada di sini."),
+                     ("Vio", "Aku bisa rasakan sinyalnya dari luar. Tapi pertama — bypass sistem keamanan berlapis itu.")],
+        "haikaru":  [("Haikaru", "Dokumen tersembunyi di sini pasti kunci segalanya."),
+                     ("Haikaru", "Waspada. Penjaga di sini berbeda kelas dari yang di luar.")],
+        "aolinh":   [(None, "Mansion besar yang terasa dingin meski mewah."),
+                     ("Aolinh", "*Memegang biola erat* Ada perasaan tidak enak. Tapi aku harus masuk.")],
+        "arganta":  [(None, "Arganta menatap mansion dengan mata menyimpan amarah."),
+                     ("Arganta", "Tempat seperti ini yang menghancurkan keluargaku. Aku tidak akan takut masuk.")],
+        "ignatius": [(None, "Ignatius masuk ke mansion dengan rencana yang sudah matang."),
+                     ("Ignatius", "Sistem listrik mansion terhubung ke seluruh pulau. Kendali ada di sini.")],
+    },
+    "theater": {
+        "vio":      [("Vio", "Teater di tengah pulau penjara. Absurd. Tapi kalau ada orang berguna di dalam...")],
+        "haikaru":  [("Haikaru", "Suara bisa jadi distraksi yang sangat efektif jika dimanfaatkan dengan benar.")],
+        "aolinh":   [(None, "Bau kayu panggung. Tirai beludru merah. Aolinh terpaku sebentar."),
+                     ("Aolinh", "Panggung... *menggenggam biola* ini mengingatkanku pada rumah."),
+                     ("Aolinh", "Tapi sekarang bukan waktunya bernostalgia.")],
+        "arganta":  [("Arganta", "Waspada. Tempat seperti ini punya banyak sudut tersembunyi.")],
+        "ignatius": [("Ignatius", "Speaker sistem teater terhubung ke seluruh gedung. Berguna untuk distraksi massal.")],
+    },
+    "beach": {
+        "vio":      [(None, "Pantai. Vio merasakan angin laut untuk pertama kali sejak ditangkap."),
+                     ("Vio", "Berapa jauh daratan? *Menghitung* ...Terlalu jauh. Butuh kapal.")],
+        "haikaru":  [("Haikaru", "Sekitar 47 kilometer ke daratan. Membutuhkan kapal kecepatan minimal 25 knot."),
+                     ("Haikaru", "Rencana B: cari kapal. Rencana A belum gagal, tapi data ini disimpan.")],
+        "aolinh":   [(None, "Laut yang indah. Ironi yang menyakitkan."),
+                     ("Aolinh", "不要放弃. Jangan menyerah. Ini bukan akhir.")],
+        "arganta":  [(None, "Arganta berdiri di pantai. Angin laut seperti sapaan lama."),
+                     ("Arganta", "Nonno sering cerita pantai-pantai di sini. Akhirnya aku di sini juga."),
+                     ("Arganta", "*Melihat reruntuhan perahu* Ada yang bisa dipakai?")],
+        "ignatius": [("Ignatius", "Arus pantai barat tidak standar. Ada jalur bawah permukaan yang tidak terpetakan.")],
+    },
+    "dock": {
+        "vio":      [("Vio", "Kalau bisa akses sistem navigasi kapal itu... kita punya tiket keluar."),
+                     ("Vio", "Enkripsi sistem dermaga pasti bisa ditembus. 10 menit.")],
+        "haikaru":  [("Haikaru", "Kapal terbesar — kapasitas 20 orang. Kecepatan estimasi 35 knot. Memadai."),
+                     ("Haikaru", "Tantangan: netralisasi penjaga dermaga sebelum kapal digunakan.")],
+        "aolinh":   [(None, "Aolinh melihat kapal-kapal dengan mata penuh harapan."),
+                     ("Aolinh", "Kapal itu... bisa membawa kita pulang? *Mata berkaca-kaca*"),
+                     ("Aolinh", "Aku harus kuat. Untuk Jiejie.")],
+        "arganta":  [(None, "Dermaga. Arganta mengenali jenis kapal utama dari kejauhan."),
+                     ("Arganta", "Kapal itu — mirip yang Papà punya dulu. Aku tahu cara mengemudikannya."),
+                     ("Arganta", "Ini jalan keluar kita. Per Nonno.")],
+        "ignatius": [("Ignatius", "Semua kapal terhubung ke sistem kunci sentral. Satu override dan semua terbuka."),
+                     ("Ignatius", "Butuh 8 menit. Mungkin 7 kalau kondisi optimal.")],
+    },
+    "safe_zone": {
+        "vio":      [("Vio", "Ada toko? *Melihat konter* Menarik. Siapa yang mengelola ini?")],
+        "haikaru":  [("Haikaru", "Safe zone. Kenapa Maxwell membiarkan zona ini aman? Ada maksud tersembunyi?"),
+                     ("Haikaru", "Atau jebakan. Tetap waspada.")],
+        "aolinh":   [(None, "Aolinh menghela napas lega."),
+                     ("Aolinh", "Akhirnya... istirahat sebentar. *Melihat toko* Oh ada pedagang? ♪")],
+        "arganta":  [("Arganta", "Bersih. Tidak ada jebakan terlihat. Aman untuk sekarang."),
+                     ("Arganta", "Tapi tetap waspada. Pulau ini penuh kejutan tidak menyenangkan.")],
+        "ignatius": [("Ignatius", "Tidak ada sistem keamanan aktif yang terdeteksi."),
+                     ("Ignatius", "Entah ini keberuntungan atau strategi pihak ketiga.")],
+    },
+    "basement": {
+        "vio":      [("Vio", "Server farm di sini? *Melihat ke sekeliling* Siapapun yang merancang ini — respect.")],
+        "haikaru":  [("Haikaru", "Ada jalur kabel tersembunyi di dinding timur. Mengarah ke mana?")],
+        "aolinh":   [(None, "Aolinh mengernyit. Basement pengap dan gelap."),
+                     ("Aolinh", "*Menekan earphone, memutar musik pelan* Oke. Ayo masuk.")],
+        "arganta":  [("Arganta", "Terowongan bawah tanah seperti ini... Nonno pernah cerita.")],
+        "ignatius": [(None, "Ignatius memasuki basement. Matanya langsung mencerna setiap detail teknis."),
+                     ("Ignatius", "Panel utama, kapasitor, relay, transformator... ini ruang kontrolku."),
+                     ("Ignatius", "Dari sini, aku bisa matikan seluruh sistem keamanan pulau.")],
+    },
+}
+
+# ── Fungsi publik ────────────────────────────────────────────────────────────
+
+def show_enemy_encounter_dialog(enemy_id, player_char_id, enemy_name=None, is_boss=False):
+    """
+    Tampilkan dialog singkat sebelum combat dimulai.
+    Musuh bicara dulu, lalu player bereaksi.
+    """
+    import shutil as _shutil
+    tw = max(40, _shutil.get_terminal_size(fallback=(80, 24)).columns)
+
+    CHAR_COLORS = {
+        'vio':      Warna.MERAH + Warna.TERANG,
+        'haikaru':  Warna.CYAN + Warna.TERANG,
+        'aolinh':   Warna.UNGU + Warna.TERANG,
+        'arganta':  Warna.PUTIH + Warna.TERANG,
+        'ignatius': Warna.KUNING + Warna.TERANG,
+    }
+    CHAR_NAMES = {
+        'vio': 'Vio', 'haikaru': 'Haikaru', 'aolinh': 'Aolinh',
+        'arganta': 'Arganta', 'ignatius': 'Ignatius',
+    }
+    tc        = CHAR_COLORS.get(player_char_id, Warna.PUTIH + Warna.TERANG)
+    char_name = CHAR_NAMES.get(player_char_id, player_char_id.capitalize())
+    disp_enemy = enemy_name or enemy_id.replace('_', ' ').title()
+
+    enemy_pool  = _ENEMY_ENCOUNTER_LINES.get(enemy_id, ["Berhenti! Tidak ada yang bisa lewat!"])
+    player_pool = _PLAYER_REACTIONS.get(player_char_id, ["*Bersiap untuk bertarung*"])
+    enemy_line  = _random.choice(enemy_pool)
+    player_line = _random.choice(player_pool)
+
+    sep   = '─' * min(58, tw - 2)
+    label = "★  BOSS ENCOUNTER  ★" if is_boss else "!  PERTEMUAN"
+    lc    = Warna.KUNING + Warna.TERANG if is_boss else Warna.MERAH
+
+    print(f"\n{lc}{sep}{Warna.RESET}")
+    print(f"  {lc}{label}{Warna.RESET}")
+    print(f"{lc}{sep}{Warna.RESET}\n")
+    time.sleep(0.12)
+
+    # Musuh bicara
+    print(f"  {Warna.MERAH + Warna.TERANG}{disp_enemy}{Warna.RESET}: {enemy_line}")
+    time.sleep(0.65)
+
+    # Player bereaksi
+    print(f"  {tc}{char_name}{Warna.RESET}: {player_line}")
+    time.sleep(0.65)
+
+    print(f"\n{Warna.ABU_GELAP}{sep}{Warna.RESET}")
+    time.sleep(0.25)
+
+
+def show_map_entry_dialog(map_id, player_char_id, gs=None):
+    """
+    Tampilkan dialog singkat saat player masuk lokasi baru PERTAMA KALI.
+    Set flag 'map_entry_{map_id}' agar tidak repeat.
+    """
+    flag = f"map_entry_{map_id}_shown"
+    if gs and gs.story_flags.get(flag):
+        return
+
+    lines = _MAP_ENTRY_DIALOGS.get(map_id, {}).get(player_char_id, [])
+    if not lines:
+        if gs:
+            gs.story_flags[flag] = True
+        return
+
+    MAP_DISPLAY = {
+        'island': '🌴 PULAU UTAMA', 'prison_north': '⛓ PENJARA UTARA',
+        'mansion': '🏛 MANSION',    'theater': '🎭 TEATER',
+        'beach': '🌊 PANTAI',       'dock': '⚓ DERMAGA',
+        'safe_zone': '🛒 SAFE ZONE', 'basement': '⚡ BASEMENT',
+    }
+    CHAR_COLORS = {
+        'vio': Warna.MERAH + Warna.TERANG, 'haikaru': Warna.CYAN + Warna.TERANG,
+        'aolinh': Warna.UNGU + Warna.TERANG, 'arganta': Warna.PUTIH + Warna.TERANG,
+        'ignatius': Warna.KUNING + Warna.TERANG,
+    }
+    tc = CHAR_COLORS.get(player_char_id, Warna.PUTIH)
+    map_name = MAP_DISPLAY.get(map_id, map_id.upper())
+
+    print(f"\n{Warna.KUNING}── {map_name} ──{Warna.RESET}")
+    time.sleep(0.2)
+
+    for speaker, line in lines:
+        if speaker is None:
+            print(f"  {Warna.ABU_GELAP}[{line}]{Warna.RESET}")
+        else:
+            print(f"  {tc}{speaker}{Warna.RESET}: {line}")
+        time.sleep(0.45)
+
+    print(f"{Warna.ABU_GELAP}{'─' * 40}{Warna.RESET}")
+    time.sleep(0.3)
+
+    if gs:
+        gs.story_flags[flag] = True

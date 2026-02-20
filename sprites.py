@@ -35,15 +35,7 @@ import sys as _sys
 import os as _os
 
 def _detect_unicode_support():
-    """
-    Cek apakah terminal mendukung Unicode secara penuh.
-    Menggunakan pendekatan empiris dengan try-except alih-alih hanya mengecek env variables.
-    
-    Fallback ke ASCII jika:
-      - Environment variable TERM_UNICODE=0 di-set manual
-      - Encoding tidak UTF-8
-      - Pencetakan karakter Unicode pertama gagal (empirical test)
-    """
+    """Cek apakah terminal mendukung Unicode secara penuh."""
     if _os.environ.get('TERM_UNICODE', '').lower() == '0':
         return False
     

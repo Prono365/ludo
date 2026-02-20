@@ -1,6 +1,4 @@
-"""
-GAME STATE
-"""
+# State game: stats, quest, save/load
 
 import os
 import json
@@ -21,13 +19,12 @@ from constants import (
     GAME_VERSION,
 )
 
-
+# Field yang perlu konversi set<->list saat save/load
 _SET_FIELDS = ('visited_locations', 'npcs_recruited', 'card_dialogs_seen')
 _SKIP_FIELDS = ('start_time',)
 
-
 class GameState:
-    # Menyimpan status permainan (level, XP, stats player)
+
     def __init__(self):
         self.player_name = ""
         self.player_character = ""
@@ -51,7 +48,7 @@ class GameState:
             'energy': LEVEL_UP_ENERGY_GAIN,
         }
 
-        #  Energy system - used for skills
+        # #codebase Energy system - used for skills
         self.energy = 30
         self.max_energy = 30
         self.energy_regen_rate = 5
@@ -68,7 +65,7 @@ class GameState:
         self.bosses_defeated = 0
         self.npcs_recruited = set()
 
-        #  Story progression tracking - prevents KeyError
+        # #codebase Story progression tracking - prevents KeyError
         self.story_flags = {
             'current_chapter': 1,
             'prologue_complete': False,
@@ -106,9 +103,7 @@ class GameState:
         self.last_save = None
         self.game_completed = False
 
-
     def add_party_member(self, character_id, character_data):
-        # Menambahkan anggota party dengan stat awal
         if character_id not in self.party_members and len(self.party_members) < MAX_PARTY_SIZE:
             self.party_members.append(character_id)
             stats = character_data.get("stats", {})
@@ -129,7 +124,6 @@ class GameState:
         return False
 
     def _validate_party_data(self):
-        # Memvalidasi data party member dan memperbaiki HP yang invalid
         valid = []
         for mid in self.party_members:
             data = self.party_data.get(mid)
@@ -138,9 +132,7 @@ class GameState:
                 valid.append(mid)
         self.party_members = valid
 
-
     def gain_xp(self, amount):
-        # Menambah XP dan menangani level up otomatis
         self.xp += amount
         leveled_up = False
         while self.xp >= self.xp_to_next_level:
@@ -187,35 +179,33 @@ class GameState:
             pass  # Fallback ke default constants jika import gagal
 
     def regen_energy(self, amount=None):
-        # Regenerasi energy pemain setiap langkah eksplorasi
         """Regenerasi energy — dipanggil tiap langkah eksplorasi."""
         gain = amount if amount is not None else self.energy_regen_rate
         self.energy = min(self.energy + gain, self.max_energy)
 
     def use_energy(self, cost):
-        # Menggunakan energy untuk skill/aksi
         """Kurangi energy untuk skill. Kembalikan True jika berhasil."""
         if self.energy >= cost:
             self.energy -= cost
             return True
         return False
 
-
     def add_item(self, item_name):
-        # Menambahkan item ke inventory
         self.inventory.append(item_name)
+
     def remove_item(self, item_name):
-        # Menghapus item dari inventory
         if item_name in self.inventory:
             self.inventory.remove(item_name)
             return True
         return False
 
-
     def add_quest(self, quest_id, title, objective, targets=None, location=None, quest_type="main"):
-        # Menambahkan quest baru ke daftar aktif
         """Tambahkan quest baru ke daftar aktif."""
         for q in self.active_quests:
+            if q.get("id") == quest_id:
+                return
+        # Jangan tambahkan quest yang sudah selesai (mencegah re-add setelah complete)
+        for q in self.completed_quests:
             if q.get("id") == quest_id:
                 return
         self.active_quests.append({
@@ -267,21 +257,17 @@ class GameState:
             char_quests = CHARACTER_MAIN_QUESTS.get(self.player_character, {})
             quest_data  = char_quests.get(chapter)
             if quest_data:
-                return f"Ch.{chapter} — {quest_data['title']}"
+                return quest_data['title']   # FIX: no "Ch.X —" prefix — tracker adds it
         except Exception:
             pass
 
-        # Fallback generic — cover all 6 chapters
+        # Fallback generic (tanpa prefix Ch.X — agar tidak double di tracker)
         generic = {
-            1: "Ch.1 — Kabur dari area awal. Temukan jalan keluar!",
-            2: "Ch.2 — Jelajahi pulau. Cari sekutu & kalahkan Boss!",
-            3: "Ch.3 — Selidiki mansyen. Temui NPC & sidequest!",
-            4: "Ch.4 — Gunakan item sidequest. Kalahkan Boss Ch.4!",
-            5: "Ch.5 — Kumpulkan bukti. Selesaikan sidequest tersisa!",
-            6: "Ch.6 — Konfrontasi final. Kalahkan Boss terakhir!",
+            1: "Kabur dari lokasi awal!",
+            2: "Cari sekutu dan hancurkan boss ch.2",
+            3: "Final battle — kalahkan Epstein!",
         }
-        return generic.get(chapter, f"Ch.{chapter} — Survive di Cursed Island!")
-
+        return generic.get(chapter, "Survive di Cursed Island!")
 
     def update_playtime(self):
         try:
@@ -296,16 +282,8 @@ class GameState:
         minutes = (self.total_playtime_seconds % 3600) // 60
         return f"{hours}h {minutes}m"
 
-
     def save_to_file(self, filename="data.txt"):
-        """
-        Save game state dengan sistem anti-tamper yang sophisticated:
-        1. Checksum MD5 untuk detect perubahan manual
-        2. Base64 encoding untuk obscurity
-        3. Magic header untuk validasi file
-        4. Atomic write untuk prevent corruption
-        5. Automatic backup
-        """
+        """Save game state dengan sistem anti-tamper yang sophisticated:"""
         try:
             # Create backup of existing save
             backup_name = f"{filename}.bak"
@@ -365,7 +343,6 @@ class GameState:
                 except Exception:
                     pass
             return False, f"Save failed: {e}. Data backup preserved."
-
 
     def _check_tampering(self, save_data):
         """
@@ -427,14 +404,7 @@ class GameState:
             print("File will be deleted.\n")
 
     def load_from_file(self, filename="data.txt"):
-        """
-        Load game state dengan anti-tamper protection:
-        1. Validate magic header
-        2. Decode Base64
-        3. Verify checksum SHA256
-        4. Detect tampering dan hapus file jika invalid
-        5. Fallback ke backup jika diperlukan
-        """
+        """Load game state dengan anti-tamper protection:"""
         try:
             if not os.path.exists(filename):
                 backup_name = f"{filename}.bak"
@@ -527,9 +497,6 @@ class GameState:
 
         except Exception as e:
             return False, f"Failed to load: {e}"
-
-
-
 
     def get_save_summary(self, filename="data.txt"):
         """Extract save summary dari file yang di-encrypt dengan anti-tamper."""

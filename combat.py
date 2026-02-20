@@ -1,32 +1,18 @@
-"""
-COMBAT
- Card-based battle system with energy mechanic
-
-STAT ACCESS GUIDELINES:
-  For safety and consistency, use get_stat() to access character stats.
-  This prevents KeyError if stat structure changes or is missing.
-  
-  RECOMMENDED:
-    hp = get_stat(player, 'hp', 0)
-    attack = get_stat(enemy, 'attack', 10)
-  
-  NOT RECOMMENDED:
-    hp = player['hp']           # KeyError jika 'hp' tidak ada
-    attack = enemy['stats']['attack']  # Nested KeyError risk
-  
-  Direct access is OK for:
-    - Loop variables (e.g., `for member in party_members`)
-    - Fields you're setting (e.g., `player['hp'] = new_hp`)
-    - Very performance-critical inner loops where stat structure is guaranteed
-"""
+# Sistem pertarungan berbasis kartu poker
 
 import random
 import time
+import shutil
 import os
 from collections import Counter
 from itertools import combinations
 from sprites import Warna
 from characters import get_card_dialog
+
+def _tw():
+    """Terminal width saat ini."""
+    return max(40, shutil.get_terminal_size(fallback=(80, 24)).columns)
+
 
 try:
     from utils import clear_screen, get_stat
@@ -44,19 +30,19 @@ try:
 except ImportError:
     UNICODE_SUPPORTED = True
 
-# Suit simbol — fallback ke S/H/D/C jika terminal tidak support Unicode
+# Simbol suit kartu
 if UNICODE_SUPPORTED:
     SUITS = ['♠', '♥', '♦', '♣']
     _SUIT_ASCII = {'♠': 'S', '♥': 'H', '♦': 'D', '♣': 'C'}
 else:
     SUITS = ['S', 'H', 'D', 'C']
-    _SUIT_ASCII = {}   # Tidak dipakai, sudah ASCII
+    _SUIT_ASCII = {}
 
 RANKS = ['2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A']
 RANK_VALUES = {r: i for i, r in enumerate(RANKS, 2)}
 RANK_VALUES['A'] = 14
 
-
+# Kelas kartu
 class Card:
     def __init__(self, rank, suit):
         self.rank = rank
@@ -72,12 +58,12 @@ class Card:
     def __repr__(self):
         return f"{self.rank}{self.suit}"
 
+# Buat deck standar 52 kartu
 def create_deck():
-    # Membuat deck standar 52 kartu
+    """Create standard 52-card deck"""
     return [Card(rank, suit) for suit in SUITS for rank in RANKS]
 
 def refill_deck_if_needed(deck, discard_pile=None, min_cards=10):
-    # Mengisi ulang deck jika kartu hampir habis
     """
     Jika deck hampir habis, reshuffle kartu dari discard_pile.
     """
@@ -92,7 +78,9 @@ def refill_deck_if_needed(deck, discard_pile=None, min_cards=10):
             deck.extend(new_deck)
 
 def ensure_hand_size(hand, deck, discard_pile=None, target_size=5):
-    # Memastikan pemain memiliki jumlah kartu yang cukup
+    """
+    Pastikan tangan memiliki minimal target_size kartu
+    """
     refill_deck_if_needed(deck, discard_pile, min_cards=target_size * 2)
     while len(hand) < target_size:
         if deck:
@@ -100,10 +88,10 @@ def ensure_hand_size(hand, deck, discard_pile=None, target_size=5):
         else:
             break
 
+# Evaluasi kombinasi kartu poker
 def evaluate_hand(cards, allow_four_straight=False):
-    # Mengevaluasi tangan poker dan mengembalikan (tipe, skor)
     """
-    Evaluate poker hand - returns (hand_type, score)
+    Evaluate poker hand - returns (hand_typescore)
     allow_four_straight: jika True, 4 kartu berurutan dihitung sebagai Straight
     """
     if not cards:
@@ -195,8 +183,8 @@ def _evaluate_five_card_hand(cards, allow_four_straight=False):
     else:
         return ("High Card", top_value)
 
+# Hitung damage berdasarkan kombinasi kartu
 def calculate_kerusakan(hand_type, hand_score, base_attack, level=1, is_enemy=False, defense=0):
-    # Menghitung damage berdasarkan tangan poker, level, dan stat
     """
     Hitung damage berdasarkan kombinasi kartu, level, dan stat.
     
@@ -240,95 +228,124 @@ def calculate_kerusakan(hand_type, hand_score, base_attack, level=1, is_enemy=Fa
     min_dmg = 5 if is_enemy else 8
     return max(min_dmg, kerusakan)
 
+def _strip_ansi_vis(s):
+    """Hapus ANSI untuk hitung panjang teks yang terlihat."""
+    import re as _re2
+    return _re2.sub(r'\x1b\[[0-9;]*[mA-Za-z]', '', s)
+
+def _vis_len(s):
+    return len(_strip_ansi_vis(s))
+
+def _pad_col(s, width):
+    """Pad string s ke kanan sampai visible-width = width."""
+    return s + ' ' * max(0, width - _vis_len(s))
+
+# Tampilkan UI combat side-by-side
 def show_combat_ui(player, enemy, overtime_progress=0, overtime_required=8, overtime_active=False, overtime_available=False):
-    # Menampilkan UI pertarungan (HP, Energi, stats, buff/debuff)
-    """Display combat UI — HP, Energi, stats, buff/debuff, cooldowns."""
+    """Display combat UI SIDE-BY-SIDE: kolom MUSUH | kolom KAMU."""
     clear_screen()
+    tw = _tw()
 
-    print(f"\n{Warna.MERAH}{'═' * 68}{Warna.RESET}")
-    print(f"{Warna.MERAH + Warna.TERANG}  ⚔  PERTARUNGAN  ⚔{Warna.RESET}")
-    print(f"{Warna.MERAH}{'═' * 68}{Warna.RESET}\n")
+    # ── HEADER────────────
+    border = Warna.MERAH + '═' * (tw - 1) + Warna.RESET
+    print(f"\n{border}")
+    print(f"{Warna.MERAH + Warna.TERANG}{'  ⚔  PERTARUNGAN  ⚔'.center(tw - 1)}{Warna.RESET}")
+    print(f"{border}\n")
 
-    # Musuh
-    enemy_hp_bar = make_hp_bar(enemy['hp'], enemy['max_hp'], 25)
-    boss_tag = f"  {Warna.KUNING}★ BOSS ★{Warna.RESET}" if enemy.get('boss') else ""
-    stun_tag = f"  {Warna.CYAN}[STUN]{Warna.RESET}" if enemy.get('_stunned', 0) > 0 else ""
-    print(f"  {Warna.MERAH}▶ MUSUH{Warna.RESET}{boss_tag}  {enemy['name']}{stun_tag}")
-    print(f"    HP  : {enemy_hp_bar} {enemy['hp']}/{enemy['max_hp']}")
+    # ── Lebar tiap kolom──
+    col  = max(30, (tw - 3) // 2)
+    bar  = max(10, col - 18)       # panjang HP/EN bar
 
-    # Tampilkan debuff musuh yang aktif
+    # ── KOLOM KIRI: MUSUH──
+    boss_tag  = f" {Warna.KUNING}[BOSS]{Warna.RESET}"  if enemy.get('boss')             else ""
+    stun_tag  = f" {Warna.CYAN}[STUN]{Warna.RESET}"    if enemy.get('_stunned', 0) > 0  else ""
     e_debuffs = []
     if enemy.get('_def_debuff_turns', 0) > 0:
-        e_debuffs.append(f"{Warna.KUNING}DEF↓({enemy['_def_debuff_turns']}t){Warna.RESET}")
+        e_debuffs.append(f"{Warna.KUNING}DEF↓{enemy['_def_debuff_turns']}t{Warna.RESET}")
     if enemy.get('_atk_debuff_turns', 0) > 0:
-        e_debuffs.append(f"{Warna.KUNING}ATK↓({enemy['_atk_debuff_turns']}t){Warna.RESET}")
-    e_atk = enemy.get('attack', '?')
-    e_def = enemy.get('defense', '?')
-    debuff_str = " " + " ".join(e_debuffs) if e_debuffs else ""
-    print(f"    ATK : {e_atk} | DEF : {e_def}{debuff_str}")
-    print()
+        e_debuffs.append(f"{Warna.KUNING}ATK↓{enemy['_atk_debuff_turns']}t{Warna.RESET}")
+    deb = (" " + " ".join(e_debuffs)) if e_debuffs else ""
 
-    # Player
-    player_hp_bar = make_hp_bar(player['hp'], player['max_hp'], 25)
+    left_lines = [
+        f"{Warna.MERAH + Warna.TERANG}▶ MUSUH{Warna.RESET}{boss_tag}",
+        f"  {Warna.TERANG}{enemy['name']}{Warna.RESET}{stun_tag}",
+        f"  HP : {make_hp_bar(enemy['hp'], enemy['max_hp'], bar)} "
+        f"{enemy['hp']}/{enemy['max_hp']}",
+        f"  ATK:{enemy.get('attack','?')} DEF:{enemy.get('defense','?')}{deb}",
+        "",
+    ]
+
+    # ── KOLOM KANAN: KAMU──
     energy     = player.get('energy', 0)
-    max_energy = player.get('max_energy', 20)
-    energy_bar = make_energy_bar(energy, max_energy, 20)
+    max_energy = player.get('max_energy', 30)
+    p_atk      = get_stat(player, 'attack',  '?')
+    p_def      = get_stat(player, 'defense', '?')
+    p_spd      = get_stat(player, 'speed',   '?')
 
-    print(f"  {Warna.HIJAU}▶ KAMU{Warna.RESET}  {player['name']} (Lv.{player.get('level', 1)})")
-    print(f"    HP    : {player_hp_bar} {player['hp']}/{player['max_hp']}")
-    print(f"    {Warna.CYAN}ENERGI: [{energy_bar}] {energy}/{max_energy}{Warna.RESET}")
-
-    p_atk = get_stat(player, 'attack', '?')
-    p_def = get_stat(player, 'defense', '?')
-    p_spd = get_stat(player, 'speed', '?')
-
-    # Buff aktif player
-    buffs    = player.get('_buffs', {})
-    buff_str = ""
-    if buffs.get('atk_up', 0) > 0:
-        buff_str += f" {Warna.HIJAU}[ATK+{buffs['atk_up']}t]{Warna.RESET}"
-    if buffs.get('def_up', 0) > 0:
-        buff_str += f" {Warna.HIJAU}[DEF+{buffs['def_up']}t]{Warna.RESET}"
-    if buffs.get('evade', 0) > 0:
-        buff_str += f" {Warna.CYAN}[DODGE 70%×{buffs['evade']}t]{Warna.RESET}"
-    if buffs.get('card_power_mult', 0) >= 2:
-        buff_str += f" {Warna.UNGU}[KARTU ×{buffs['card_power_mult']}!]{Warna.RESET}"
-    if buffs.get('four_straight', 0) > 0:
-        buff_str += f" {Warna.CYAN}[4-STRAIGHT]{Warna.RESET}"
-    if buffs.get('ambush_stun', 0) > 0:
-        buff_str += f" {Warna.UNGU}[AMBUSH+STUN]{Warna.RESET}"
-    print(f"    ATK:{p_atk} | DEF:{p_def} | SPD:{p_spd}{buff_str}")
+    # Buff tags
+    buffs = player.get('_buffs', {})
+    btags = []
+    if buffs.get('atk_up', 0)         > 0: btags.append(f"{Warna.HIJAU}ATK↑{buffs['atk_up']}t{Warna.RESET}")
+    if buffs.get('def_up', 0)         > 0: btags.append(f"{Warna.HIJAU}DEF↑{buffs['def_up']}t{Warna.RESET}")
+    if buffs.get('evade', 0)          > 0: btags.append(f"{Warna.CYAN}DODGE{Warna.RESET}")
+    if buffs.get('card_power_mult',0) >= 2: btags.append(f"{Warna.UNGU}×{buffs['card_power_mult']}PWR{Warna.RESET}")
+    if buffs.get('four_straight', 0)  > 0: btags.append(f"{Warna.CYAN}4STR{Warna.RESET}")
+    if buffs.get('ambush_stun', 0)    > 0: btags.append(f"{Warna.UNGU}AMBUSH{Warna.RESET}")
+    buff_str = " ".join(btags)
 
     # Overtime bar
-    ot_filled = min(overtime_progress, overtime_required)
-    ot_bar    = '▰' * ot_filled + '▱' * (overtime_required - ot_filled)
+    ot_fill = min(overtime_progress, overtime_required)
+    ot_bar  = '▰' * ot_fill + '▱' * (overtime_required - ot_fill)
     if overtime_active:
-        ot_status = f"{Warna.MERAH + Warna.TERANG}[⚡OVERTIME AKTIF! {Warna.RESET}"
-        ot_color  = Warna.MERAH + Warna.TERANG
+        ot_label = f"{Warna.MERAH + Warna.TERANG}⚡AKTIF!{Warna.RESET}"
     elif overtime_available:
-        ot_status = f"{Warna.KUNING + Warna.TERANG}[SIAP! Ketik 'OT' untuk aktifkan]{Warna.RESET}"
-        ot_color  = Warna.KUNING + Warna.TERANG
+        ot_label = f"{Warna.KUNING}SIAP → ketik OT{Warna.RESET}"
     else:
-        ot_status = f"{Warna.ABU_GELAP}({ot_filled}/{overtime_required}){Warna.RESET}"
-        ot_color  = Warna.CYAN
-    print(f"    {ot_color}OVERTIME:[{ot_bar}]{Warna.RESET} {ot_status}")
+        ot_label = f"{Warna.ABU_GELAP}{ot_fill}/{overtime_required}{Warna.RESET}"
 
-    # Cooldown ringkas (skill yang masih cooldown)
+    # Cooldowns (max 3 ditampilkan)
     cooldowns = player.get('_skill_cooldowns', {})
     active_cd = [(sk, cd) for sk, cd in cooldowns.items() if cd > 0]
-    if active_cd:
-        cd_str = "  ".join(f"{Warna.ABU_GELAP}{sk}:{cd}t{Warna.RESET}" for sk, cd in active_cd)
-        print(f"    {Warna.ABU_GELAP}CD: {cd_str}{Warna.RESET}")
 
-    print(f"\n{Warna.ABU_GELAP}{'─' * 68}{Warna.RESET}")
+    right_lines = [
+        f"{Warna.HIJAU + Warna.TERANG}▶ KAMU{Warna.RESET}",
+        f"  {Warna.TERANG}{player['name']}{Warna.RESET} (Lv.{player.get('level',1)})",
+        f"  HP  : {make_hp_bar(player['hp'], player['max_hp'], bar)} "
+        f"{player['hp']}/{player['max_hp']}",
+        f"  {Warna.CYAN}EN  : {make_energy_bar(energy, max_energy, bar)} "
+        f"{energy}/{max_energy}{Warna.RESET}",
+        f"  ATK:{p_atk} DEF:{p_def} SPD:{p_spd}" + (f"  {buff_str}" if buff_str else ""),
+        f"  {Warna.CYAN}OT:[{ot_bar}]{Warna.RESET} {ot_label}",
+    ]
+    if active_cd:
+        cd_str = "  ".join(f"{Warna.ABU_GELAP}{sk[:8]}:{cd}t{Warna.RESET}"
+                           for sk, cd in active_cd[:3])
+        right_lines.append(f"  {Warna.ABU_GELAP}CD:{Warna.RESET} {cd_str}")
+
+    # ── Render side-by-side
+    div = f"{Warna.ABU_GELAP}│{Warna.RESET}"
+    n   = max(len(left_lines), len(right_lines))
+    for i in range(n):
+        L = left_lines[i]  if i < len(left_lines)  else ""
+        R = right_lines[i] if i < len(right_lines) else ""
+        print(f"{_pad_col(L, col)} {div} {R}")
+
+    print(f"\n{Warna.ABU_GELAP}{'─' * (tw - 1)}{Warna.RESET}")
+
 
 def make_energy_bar(current, maximum, length=20):
-    """Create energy bar untuk skill display."""
+    """Create energy bar untuk skill display — warna teal kalem."""
     if maximum <= 0:
         return f"{Warna.ABU_GELAP}{'░' * length}{Warna.RESET}"
     filled = max(0, min(int((current / maximum) * length), length))
-    return f"{Warna.CYAN}{'█' * filled}{Warna.ABU_GELAP}{'░' * (length - filled)}{Warna.RESET}"
-
+    # Warna berdasarkan level energi
+    if current >= maximum * 0.6:
+        color = Warna.CYAN
+    elif current >= maximum * 0.3:
+        color = Warna.ABU_GELAP
+    else:
+        color = Warna.MERAH
+    return f"{color}{'▪' * filled}{Warna.ABU_GELAP}{'░' * (length - filled)}{Warna.RESET}"
 
 def _tick_buffs(player):
     """Kurangi durasi buff aktif player tiap turn."""
@@ -340,9 +357,7 @@ def _tick_buffs(player):
                 del buffs[key]
     player['_buffs'] = buffs
 
-
 def make_hp_bar(current, maximum, length=30):
-    # Membuat visual HP bar untuk UI pertarungan
     """Create HP bar"""
     filled = int((current / maximum) * length) if maximum else 0
     filled = max(0, min(length, filled))
@@ -359,7 +374,6 @@ def make_hp_bar(current, maximum, length=30):
     return f"[{bar}]"
 
 def show_hand(hand, selectable=True):
-    # Menampilkan kartu tangan pemain
     """Display hand with selection"""
     if not hand:
         print(f"  {Warna.ABU_GELAP}Tidak ada kartu{Warna.RESET}")
@@ -374,28 +388,17 @@ def show_hand(hand, selectable=True):
             print(f"{card} ", end="")
     print()
 
-
+# Loop utama combat
 def run_combat(player_stats, enemy, inventory, party_members=None):
-    """
-    Card-based combat system.
-    
-    Args:
-        player_stats: dict dengan {hp, max_hp, attack, defense, speed, character_id}
-        enemy: dict dengan data musuh
-        inventory: list item player
-        party_members: (deprecated, diabaikan — sistem party sudah dihapus)
-    
-    Returns: string - 'victory', 'player_dead', atau 'fled'
-    """
+    """Card-based combat system."""
     import copy
     
-
     # Gunakan player_stats langsung (BUKAN deepcopy) supaya HP
     # otomatis ter-sync balik ke caller setelah combat selesai.
     player = player_stats
     enemy = copy.deepcopy(enemy)
     
-    #  Initialize buffs at start - prevent persistence across combats
+    # Initialize buffs at start
     player['_buffs'] = {}
     if enemy:
         enemy['_buffs'] = {}
@@ -405,9 +408,7 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
     if 'hp' not in enemy:
         enemy['hp'] = enemy.get('max_hp', 100)
     
-
     # party_members parameter diabaikan — sistem party sudah dihapus
-
 
     deck = create_deck()
     random.shuffle(deck)
@@ -425,16 +426,13 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
     player_hand = []
     enemy_hand = []
     
-
-
     ensure_hand_size(player_hand, deck, discard_pile, target_size=8)
     ensure_hand_size(enemy_hand, deck, discard_pile, target_size=8)
     
     turn = 1
     combat_log = []
     
-    # ─── SISTEM OVERTIME ─────────────────────────────────────────────────────
-    # Bar overtime terisi setiap player mainkan kartu (bukan skill/discard/pass)
+        # Bar overtime terisi setiap player mainkan kartu (bukan skill/discard/pass)
     # Setelah 8 turn attack → bar penuh → player bisa aktifkan OVERTIME mode
     # OVERTIME: 2 turn kebal serangan + damage ×1.75 + bisa main 2 combo hand sekaligus
     OVERTIME_REQUIRED   = 8      # Turn attack yang dibutuhkan
@@ -442,13 +440,10 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
     overtime_active     = False  # Mode overtime sedang aktif
     overtime_turns_left = 0      # Sisa turn overtime
     overtime_available  = False  # Bar penuh, siap diaktifkan
-    # ─────────────────────────────────────────────────────────────────────────
     
-
     player_speed = get_stat(player, 'speed', 10)
     enemy_speed = get_stat(enemy, 'speed', 10)
     player_turn_first = player_speed >= enemy_speed
-
 
     player['hp'] = player.get('hp', player.get('max_hp', 100))
     player['max_hp'] = player.get('max_hp', 100)
@@ -478,7 +473,6 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
         print(f"  {Warna.KUNING + Warna.TERANG}TURN {turn}{Warna.RESET}")
         print(f"{Warna.KUNING}═══════════════════════════════════════{Warna.RESET}")
         
-
         show_hand(player_hand)
         
         # Hitung warna slot discard
@@ -501,7 +495,6 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
         action_taken = ""
         skip_enemy_turn = False  # Skill & Discard tidak trigger giliran musuh
         
-
         if action == 'F':
             is_boss_fight = enemy.get('boss', False)
             
@@ -531,11 +524,10 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
                     break
                 continue
         
-
         if action == 'P':
             # Skip giliran — regen energy
-            en_gain = 5
-            player['energy'] = min(player.get('max_energy', 20), player.get('energy', 0) + en_gain)
+            en_gain = 4
+            player['energy'] = min(player.get('max_energy', 30), player.get('energy', 0) + en_gain)
             action_taken = f"{Warna.ABU_GELAP}Lewati giliran (+{en_gain} EN){Warna.RESET}"
             combat_log.append(action_taken)
 
@@ -555,18 +547,12 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
             overtime_progress   = 0
             overtime_turns_left = 2
             skip_enemy_turn     = True  # Aktivasi overtime tidak memicu giliran musuh
-            # Overtime menghabiskan 90% energy sebagai trade-off
-            current_energy = player.get("energy", 0)
-            energy_drain   = int(current_energy * 0.9)
-            player["energy"] = max(0, current_energy - energy_drain)
             action_taken = (f"{Warna.MERAH + Warna.TERANG}⚡ OVERTIME AKTIF! "
-                            f"Kebal 2t + Damage ×1.75 + 2 Combo Hand!{Warna.RESET} "
-                            f"{Warna.ABU_GELAP}(-{energy_drain} EN){Warna.RESET}")
+                            f"Kebal 2t + Damage ×1.75 + Bisa main 2 combo hand!{Warna.RESET}")
             combat_log.append(action_taken)
             print(f"\n  {action_taken}")
             time.sleep(1.5)
         
-
         elif action.startswith('D '):
             # Cek sisa slot discard
             if discard_remaining <= 0:
@@ -612,7 +598,6 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
                 time.sleep(1)
                 continue
         
-
         elif action == 'S':
             # SKILL — pakai ENERGI + COOLDOWN system
             skills = list(player.get('skills', {}).values())
@@ -622,8 +607,8 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
                 continue
 
             clear_screen()
-            energy     = player.get('energy', 0)
-            max_energy = player.get('max_energy', 20)
+            energy     = player.get('energy', 30)
+            max_energy = player.get('max_energy', 30)
             energy_bar = make_energy_bar(energy, max_energy, 28)
             cooldowns  = player.setdefault('_skill_cooldowns', {})
 
@@ -888,7 +873,6 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
                 time.sleep(1)
                 continue
         
-
         elif action == 'I':
             clear_screen()
             print(f"\n{Warna.KUNING}═══════════════════════════════════════{Warna.RESET}")
@@ -915,7 +899,6 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
                     item = inventory[idx - 1]
                     inventory.pop(idx - 1)
                     
-
                     if "Health" in item or "Healing" in item:
                         heal = 50
                         player['hp'] = min(player['max_hp'], player['hp'] + heal)
@@ -933,9 +916,6 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
                 time.sleep(1)
                 continue
         
-
-
-
         else:
             try:
                 indices = [int(x.strip()) for x in action.split(',')]
@@ -950,7 +930,6 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
                 for i in sorted(indices, reverse=True):
                     player_hand.pop(i)
                 
-
                 # Cek buff four_straight (Haikaru) — consume setelah dipakai
                 allow_4s = player.get('_buffs', {}).get('four_straight', 0) > 0
                 if allow_4s:
@@ -1055,7 +1034,6 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
                 time.sleep(1)
                 continue
         
-
         if action_taken and not skip_enemy_turn:
             print(f"\n  {action_taken}")
             time.sleep(1.5)
@@ -1101,7 +1079,7 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
             dodge_chance  = 0.70 if evade_buffed else 0.20
             player_dodges = random.random() < dodge_chance
             if evade_buffed:
-                player.get('_buffs', {})['evade'] = 0   # consume buff
+                player['_buffs']['evade'] = 0  # consume buff
             if player_dodges:
                 tag = f"{Warna.KUNING}[SHADOW STEP] {Warna.RESET}" if evade_buffed else ""
                 enemy_action = (f"{Warna.CYAN}Musuh mainkan {hand_type} — "
@@ -1143,8 +1121,8 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
             break
         
         # Regen energy player tiap turn
-        regen_per_turn = 3
-        player['energy'] = min(player.get('max_energy', 20),
+        regen_per_turn = 2
+        player['energy'] = min(player.get('max_energy', 30),
                                player.get('energy', 0) + regen_per_turn)
         # Tick buff durasi player
         _tick_buffs(player)
@@ -1168,18 +1146,16 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
         if enemy.get('_def_debuff_turns', 0) > 0:
             enemy['_def_debuff_turns'] -= 1
             if enemy['_def_debuff_turns'] == 0:
-                # Restore DEF (estimasi — naik 80% dari nilai debuffed)
-                enemy['defense'] = min(enemy.get('_orig_def', enemy.get('defense', 5)),
-                                       int(enemy.get('defense', 5) / 0.50))
+                # Restore DEF ke nilai asli
+                enemy['defense'] = enemy.get('_orig_def', enemy.get('defense', 5))
         if enemy.get('_atk_debuff_turns', 0) > 0:
             enemy['_atk_debuff_turns'] -= 1
             if enemy['_atk_debuff_turns'] == 0:
-                enemy['attack'] = min(enemy.get('_orig_atk', enemy.get('attack', 15)),
-                                      int(enemy.get('attack', 15) / 0.60))
+                # Restore ATK ke nilai asli
+                enemy['attack'] = enemy.get('_orig_atk', enemy.get('attack', 15))
 
         turn += 1
     
-
     clear_screen()
     
     # Clean up all buff effects after combat ends
@@ -1193,7 +1169,6 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
         print(f"{Warna.RESET}\n")
         print(f"  {Warna.HIJAU}Kamu mengalahkan {enemy['name']}!{Warna.RESET}")
         
-
         xp = enemy.get('xp', 10)
         print(f"  {Warna.KUNING}+{xp} XP{Warna.RESET}")
         

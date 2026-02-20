@@ -1,22 +1,20 @@
-"""
-STORY
-"""
+# Konten cerita dan chapter
 from sprites import Warna
 import time
+import shutil
 from contextlib import suppress
 from utils import print_slow
+
+def _tw():
+    """Terminal width saat ini."""
+    return max(40, shutil.get_terminal_size(fallback=(80, 24)).columns)
+
 
 
 def _get_character_gender_descriptor(player_character=''):
     # Mengambil descriptor gender untuk karakter pemain
     #  Get gender descriptor - avoids circular import
-    """
-    Get gender descriptor for player character.
-    Returns: 'gadis biasa', 'anak laki-laki biasa', or 'orang biasa' as fallback
-    
-    Moved to separate function to avoid circular import issue with characters.py
-    being imported in _interpolate_player_info at module level.
-    """
+    """Get gender descriptor for player character."""
     if not player_character:
         return 'gadis biasa'  # Default fallback
     
@@ -25,9 +23,9 @@ def _get_character_gender_descriptor(player_character=''):
         if player_character in PLAYABLE_CHARACTERS:
             char_data = PLAYABLE_CHARACTERS[player_character]
             gender = char_data.get('gender', 'female')
-            if gender == 'male':
+            if gender.lower() == 'male':
                 return 'anak laki-laki biasa'
-            elif gender == 'female':
+            elif gender.lower() == 'female':
                 return 'gadis biasa'
     except ImportError:
         pass  # Fallback if import fails
@@ -38,16 +36,7 @@ def _get_character_gender_descriptor(player_character=''):
 def _interpolate_player_info(text, game_state=None):
     # Mengganti variabel template cerita dengan data pemain
     #  Replace story template variables with player data
-    """
-    Interpolate player information into story text.
-    Supports:
-      - {player_name} → player's name
-      - {player_pronoun_subject} → dia (untuk subject)
-      - {player_pronoun_object} → dia (untuk object)
-      - {player_gender_adj} → "gadis/anak laki-laki" descriptor
-      
-    If no game_state provided, returns text unchanged.
-    """
+    """Interpolate player information into story text."""
     if not game_state:
         return text
     
@@ -2173,21 +2162,15 @@ def print_story_slow(text, delay=0.03):
 
 def display_chapter(chapter_id, skip_delays=False, game_state=None):
     # Menampilkan chapter cerita dengan interpolasi nama pemain
-    """Display story chapter with support for player name interpolation.
-    
-    Args:
-        chapter_id: ID of chapter to display
-        skip_delays: Skip typewriter effect delays
-        game_state: Optional GameState object for player info interpolation
-    """
+    """Args:"""
     if chapter_id not in STORY_CHAPTERS:
         return False
 
     chapter = STORY_CHAPTERS[chapter_id]
 
-    print(f"\n{Warna.CYAN}{'═'*70}{Warna.RESET}")
-    print(f"{Warna.KUNING + Warna.TERANG}{chapter['title'].center(70)}{Warna.RESET}")
-    print(f"{Warna.CYAN}{'═'*70}{Warna.RESET}\n")
+    print(f"\n{Warna.CYAN}{'═' * (_tw() - 1)}{Warna.RESET}")
+    print(f"{Warna.KUNING + Warna.TERANG}{chapter['title'].center(_tw())}{Warna.RESET}")
+    print(f"{Warna.CYAN}{'═' * (_tw() - 1)}{Warna.RESET}\n")
 
     if not skip_delays:
         time.sleep(0.3)
@@ -2218,9 +2201,9 @@ def display_backstory(character_id, skip_delays=False):
 
     backstory = CHARACTER_BACKSTORIES[character_id]
 
-    print(f"\n{Warna.CYAN}{'═'*70}{Warna.RESET}")
-    print(f"{Warna.KUNING + Warna.TERANG}{backstory['title'].center(70)}{Warna.RESET}")
-    print(f"{Warna.CYAN}{'═'*70}{Warna.RESET}\n")
+    print(f"\n{Warna.CYAN}{'═' * (_tw() - 1)}{Warna.RESET}")
+    print(f"{Warna.KUNING + Warna.TERANG}{backstory['title'].center(_tw())}{Warna.RESET}")
+    print(f"{Warna.CYAN}{'═' * (_tw() - 1)}{Warna.RESET}\n")
 
     if not skip_delays:
         time.sleep(0.3)
@@ -2254,9 +2237,9 @@ def display_route_chapter(chapter_id, skip_delays=False):
         border_color = Warna.CYAN
         title_color = Warna.KUNING + Warna.TERANG
 
-    print(f"\n{border_color}{'═'*70}{Warna.RESET}")
-    print(f"{title_color}{chapter['title'].center(70)}{Warna.RESET}")
-    print(f"{border_color}{'═'*70}{Warna.RESET}\n")
+    print(f"\n{border_color}{'═' * (_tw() - 1)}{Warna.RESET}")
+    print(f"{title_color}{chapter['title'].center(_tw())}{Warna.RESET}")
+    print(f"{border_color}{'═' * (_tw() - 1)}{Warna.RESET}\n")
 
     if not skip_delays:
         time.sleep(0.3)

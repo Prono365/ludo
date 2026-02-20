@@ -6,14 +6,7 @@ from contextlib import suppress
 from constants import FALLBACK_CARD_DIALOGS
 
 def _load_card_dialogs():
-    # Memuat dialog kartu dari file JSON dengan validasi
-    """
-    Muat CARD_PLAY_DIALOGS dari card_dialogs.json dengan validasi ketat.
-    Format: { "character_id": { "hand_type": ["dialog1", "dialog2", ...] } }
-    Cari file di direktori yang sama dengan characters.py,
-    lalu fallback ke direktori kerja saat ini.
-    Jika file tidak ditemukan atau rusak, kembalikan FALLBACK_CARD_DIALOGS untuk mencegah NPC bisu.
-    """
+    """Muat CARD_PLAY_DIALOGS dari card_dialogs.json dengan validasi ketat."""
 
     _this_dir = os.path.dirname(os.path.abspath(__file__))
     _candidates = [
@@ -434,7 +427,6 @@ PLAYABLE_CHARACTERS = {
 }
 
 
-# ══════════════════════════════════════════════════════════════════════════════
 # LEVEL-UP STAT GAINS PER KARAKTER
 # Setiap karakter punya distribusi stat unik → level-up gains mencerminkan itu.
 #
@@ -444,7 +436,7 @@ PLAYABLE_CHARACTERS = {
 #   Aolinh  : HP 88  ATK 11  DEF 13  SPD 17  → Support/Energy build
 #   Arganta : HP 87  ATK 19  DEF 11  SPD 24  → ATK/SPD glass cannon
 #   Ignatius: HP 85  ATK 22  DEF  9  SPD 16  → Pure ATK berserker
-# ══════════════════════════════════════════════════════════════════════════════
+# Level-up stat gains per karakter
 CHARACTER_LEVEL_GAINS = {
     "vio": {
         # Hacker: cepat & menyerang, tapi tipis
@@ -452,7 +444,7 @@ CHARACTER_LEVEL_GAINS = {
         "attack":   2,  # solid attacker
         "defense":  1,  # pertahanan rendah tetap rendah
         "speed":    2,  # SPD signature — naik cepat
-        "energy":   2,  # energy lumayan untuk skill hack
+        "energy":   1,  # energy gain per level — lebih sedikit post-buff
         "note": "ATK/SPD scaling — tetap cepat tapi rapuh",
     },
     "haikaru": {
@@ -470,7 +462,7 @@ CHARACTER_LEVEL_GAINS = {
         "attack":   1,  # paling lemah
         "defense":  2,  # sedang
         "speed":    1,  # sedang
-        "energy":   3,  # healer energy gain
+        "energy":   2,  # healer energy gain (dikurangi)
         "note": "Energy scaling — skill heal makin kuat tiap level",
     },
     "arganta": {
@@ -494,6 +486,7 @@ CHARACTER_LEVEL_GAINS = {
 }
 
 
+# NPC spesial (Candala, Joker, Phone Call)
 SPECIAL_NPC = {
     "candala": {
         "name": "Candala",
@@ -574,11 +567,10 @@ SPECIAL_NPC = {
     }
 }
 
-# ══════════════════════════════════════════════════════════════════════════════
 # QUEST UTAMA PER KARAKTER
 # Tiap chapter punya boss unik sesuai karakter.
 # Boss ch.3 terakhir selalu Epstein (final boss).
-# ══════════════════════════════════════════════════════════════════════════════
+# Quest utama per karakter per chapter
 CHARACTER_MAIN_QUESTS = {
     # VIO
     "vio": {
@@ -803,6 +795,7 @@ def get_main_quest(char_id, chapter):
     return CHARACTER_MAIN_QUESTS.get(char_id, {}).get(chapter)
 
 
+# Quest rekrutmen NPC
 NPC_QUESTS = {
     "haikaru": {
         "chapter": 2,
@@ -882,6 +875,7 @@ NPC_QUESTS = {
     }
 }
 
+# Intro cerita tiap karakter
 CHARACTER_INTROS = {
     "vio": [
         "Dia adalah Vio, hacker elite dari Edinburgh, Skotlandia yang diculik karena membobol jaringan Epstein.",
@@ -968,12 +962,10 @@ def get_all_character_ids():
     return list(PLAYABLE_CHARACTERS.keys())
 
 def get_character_name(char_id):
-    # Mengambil nama karakter
     char = PLAYABLE_CHARACTERS.get(char_id)
     return char["name"] if char else "Unknown"
 
 def get_card_dialog(char_id, hand_type):
-    # Mengambil dialog karakter untuk tangan poker tertentu
     """
     Get random dialog for card play based on character and hand type.
     Returns:
@@ -1027,31 +1019,7 @@ def get_card_dialog(char_id, hand_type):
 
 
 def safe_get_card_dialog(char_id, hand_key):
-    """
-    FIX Bug 3: API aman untuk mengakses dialog kartu dari kode eksternal
-    (tutorial.py, cutscene, dsb.) yang mungkin memakai kunci hand secara
-    langsung seperti 'straight', 'flush', dsb.
-
-    Kenapa fungsi ini perlu ada:
-      - tutorial.py (dan kode serupa) kadang mengakses dialog dengan kunci
-        hand langsung tanpa melalui evaluate_hand(). Contoh sebelumnya:
-            dialogs['vio']['straight'][0]   ← crash jika list kosong/berubah
-      - Fungsi ini menggantikan pola akses tersebut dengan cara yang aman.
-
-    Perbedaan dengan get_card_dialog():
-      - get_card_dialog() menerima nama lengkap hand dari evaluate_hand()
-        seperti "Three of a Kind" dan mengonversinya secara internal.
-      - safe_get_card_dialog() menerima kunci JSON langsung seperti "straight",
-        "three_kind", "flush" — cocok untuk pemanggil yang sudah tahu kunci JSON.
-
-    Args:
-        char_id  : ID karakter, case-insensitive (contoh: "vio", "Vio", "VIO")
-        hand_key : Kunci hand sesuai card_dialogs.json (contoh: "straight",
-                   "three_kind", "high_card", dll.)
-
-    Returns:
-        str  — satu baris dialog acak, atau None jika tidak ada dialog.
-    """
+    """FIX Bug 3: API aman untuk mengakses dialog kartu dari kode eksternal"""
     
     def _get_dialog_from_char(char, hand_key):
         dialogs = char.get("card_dialogs", {})

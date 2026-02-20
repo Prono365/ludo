@@ -1,6 +1,4 @@
-"""
-TUTORIAL — Cursed Island Escape
-"""
+# Tutorial game
 
 from sprites import Warna
 import time
@@ -25,7 +23,6 @@ def wait_for_skip():
 
 
 def tutorial_eksplorasi():
-    # Menampilkan tutorial untuk sistem eksplorasi
     clear()
     separator()
     print(f"{Warna.HIJAU + Warna.TERANG}  TUTORIAL: EKSPLORASI{Warna.RESET}".center(70))
@@ -64,12 +61,13 @@ def tutorial_eksplorasi():
     print(f"    Boss menunggu di tempatnya — dekatinya hanya saat kamu siap!")
 
     print()
-    print(f"  {Warna.KUNING}Quest Tracker HUD (bawah peta):{Warna.RESET}")
+    print(f"  {Warna.KUNING}Quest Tracker HUD (kanan peta):{Warna.RESET}")
     print(f"    {Warna.KUNING}[O]{Warna.RESET} = Objektif chapter saat ini (Main Quest)")
-    print(f"    {Warna.PUTIH}[M]{Warna.RESET} = Quest utama karakter aktif")
+    print(f"    {Warna.PUTIH}[M]{Warna.RESET} = Quest utama karakter aktif dengan progress bar")
     print(f"    {Warna.HIJAU}[S]{Warna.RESET} = Sidequest NPC aktif")
-    print(f"    Ada panah arah dan estimasi jarak ke target terdekat.")
-    print(f"    HUD juga menampilkan {Warna.CYAN}[S]:{Warna.RESET} kemajuan sidequest (misal: [S]:2/5).")
+    print(f"    Di bawahnya ada daftar target terdekat: NPC, item, musuh, pintu.")
+    print(f"    HUD tampil di SEBELAH KANAN peta — tidak terhalangi perintah!")
+    print(f"    {Warna.CYAN}[S]:x/5{Warna.RESET} di header = jumlah sidequest selesai.")
     print()
     print(f"  {Warna.KUNING}Tips:{Warna.RESET}")
     print(f"    - Save (X) sering — terutama sebelum masuk area berbahaya")
@@ -83,7 +81,6 @@ def tutorial_eksplorasi():
 
 
 def tutorial_combat():
-    # Menampilkan tutorial untuk sistem pertarungan kartu poker
     clear()
     separator()
     print(f"{Warna.MERAH + Warna.TERANG}  TUTORIAL: PERTARUNGAN{Warna.RESET}".center(70))
@@ -135,11 +132,20 @@ def tutorial_combat():
 
     print()
     print(f"  {Warna.KUNING}Aksi Lain di Pertarungan:{Warna.RESET}")
-    print(f"    {Warna.CYAN}[S]{Warna.RESET}     = Gunakan Skill (buff/debuff/heal)")
-    print(f"    {Warna.KUNING}[I]{Warna.RESET}     = Gunakan Item dari inventory")
-    print(f"    {Warna.KUNING}[D 0,1]{Warna.RESET} = Buang kartu & ambil baru (3 slot/battle)")
-    print(f"    {Warna.ABU_GELAP}[P]{Warna.RESET}     = Lewati giliran (energy regen +5)")
-    print(f"    {Warna.MERAH}[F]{Warna.RESET}     = Coba kabur (25% sukses, GAGAL saat lawan Boss!)")
+    print(f"    {Warna.CYAN}[S]{Warna.RESET}       = Gunakan Skill (buff/debuff/heal)")
+    print(f"    {Warna.KUNING}[I]{Warna.RESET}       = Gunakan Item dari inventory")
+    print(f"    {Warna.KUNING}[D 0,1]{Warna.RESET}   = Buang kartu & ambil baru (3 slot/battle)")
+    print(f"    {Warna.ABU_GELAP}[P]{Warna.RESET}       = Lewati giliran (energy regen +5)")
+    print(f"    {Warna.MERAH}[OT]{Warna.RESET}      = Aktifkan OVERTIME (setelah bar penuh)")
+    print(f"    {Warna.MERAH}[F]{Warna.RESET}       = Coba kabur (25% sukses, GAGAL saat lawan Boss!)")
+
+    print()
+    print(f"  {Warna.KUNING + Warna.TERANG}⚡ QUICK TIME EVENT (QTE) DODGE:{Warna.RESET}")
+    print(f"  Setiap kali musuh mau menyerang, muncul {Warna.KUNING}QTE Prompt{Warna.RESET}.")
+    print(f"  Tekan tombol yang ditampilkan ({Warna.CYAN}Z / X / C / V{Warna.RESET}) + ENTER dalam waktu singkat.")
+    print(f"  Sukses QTE → {Warna.HIJAU}~80% chance dodge{Warna.RESET} serangan musuh!")
+    print(f"  Gagal QTE → {Warna.ABU_GELAP}15% chance dodge{Warna.RESET} (keberuntungan murni).")
+    print(f"  Shadow Step skill + QTE = {Warna.CYAN}95% dodge chance{Warna.RESET} — hampir kebal!")
 
     print()
     print(f"  {Warna.KUNING + Warna.TERANG}⚡ MODE OVERTIME:{Warna.RESET}")
@@ -199,10 +205,10 @@ def tutorial_skills():
     print()
     print(f"  {Warna.KUNING}Energy (EN):{Warna.RESET}")
     print(f"  Skill butuh energy. Kamu mulai dengan {Warna.CYAN}30 EN{Warna.RESET} per pertarungan.")
-    print(f"  Energy regen otomatis +{Warna.CYAN}5 EN{Warna.RESET} tiap giliran.")
-    print(f"  Lewati giliran [P] untuk regen lebih cepat.")
+    print(f"  Energy regen otomatis +{Warna.CYAN}2 EN{Warna.RESET} tiap giliran — hemat penggunaannya!")
+    print(f"  Lewati giliran [P] untuk regen +5 EN lebih cepat.")
     print(f"  {Warna.MERAH}Perhatian:{Warna.RESET} Mengaktifkan OVERTIME menguras 90% energy!")
-    print(f"  Pikirkan matang-matang sebelum menekan [OT].")
+    print(f"  Pikirkan matang-matang sebelum menekan [OT] — energy susah dipulihkan.")
 
     print()
     separator()
@@ -289,7 +295,6 @@ def tutorial_chapter():
 
 
 def tutorial_lengkap():
-    # Menampilkan menu tutorial lengkap dengan 4 bagian
     clear()
     separator()
     print(f"{Warna.KUNING + Warna.TERANG}  SELAMAT DATANG DI CURSED ISLAND ESCAPE!{Warna.RESET}".center(70))
@@ -347,6 +352,9 @@ def tutorial_lengkap():
     print(f"  - Skill = buff/debuff/heal strategis, bukan spam")
     print(f"  - Temui NPC [N] → sidequest [S] → key item → buka chapter baru")
     print(f"  - Pantau {Warna.KUNING}[O]{Warna.RESET} chapter obj, {Warna.CYAN}[S]:x/5{Warna.RESET} sidequest, {Warna.PUTIH}[M]{Warna.RESET} main quest di HUD")
+    print(f"  - QTE Dodge: tekan tombol yang ditampilkan saat musuh mau serang!")
+    print(f"  - {Warna.UNGU}Secret:{Warna.RESET} di Ch.6, temukan Epstein Phone → NPC rahasia bisa muncul...")
+    print(f"  - {Warna.ABU_GELAP}(Psst: Joker mungkin membantumu jika nasib sedang buruk...){Warna.RESET}")
     print(f"  - Save (X) sering, terutama sebelum masuk area berbahaya!")
     print()
     print(f"  {Warna.HIJAU}Selamat berpetualangan — temukan jalan keluarmu!{Warna.RESET}")
