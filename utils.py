@@ -17,7 +17,7 @@ def _setup_encoding():
     return encoding_success
 
 def get_term_width(default=80):
-    """Ambil lebar terminal saat ini — auto-update tiap dipanggil."""
+    """Terminal width — re-queried each call so it auto-updates on resize."""
     return max(40, shutil.get_terminal_size(fallback=(default, 24)).columns)
 
 def check_terminal_compatibility():
@@ -102,17 +102,26 @@ def wait_input(prompt="[ENTER untuk lanjut] "):
         pass
 
 def separator(char=None, length=None):
-    """Separator otomatis fit ke lebar terminal."""
+    # Public: auto-fit separator to current terminal width
     if char is None:
         char = '─'
     if length is None:
         length = max(40, get_term_width() - 2)
-    print(f"{Warna.ABU_GELAP}{char * length}{Warna.RESET}")
+    try:
+        print(f"{Warna.ABU_GELAP}{char * length}{Warna.RESET}")
+    except UnicodeEncodeError:
+        print('-' * length)
 
 def header(text):
+    # Public: section header with separators
     separator()
     print(f"{Warna.CYAN}{text}{Warna.RESET}")
     separator()
+
+def center(text, width=None):
+    # Public: center text in terminal width
+    w = width or get_term_width()
+    return text.center(w)
 
 def confirm_action(prompt="Yakin? (y/n): "):
     while True:

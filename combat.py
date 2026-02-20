@@ -389,14 +389,108 @@ def show_hand(hand, selectable=True):
     print()
 
 # Loop utama combat
-def run_combat(player_stats, enemy, inventory, party_members=None):
-    """Card-based combat system."""
+def _show_boss_retry_menu(retries_left, boss_name, Warna=Warna):
+    """Tampilkan menu retry/give up saat player kalah lawan boss."""
+    print(f"\n{Warna.MERAH + Warna.TERANG}")
+    print(f"  ╔══════════════════════════════════════════╗")
+    print(f"  ║          ⚠  KALAH DARI BOSS...          ║")
+    print(f"  ╚══════════════════════════════════════════╝")
+    print(f"{Warna.RESET}")
+    print(f"  {Warna.MERAH}Kamu dikalahkan oleh {boss_name}.{Warna.RESET}")
+    print(f"  {Warna.KUNING}Retry tersisa: {retries_left}/3{Warna.RESET}\n")
+    print(f"  {Warna.HIJAU}[1] RETRY{Warna.RESET}  — Ulang pertarungan (HP dipulihkan 70%)")
+    print(f"  {Warna.MERAH}[2] GIVE UP{Warna.RESET} — Mundur ke Checkpoint terakhir\n")
+    while True:
+        try:
+            ch = input(f"  {Warna.PUTIH}Pilihan (1/2): {Warna.RESET}").strip()
+            if ch == '1':
+                return 'retry'
+            elif ch == '2':
+                return 'give_up'
+        except (KeyboardInterrupt, EOFError):
+            return 'give_up'
+
+
+def run_combat(player_stats, enemy_data, inventory, party_members=None):
+    """Card-based combat system dengan Boss Retry (max 3x) dan Checkpoint support."""
+    import copy
+
+    is_boss = enemy_data.get('boss', False)
+    MAX_RETRIES = 3
+    retries_left = MAX_RETRIES
+
+    # ── SNAPSHOT sebelum boss untuk retry / checkpoint ─────────────────────
+    # Snapshot menyimpan: HP, energy, dan salinan inventory
+    # Retry     → restore HP saja (partial)
+    # Give Up / retries habis → full restore (HP + inventory) → return 'checkpoint'
+    if is_boss:
+        snap_hp        = player_stats.get('hp', player_stats.get('max_hp', 100))
+        snap_energy    = player_stats.get('energy', 30)
+        snap_inventory = list(inventory)
+
+    # ── OUTER RETRY LOOP ───────────────────────────────────────────────────
+    while True:
+        result = _run_single_combat(player_stats, enemy_data, inventory, party_members)
+
+        if result != 'player_dead' or not is_boss:
+            return result
+
+        # ── Player mati lawan boss ─────────────────────────────────────────
+        boss_name = enemy_data.get('name', 'Boss')
+
+        if retries_left > 0:
+            retries_left -= 1
+            choice = _show_boss_retry_menu(retries_left, boss_name)
+
+            if choice == 'retry':
+                # Partial restore: HP ke 70% max (bukan full, ada konsekuensi)
+                max_hp = player_stats.get('max_hp', 100)
+                player_stats['hp']     = max(1, int(max_hp * 0.70))
+                player_stats['energy'] = snap_energy
+                # Bersihkan buff/debuff sisa
+                player_stats['_buffs'] = {}
+                player_stats['_skill_cooldowns'] = {}
+                print(f"\n  {Warna.HIJAU}HP dipulihkan ke {player_stats['hp']}/{max_hp}. "
+                      f"Bersiap ulang!{Warna.RESET}")
+                time.sleep(1.5)
+                continue   # ulang combat loop
+            else:
+                # Give Up → full checkpoint restore
+                player_stats['hp']     = max(1, snap_hp)
+                player_stats['energy'] = snap_energy
+                player_stats['_buffs'] = {}
+                player_stats['_skill_cooldowns'] = {}
+                inventory.clear()
+                inventory.extend(snap_inventory)
+                print(f"\n  {Warna.KUNING}Mundur ke Checkpoint terakhir...{Warna.RESET}")
+                time.sleep(1.5)
+                return 'checkpoint'
+        else:
+            # Retries habis → paksa checkpoint
+            player_stats['hp']     = max(1, snap_hp)
+            player_stats['energy'] = snap_energy
+            player_stats['_buffs'] = {}
+            player_stats['_skill_cooldowns'] = {}
+            inventory.clear()
+            inventory.extend(snap_inventory)
+            print(f"\n{Warna.MERAH + Warna.TERANG}")
+            print(f"  ╔══════════════════════════════════════════╗")
+            print(f"  ║   ❌ RETRY HABIS — KEMBALI KE CHECKPOINT ║")
+            print(f"  ╚══════════════════════════════════════════╝")
+            print(f"{Warna.RESET}")
+            print(f"  {Warna.KUNING}Inventory dipulihkan ke kondisi sebelum battle.{Warna.RESET}")
+            time.sleep(2)
+            return 'checkpoint'
+
+
+def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
+    """Internal: satu sesi combat (dipanggil oleh run_combat dengan retry wrapper)."""
     import copy
     
     # Gunakan player_stats langsung (BUKAN deepcopy) supaya HP
     # otomatis ter-sync balik ke caller setelah combat selesai.
     player = player_stats
-    enemy = copy.deepcopy(enemy)
+    enemy = copy.deepcopy(enemy_data)
     
     # Initialize buffs at start
     player['_buffs'] = {}
@@ -714,9 +808,11 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
                                     f"ATK +55% selama 2 giliran!{Warna.RESET}")
 
                 # ATK BUFF + ENERGY (Ignatius overclock)
+                # en_gain dibatasi +12 (flat recovery) agar tidak infinite loop:
+                # Overclock biaya 6 EN, regen 12 EN → net +6 EN max, bukan full restore
                 elif effect == 'buff_atk_energy':
                     buffs['atk_up'] = 2
-                    en_gain = 20
+                    en_gain = 12   # FIX: dikurangi dari 20 → 12 (cegah spam loop)
                     player['energy'] = min(max_energy, player.get('energy', 0) + en_gain)
                     action_taken = (f"{Warna.CYAN}⚡ {skill['name']}: "
                                     f"ATK +60% 2t + "
@@ -1120,14 +1216,24 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
         if player['hp'] <= 0:
             break
         
-        # Regen energy player tiap turn
-        regen_per_turn = 2
-        player['energy'] = min(player.get('max_energy', 30),
-                               player.get('energy', 0) + regen_per_turn)
-        # Tick buff durasi player
+        # ── INDEPENDENT COOLDOWN & ENERGY REGEN ─────────────────────────────
+        # FIX: Cooldown dan energy regen HANYA berjalan saat player menyerang (main kartu)
+        # atau Pass. Saat player pakai Skill / Discard, cooldown skill LAIN tidak boleh
+        # berkurang — mencegah efek "EMP Stun mengurangi CD Overclock" dan infinite loop.
+        if not skip_enemy_turn:
+            regen_per_turn = 2
+            player['energy'] = min(player.get('max_energy', 30),
+                                   player.get('energy', 0) + regen_per_turn)
+            # Tick cooldown skill player — HANYA pada turn serangan/pass
+            cooldowns = player.get('_skill_cooldowns', {})
+            for sk_name in list(cooldowns.keys()):
+                if cooldowns[sk_name] > 0:
+                    cooldowns[sk_name] -= 1
+
+        # Tick buff durasi player (setiap turn, termasuk skill/discard)
         _tick_buffs(player)
 
-        # Tick overtime — kurangi turns jika sedang aktif
+        # Tick overtime — kurangi turns jika sedang aktif (time-based, bukan attack-based)
         if overtime_active:
             overtime_turns_left -= 1
             if overtime_turns_left <= 0:
@@ -1135,12 +1241,6 @@ def run_combat(player_stats, enemy, inventory, party_members=None):
                 overtime_turns_left = 0
                 print(f"\n  {Warna.ABU_GELAP}Overtime berakhir.{Warna.RESET}")
                 time.sleep(0.8)
-
-        # Tick cooldown skill player
-        cooldowns = player.get('_skill_cooldowns', {})
-        for sk_name in list(cooldowns.keys()):
-            if cooldowns[sk_name] > 0:
-                cooldowns[sk_name] -= 1
 
         # Tick debuff musuh (DEF & ATK) — kembalikan nilai setelah habis
         if enemy.get('_def_debuff_turns', 0) > 0:

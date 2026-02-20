@@ -248,8 +248,7 @@ class GameMap:
 
         self.place_exit(12, self.height - 2, "island", "Kembali ke Pulau")
 
-        # Bran Edwards — penjual
-        self.npcs.append({'x': 12, 'y': 4, 'id': 'bran_edwards'})
+        # Bran Edwards hanya diakses via tombol [B] / Walkie Talkie — tidak ada NPC fisik
 
         # Beberapa item gratis di safe zone
         self.place_item(5,  8,  "Health Potion")
@@ -444,10 +443,17 @@ class GameMap:
                     self.place_boss_door(self.width // 2, self.height // 2, "epstein_boss", "FINAL BOSS")
 
     def check_and_spawn_bosses(self, gs):
-        """Check and spawn bosses based on chapter and character."""
+        # Public: check and spawn bosses based on chapter and character.
         char_id = gs.player_character
         chapter = int(gs.story_flags.get('current_chapter', 1))
         self._spawn_boss_for_chapter(chapter, char_id, gs)
+
+        # Strict spawn: remove boss_doors whose boss_id is already in defeated flags
+        defeated_ids = set(gs.story_flags.get('defeated_boss_ids', []))
+        self.boss_doors = [
+            d for d in self.boss_doors
+            if d['boss_id'] not in defeated_ids
+        ]
 
     def add_enemy_patrol(self, x, y, enemy_id, path=None):
         """Tambahkan enemy yang DIAM di tempat (stay). Path diabaikan untuk cegah bug render."""
@@ -1241,6 +1247,17 @@ def handle_hasil(hasil, gs, gm):
 
             elif ret == 'player_dead':
                 return 'game_over'
+            elif ret == 'checkpoint':
+                # Boss retry habis atau Give Up — load checkpoint
+                if hasattr(gs, 'load_checkpoint'):
+                    gs.load_checkpoint()
+                    # Sync player_stats ke GameState setelah checkpoint load
+                    player_stats['hp']     = gs.hp
+                    player_stats['energy'] = gs.energy
+                print(f"\n  {Warna.KUNING}Kembali ke checkpoint terakhir...{Warna.RESET}")
+                time.sleep(1)
+                # Kembalikan ke eksplorasi (bukan game_over)
+                return 'checkpoint'
 
             try:
                 from character_routes import check_candala_encounter
@@ -1476,6 +1493,10 @@ def handle_hasil(hasil, gs, gm):
                                 '_id': mid,
                             })
 
+                    # ── Simpan checkpoint SEBELUM boss fight ──────────────────────
+                    if hasattr(gs, 'save_checkpoint'):
+                        gs.save_checkpoint(location=gs.current_location)
+
                     ret = run_combat(player_stats, boss, gs.inventory, boss_party_dicts)
 
                     # HP dan energy di-sync setelah boss combat
@@ -1485,17 +1506,37 @@ def handle_hasil(hasil, gs, gm):
 
                     if ret == 'player_dead':
                         return 'game_over'
+                    elif ret == 'checkpoint':
+                        # Boss retry habis atau Give Up → load checkpoint
+                        if hasattr(gs, 'load_checkpoint'):
+                            gs.load_checkpoint()
+                            player_stats['hp']     = gs.hp
+                            player_stats['energy'] = gs.energy
+                        print(f"\n  {Warna.KUNING}Kembali ke checkpoint terakhir...{Warna.RESET}")
+                        time.sleep(1)
+                        return 'checkpoint'
                     elif ret == 'victory':
-                        # Check if this is a final boss
-                        if boss.get('final_boss') or boss.get('id') == 'epstein_boss':
-                            return 'victory'
-                        
-                        # Set special flags based on boss ID for character quests
+                        # Victory Sync: record defeated boss, remove from map
                         boss_id = boss.get('id', '')
+                        if boss_id:
+                            defeated_ids = gs.story_flags.get('defeated_boss_ids', [])
+                            if boss_id not in defeated_ids:
+                                defeated_ids.append(boss_id)
+                            gs.story_flags['defeated_boss_ids'] = defeated_ids
+                            # Remove from map immediately
+                            gm.boss_doors = [d for d in gm.boss_doors if d['boss_id'] != boss_id]
+
+                        # Check if this is a final boss
+                        if boss.get('final_boss') or boss_id == 'epstein_boss':
+                            gs.save_to_file()
+                            return 'victory'
+
+                        # Set special flags based on boss ID for character quests
                         if boss_id == 'theater_master' or 'theater' in boss_id.lower():
                             gs.story_flags['defeat_theater_guard'] = True
-                        
+
                         gs.bosses_defeated += 1
+                        gs.save_to_file()  # auto-save after boss kill
 
                         char_id = gs.player_character
                         chapter = int(gs.story_flags.get('current_chapter', 1))

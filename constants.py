@@ -33,7 +33,7 @@ DEFAULT_TERMINAL_WIDTH = 80
 DEFAULT_TERMINAL_HEIGHT = 24
 
 # Game Settings
-GAME_VERSION = "0.3"
+GAME_VERSION = "0.3.1"
 SAVE_FILE = "data.txt"
 CONFIG_FILE = "card_dialogs.json"
 

@@ -19,9 +19,18 @@ from constants import (
     GAME_VERSION,
 )
 
-# Field yang perlu konversi set<->list saat save/load
-_SET_FIELDS = ('visited_locations', 'npcs_recruited', 'card_dialogs_seen')
+# Data Sync
+_SET_FIELDS  = ('visited_locations', 'npcs_recruited', 'card_dialogs_seen')
 _SKIP_FIELDS = ('start_time',)
+
+# 5-slot save files: slot 0→data.txt, slot 1→data1.txt, …, slot 4→data4.txt
+SLOT_FILES = {
+    0: "data.txt",
+    1: "data1.txt",
+    2: "data2.txt",
+    3: "data3.txt",
+    4: "data4.txt",
+}
 
 class GameState:
 
@@ -102,6 +111,13 @@ class GameState:
         self.save_version = GAME_VERSION
         self.last_save = None
         self.game_completed = False
+        self.current_slot = 0  # Public: active save slot (0–4)
+
+        # ── CHECKPOINT SYSTEM ──────────────────────────────────────────────
+        # Checkpoint di-set otomatis sebelum boss fight (dipanggil dari exploration.py)
+        # load_checkpoint() mengembalikan pemain ke state sebelum boss
+        self.checkpoint_data = {}     # snapshot state sebelum boss
+        self.boss_retry_count = 0     # jumlah retry boss saat ini (tracking per-boss)
 
     def add_party_member(self, character_id, character_data):
         if character_id not in self.party_members and len(self.party_members) < MAX_PARTY_SIZE:
@@ -282,11 +298,64 @@ class GameState:
         minutes = (self.total_playtime_seconds % 3600) // 60
         return f"{hours}h {minutes}m"
 
-    def save_to_file(self, filename="data.txt"):
+    def save_checkpoint(self, location=None):
+        """
+        Simpan checkpoint sebelum boss fight.
+        Menyimpan: posisi/lokasi, HP, energy, inventory, key_items, story_flags.
+        Dipanggil dari exploration.py SEBELUM run_combat untuk boss.
+        """
+        import copy
+        self.checkpoint_data = {
+            'location':     location or self.current_location,
+            'hp':           self.hp,
+            'max_hp':       self.max_hp,
+            'energy':       self.energy,
+            'max_energy':   self.max_energy,
+            'inventory':    list(self.inventory),
+            'key_items':    list(self.key_items),
+            'story_flags':  copy.deepcopy(self.story_flags),
+            'dollars':      self.dollars,
+            'xp':           self.xp,
+            'level':        self.level,
+        }
+        self.boss_retry_count = 0   # reset retry counter untuk boss baru
+
+    def load_checkpoint(self):
+        """
+        Kembalikan state ke kondisi sebelum boss (checkpoint terakhir).
+        Dipanggil saat run_combat mengembalikan 'checkpoint'.
+        Returns True jika berhasil, False jika tidak ada checkpoint tersimpan.
+        """
+        import copy
+        if not self.checkpoint_data:
+            self.hp = max(1, int(self.max_hp * 0.50))
+            return False
+
+        data = self.checkpoint_data
+        self.current_location  = data.get('location', self.current_location)
+        self.hp                = max(1, data.get('hp', self.max_hp))
+        self.max_hp            = data.get('max_hp', self.max_hp)
+        self.energy            = data.get('energy', self.max_energy)
+        self.max_energy        = data.get('max_energy', self.max_energy)
+        self.inventory         = list(data.get('inventory', self.inventory))
+        self.key_items         = list(data.get('key_items', self.key_items))
+        self.story_flags       = copy.deepcopy(data.get('story_flags', self.story_flags))
+        self.dollars           = data.get('dollars', self.dollars)
+        self.xp                = data.get('xp', self.xp)
+        return True
+
+
+    def get_slot_filename(self):
+        # Public: resolve active slot → filename
+        return SLOT_FILES.get(self.current_slot, "data.txt")
+
+    def save_to_file(self, filename=None):
         """Save game state dengan sistem anti-tamper yang sophisticated:"""
+        # Data Sync: resolve filename from active slot if not explicit
+        if filename is None:
+            filename = self.get_slot_filename()
+        backup_name = f"{filename}.bak"
         try:
-            # Create backup of existing save
-            backup_name = f"{filename}.bak"
             if os.path.exists(filename):
                 shutil.copy2(filename, backup_name)
 
@@ -403,8 +472,10 @@ class GameState:
             print("Save file has been modified and is invalid.")
             print("File will be deleted.\n")
 
-    def load_from_file(self, filename="data.txt"):
-        """Load game state dengan anti-tamper protection:"""
+    def load_from_file(self, filename=None):
+        # Data Sync: resolve filename from active slot if not explicit
+        if filename is None:
+            filename = self.get_slot_filename()
         try:
             if not os.path.exists(filename):
                 backup_name = f"{filename}.bak"
@@ -458,13 +529,15 @@ class GameState:
                     
                     return False, "Save file was tampered with and deleted. Please restart from beginning."
 
-                # Load valid data
+                # Private: convert set-fields first
                 for field in _SET_FIELDS:
                     if field in save_data:
                         setattr(self, field, set(save_data[field]))
 
+                # Private: load remaining fields, skip SET_FIELDS and metadata
+                _skip_on_load = set(_SET_FIELDS) | set(_SKIP_FIELDS)
                 for key, value in save_data.items():
-                    if not key.startswith('_') and key not in _SKIP_FIELDS:
+                    if not key.startswith('_') and key not in _skip_on_load:
                         try:
                             setattr(self, key, value)
                         except Exception:
@@ -498,8 +571,10 @@ class GameState:
         except Exception as e:
             return False, f"Failed to load: {e}"
 
-    def get_save_summary(self, filename="data.txt"):
-        """Extract save summary dari file yang di-encrypt dengan anti-tamper."""
+    def get_save_summary(self, filename=None):
+        # Public: extract save info without full load
+        if filename is None:
+            filename = self.get_slot_filename()
         try:
             if not os.path.exists(filename):
                 return None

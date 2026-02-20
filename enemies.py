@@ -9,11 +9,11 @@ ENEMIES = {
         "id": "guard_novice",
         "name": "Security Guard - Novice",
         "level": 1,
-        "hp": 80,
-        "max_hp": 80,
-        "attack": 12,
-        "defense": 8,
-        "speed": 12,
+        "hp": 94,       # buffed dari 80 (+17%)
+        "max_hp": 94,
+        "attack": 14,   # buffed dari 12
+        "defense": 9,   # buffed dari 8
+        "speed": 13,    # buffed dari 12
         "xp": 15,
         "dollars": 15,
         "desc": "Nervous rookie guard",
@@ -30,11 +30,11 @@ ENEMIES = {
         "id": "guard_veteran",
         "name": "Security Guard - Veteran",
         "level": 3,
-        "hp": 120,
-        "max_hp": 120,
-        "attack": 16,
-        "defense": 14,
-        "speed": 15,
+        "hp": 140,      # buffed dari 120 (+17%)
+        "max_hp": 140,
+        "attack": 19,   # buffed dari 16
+        "defense": 16,  # buffed dari 14
+        "speed": 17,    # buffed dari 15
         "xp": 30,
         "dollars": 25,
         "desc": "Experienced guard",
@@ -51,11 +51,11 @@ ENEMIES = {
         "id": "guard_elite",
         "name": "Elite Security Guard",
         "level": 5,
-        "hp": 150,
-        "max_hp": 150,
-        "attack": 20,
-        "defense": 20,
-        "speed": 18,
+        "hp": 176,      # buffed dari 150 (+17%)
+        "max_hp": 176,
+        "attack": 23,   # buffed dari 20
+        "defense": 23,  # buffed dari 20
+        "speed": 21,    # buffed dari 18
         "xp": 50,
         "dollars": 40,
         "desc": "Elite military background guard",
@@ -72,11 +72,11 @@ ENEMIES = {
         "id": "mercenary_thug",
         "name": "Mercenary Thug",
         "level": 2,
-        "hp": 100,
-        "max_hp": 100,
-        "attack": 20,
-        "defense": 10,
-        "speed": 16,
+        "hp": 117,      # buffed dari 100 (+17%)
+        "max_hp": 117,
+        "attack": 23,   # buffed dari 20
+        "defense": 12,  # buffed dari 10
+        "speed": 18,    # buffed dari 16
         "xp": 25,
         "dollars": 30,
         "desc": "Hired muscle",
@@ -652,34 +652,34 @@ def get_enemy_for_location(location, chapter=1):
     
     if chapter == 1:
         location_enemies = {
-            "island": ["guard_novice"],
-            "prison_north": ["guard_novice"],
+            "island":       ["guard_novice", "guard_novice"],         # +1 extra patrol
+            "prison_north": ["guard_novice", "guard_novice"],
             "prison_south": ["guard_novice"],
-            "mansion": ["guard_novice", "mansion_guard"],
-            "dock": ["guard_novice", "mansion_guard"],
-            "theater": ["guard_novice"],
-            "beach": ["guard_novice"],
-            "basement": ["guard_novice"],
+            "mansion":      ["guard_novice", "mansion_guard", "guard_novice"],  # +1 extra
+            "dock":         ["guard_novice", "mansion_guard"],
+            "theater":      ["guard_novice"],
+            "beach":        ["guard_novice"],
+            "basement":     ["guard_novice", "tech_guard"],           # +tech_guard
         }
     elif chapter == 2:
         location_enemies = {
-            "island": ["guard_novice", "guard_veteran"],
+            "island":       ["guard_novice", "guard_veteran", "guard_veteran"],  # +1 extra
             "prison_north": ["guard_novice", "guard_veteran"],
-            "prison_south": ["guard_novice", "guard_veteran"],
-            "mansion": ["mansion_guard", "guard_veteran", "tech_guard"],
-            "dock": ["guard_veteran", "mercenary_thug"],
-            "theater": ["guard_veteran"],
-            "beach": ["guard_veteran"],
-            "basement": ["guard_veteran", "tech_guard"],
+            "prison_south": ["guard_novice", "guard_veteran", "mercenary_thug"],  # +merc
+            "mansion":      ["mansion_guard", "guard_veteran", "tech_guard", "guard_elite"],  # +elite
+            "dock":         ["guard_veteran", "mercenary_thug", "guard_veteran"],  # +1 extra
+            "theater":      ["guard_veteran", "mercenary_thug"],      # +merc
+            "beach":        ["guard_veteran", "guard_veteran"],       # +1 extra
+            "basement":     ["guard_veteran", "tech_guard", "guard_elite"],  # +elite
         }
     else:
         location_enemies = {
-            "island": ["guard_veteran", "mercenary_thug"],
-            "prison_north": ["guard_veteran"],
-            "prison_south": ["guard_veteran"],
-            "mansion": ["guard_veteran", "guard_elite", "tech_guard"],
-            "dock": ["guard_elite", "mercenary_sniper"],
-            "laboratory": ["scientist", "guard_elite"],
+            "island":       ["guard_veteran", "mercenary_thug", "guard_elite"],  # +elite
+            "prison_north": ["guard_veteran", "guard_elite"],
+            "prison_south": ["guard_veteran", "mercenary_thug"],      # +merc
+            "mansion":      ["guard_veteran", "guard_elite", "tech_guard", "mercenary_sniper"],  # +sniper
+            "dock":         ["guard_elite", "mercenary_sniper", "guard_elite"],  # +extra
+            "laboratory":   ["scientist", "guard_elite", "scientist"],  # +scientist
         }
     
     enemies = location_enemies.get(location, ["guard_novice"])
@@ -701,32 +701,32 @@ def get_boss_for_location(location):
 # Probabilitas spawn musuh per lokasi per chapter
 SPAWN_RATES = {
     1: {
-        "island": 0.08,
-        "prison_north": 0.10,
-        "prison_south": 0.10,
-        "mansion": 0.12,
-        "dock": 0.12,
-        "theater": 0.10,
-        "beach": 0.08,
-        "basement": 0.12,
+        "island":       0.10,   # naik dari 0.08
+        "prison_north": 0.12,   # naik dari 0.10
+        "prison_south": 0.12,
+        "mansion":      0.15,   # naik dari 0.12
+        "dock":         0.15,
+        "theater":      0.12,
+        "beach":        0.10,
+        "basement":     0.15,
     },
     2: {
-        "island": 0.12,
-        "prison_north": 0.15,
-        "prison_south": 0.15,
-        "mansion": 0.18,
-        "dock": 0.20,
-        "theater": 0.15,
-        "beach": 0.12,
-        "basement": 0.18,
+        "island":       0.15,   # naik dari 0.12
+        "prison_north": 0.18,
+        "prison_south": 0.18,
+        "mansion":      0.22,   # naik dari 0.18
+        "dock":         0.25,   # naik dari 0.20
+        "theater":      0.18,
+        "beach":        0.15,
+        "basement":     0.22,
     },
     3: {
-        "island": 0.15,
-        "prison_north": 0.20,
-        "prison_south": 0.20,
-        "mansion": 0.25,
-        "dock": 0.30,
-        "laboratory": 0.28,
+        "island":       0.18,   # naik dari 0.15
+        "prison_north": 0.23,
+        "prison_south": 0.23,
+        "mansion":      0.28,   # naik dari 0.25
+        "dock":         0.35,   # naik dari 0.30
+        "laboratory":   0.32,
     }
 }
 
@@ -750,16 +750,13 @@ def get_boss_count():
 
 
 def scale_enemy_for_chapter(enemy, chapter, player_level=1):
-    """
-    Scale enemy stats berdasarkan chapter dan player level.
-    Semakin tinggi chapter/level, musuh makin kuat.
-    Factor: tiap chapter +15% stats, tiap 3 level player +10%.
-    """
+    # Private: scale enemy stats — Hard Mode locked at 1.2x on top of chapter scaling
     import copy
     e = copy.deepcopy(enemy)
-    ch_factor  = 1.0 + (max(1, int(chapter)) - 1) * 0.15
-    lv_factor  = 1.0 + (max(1, int(player_level)) // 3) * 0.10
-    total      = ch_factor * lv_factor
+    ch_factor    = 1.0 + (max(1, int(chapter)) - 1) * 0.15
+    lv_factor    = 1.0 + (max(1, int(player_level)) // 3) * 0.10
+    hard_factor  = 1.2   # Hard Mode locked
+    total        = ch_factor * lv_factor * hard_factor
 
     e['hp']      = max(e.get('hp', 50),      int(e['hp'] * total))
     e['max_hp']  = e['hp']
@@ -771,7 +768,7 @@ def scale_enemy_for_chapter(enemy, chapter, player_level=1):
 
 
 def create_enemy_instance(enemy_id, chapter=1, player_level=1):
-    """Buat enemy instance dengan scaling berdasarkan chapter & player level."""
+    # Public: create enemy instance with chapter/level scaling + Hard Mode 1.2x
     if enemy_id in ENEMIES:
         base = ENEMIES[enemy_id].copy()
     elif enemy_id in BOSSES:
