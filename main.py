@@ -228,31 +228,7 @@ def tampilkan_kredit():
     clear()
     header("KREDIT")
     
-    print(f"""
-{Warna.KUNING}CURSED ISLAND ESCAPE v{VERSI}{Warna.RESET}
-
-{Warna.CYAN}Developers:{Warna.RESET}
-  - Ahmad Haikal Ramadhan
-  - Alif Rizky Ramadhan Atmadja
-  - M Vallerian Aprilio Gunawan
-  - Ignatius Nino Jumantoro
-  - Evan Arganta
-
-{Warna.HIJAU}SMKN 2 JAKARTA Class X RPL 1{Warna.RESET}
-
-{Warna.CYAN}Inspirasi/Referensi:{Warna.RESET}
-  - Sword and Poker
-  - Final Fantasy Adventure
-  - Atari Adventure
-  - The Legend of Zelda
-  - Balatro
-  - jeffrey Epstein Case and Files #justiceforvictim
-
-{Warna.CYAN}Engine:{Warna.RESET}
-  Python 3.6+ CLI
-
-{Warna.ABU_GELAP}
-    """)
+    print(f)
     
     wait()
 
@@ -311,7 +287,6 @@ def pilih_slot(gs, aksi="load"):
             print(f"{Warna.MERAH}Masukkan angka.{Warna.RESET}")
         except (KeyboardInterrupt, EOFError):
             return False
-
 
 def muat_game(gs):
     # Public: load game from selected slot
@@ -404,12 +379,6 @@ def menu_utama():
             if not pilih_slot(gs, aksi="save"):
                 continue
 
-            # Pick save slot for this new game
-            slot = menu_pilih_slot(gs, mode='save')
-            if slot is None:
-                continue
-            gs.current_slot = slot
-            
             clear()
             display_backstory(gs.player_character)
             wait()

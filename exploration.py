@@ -41,6 +41,8 @@ QUEST_ITEMS = {
     # General progression
     'Epstein Phone', 'Rekaman Candala', 'USB Evidence Drive',
     'Catatan Sandi Haikaru', 'Rekaman Distraksi Aolinh', 'EMP Device',
+    # Fix: Ao Linh Route — quest clue item
+    'Gantungan Kunci Musik',
 }
 
 def is_quest_item(item_name):
@@ -113,10 +115,7 @@ class GameMap:
         self.enemy_counter = 0
 
     def _validate_spawn_point(self, x, y):
-        """
-        Cari tile walkable terdekat dari (x, y).
-        Dibatasi MAX_SEARCH_RADIUS=8 untuk cegah loop besar yang hang CPU.
-        """
+        
         MAX_SEARCH_RADIUS = 8  # Cukup untuk semua map 25x18
         if 0 <= x < self.width and 0 <= y < self.height and self.tiles[y][x].walkable:
             return x, y
@@ -160,11 +159,12 @@ class GameMap:
 
         # Di island hub (chapter 2), karakter lain mungkin terlihat
         # Haikaru di penjara utara, Aolinh di teater — jangan spawn di island
-        self.place_item(10, 8,  "Health Potion")
+        # Dynamic: potions/bandages respawn every 7 minutes; key items permanent
+        self.place_item(10, 8,  "Health Potion",    respawn_delay=420)
         self.place_item(15, 8,  "Keycard Level 1")
-        self.place_item(5,  12, "Bandage")
-        self.place_item(20, 11, "Med Kit")
-        self.place_item(12, 6,  "Health Potion")
+        self.place_item(5,  12, "Bandage",           respawn_delay=420)
+        self.place_item(20, 11, "Med Kit",           respawn_delay=600)
+        self.place_item(12, 6,  "Health Potion",     respawn_delay=420)
 
         self.player_x, self.player_y = self._validate_spawn_point(12, 12)
 
@@ -229,10 +229,7 @@ class GameMap:
         self.player_x, self.player_y = self._validate_spawn_point(12, 3)
 
     def generate_safe_zone(self):
-        """
-        Safe Zone — area aman tanpa musuh.
-        Ada toko Bran Edwards dan beberapa item gratis.
-        """
+        
         for y in range(self.height):
             for x in range(self.width):
                 if x == 0 or x == self.width - 1 or y == 0 or y == self.height - 1:
@@ -250,17 +247,15 @@ class GameMap:
 
         # Bran Edwards hanya diakses via tombol [B] / Walkie Talkie — tidak ada NPC fisik
 
-        # Beberapa item gratis di safe zone
-        self.place_item(5,  8,  "Health Potion")
-        self.place_item(19, 8,  "Bandage")
+        # Dynamic: consumables respawn; key items permanent
+        self.place_item(5,  8,  "Health Potion",  respawn_delay=420)
+        self.place_item(19, 8,  "Bandage",         respawn_delay=420)
         self.place_item(12, 12, "Info Pulau")
 
         self.player_x, self.player_y = self._validate_spawn_point(12, self.height - 4)
 
     def generate_dock(self):
-        """
-        Dock — area pelabuhan dengan musuh.
-        """
+        
         for y in range(self.height):
             for x in range(self.width):
                 if x < 10:
@@ -339,6 +334,7 @@ class GameMap:
         self.place_npc(6, 10, "arganta")
         self.place_item(6,  9,  "Health Potion")
         self.place_item(15, 6,  "Bandage")
+        self.place_item(8,  4,  "Gantungan Kunci Musik")  # Fix: Ao Linh Route — clue item
         self.place_item(20, 9,  "Med Kit")
         if self.current_player_char != "arganta":
             self.place_item(15, 9, "Kompas Nonno Arganta")
@@ -405,10 +401,7 @@ class GameMap:
             })
 
     def _spawn_boss_for_chapter(self, chapter, char_id, gs):
-        """Spawn bosses based on chapter and character.
-        BUG FIX: ch1 boss sekarang selalu di-spawn di map yang sesuai (tidak butuh flag).
-        Boss disesuaikan dengan CHARACTER_MAIN_QUESTS boss_id per karakter.
-        """
+        
         # Boss ch1 per karakter — sesuai dengan CHARACTER_MAIN_QUESTS
         CH1_BOSSES = {
             "vio":      ("maxwell_enforcer",  8, self.height // 2, "Maxwell Enforcer"),
@@ -479,21 +472,20 @@ class GameMap:
                 if valid_spot:
                     self.npcs.append({'x': valid_spot[0], 'y': valid_spot[1], 'id': npc_id})
 
-    def place_item(self, x, y, item):
+    def place_item(self, x, y, item, respawn_delay=0):
+        # respawn_delay: seconds until item reappears (0 = permanent pickup)
         if 0 <= x < self.width and 0 <= y < self.height:
-            # If tile is unwalkable, find nearest walkable spot
             if not self.tiles[y][x].walkable:
                 spot = self._validate_spawn_point(x, y)
                 if spot:
                     x, y = spot
                 else:
                     return
-            # Don't place on same tile as player, NPC, or enemy
             if any((n['x'] == x and n['y'] == y) for n in self.npcs):
                 x = min(x + 1, self.width - 2)
             if any((e['x'] == x and e['y'] == y) for e in self.enemies):
                 x = max(x - 1, 1)
-            self.items.append({'x': x, 'y': y, 'item': item})
+            self.items.append({'x': x, 'y': y, 'item': item, 'respawn_delay': respawn_delay})
 
     def attempt_move(self, dx, dy, gs):
         nx = self.player_x + dx
@@ -509,6 +501,11 @@ class GameMap:
             if (nx, ny) == (exit_data['x'], exit_data['y']):
                 self.player_x, self.player_y = nx, ny
                 self.discovered.add((nx, ny))
+                # Event: Door Checkpoint — save state before map transition
+                if hasattr(gs, 'save_checkpoint'):
+                    gs.save_checkpoint(location=gs.current_location)
+                    gs.story_flags['_checkpoint_door_pos'] = (nx, ny)
+                    gs.story_flags['_checkpoint_door_map'] = self.map_id
                 return {
                     'type': 'exit',
                     'destination': exit_data['destination'],
@@ -566,12 +563,7 @@ class GameMap:
         return None
 
     def _build_main_quest_lines(self, main_quests, gs=None):
-        """Build main quest display lines.
         
-        Untuk Ch1 quest: tampilkan SEMUA objective dengan progress bar masing-masing
-        (baca dari story_flags agar akurat terlepas urutan pengumpulan item).
-        Untuk chapter lain: tampilkan step linear seperti biasa.
-        """
         if not main_quests:
             return []
         mq       = main_quests[0]
@@ -756,7 +748,13 @@ class GameMap:
                 if not rendered:
                     for door in self.boss_doors:
                         if x == door['x'] and y == door['y']:
-                            row += f"{Warna.MERAH + Warna.TERANG}B {Warna.RESET}"
+                            # Logic: Boss Memory — dim color if boss was defeated before
+                            defeated_ids = (gs.story_flags.get('defeated_boss_ids', [])
+                                            if gs else [])
+                            if door['boss_id'] in defeated_ids:
+                                row += f"{Warna.ABU_GELAP}B {Warna.RESET}"  # Memory Boss
+                            else:
+                                row += f"{Warna.MERAH + Warna.TERANG}B {Warna.RESET}"
                             rendered = True; break
                 if not rendered:
                     tile = self.tiles[y][x]
@@ -836,7 +834,6 @@ class GameMap:
             print(f"  {legend}")
             print(f"{Warna.ABU_GELAP}{'─' * (tw - 1)}{Warna.RESET}")
 
-
 def create_game_map(map_id, gs=None):
     """Buat map berdasarkan ID."""
     current_char = gs.player_character if gs else None
@@ -882,44 +879,53 @@ def create_game_map(map_id, gs=None):
     return gm
 
 def loop_eksplorasi(gs, gm):
-    """Loop utama eksplorasi — handle movement dan interaksi."""
+    # Core: Main exploration loop
 
-    taken_key = f"items_taken_{gm.map_id}"
+    taken_key   = f"items_taken_{gm.map_id}"
     taken_items = set(gs.story_flags.get(taken_key, []))
-    gm.items = [it for it in gm.items if f"{it['x']},{it['y']}" not in taken_items]
+    respawn_log = gs.story_flags.get(f"item_respawn_{gm.map_id}", {})
+    now = time.time()
 
-    # Selalu inisialisasi quest — add_quest() sudah cek duplikat secara internal
-    # Ini memastikan main quest chapter baru langsung muncul setelah advance chapter
+    # Logic: Timed item respawn — filter only items not yet due for respawn
+    def _item_visible(it):
+        coord = f"{it['x']},{it['y']}"
+        if coord not in taken_items:
+            return True
+        delay = it.get('respawn_delay', 0)
+        return delay > 0 and (now - respawn_log.get(coord, 0)) >= delay
+
+    gm.items = [it for it in gm.items if _item_visible(it)]
     _init_location_quests(gs, gm.map_id)
 
-    # Input ghosting prevention: buffer clearing + consistent frame timing
-    FRAME_TIME = 0.05  # ~20 FPS for input responsiveness
+    FRAME_TIME = 0.05
     last_frame_time = time.time()
+    _checkpoint_flash = 0  # HUD flash timestamp for checkpoint indicator
 
     while True:
         try:
-            # Frame timing to prevent input buildup
-            current_time = time.time()
-            elapsed = current_time - last_frame_time
-            if elapsed < FRAME_TIME:
-                time.sleep(FRAME_TIME - elapsed)
+            cur = time.time()
+            if (cur - last_frame_time) < FRAME_TIME:
+                time.sleep(FRAME_TIME - (cur - last_frame_time))
             last_frame_time = time.time()
 
             gm.render(gs)
+
             if triggered := gm.update_enemies():
                 from enemies import create_enemy_instance
                 if ei := create_enemy_instance(triggered['id']):
-                    ghost_result = {'type': 'enemy', 'enemy': ei}
-                    if ret := handle_hasil(ghost_result, gs, gm):
+                    if ret := handle_hasil({'type': 'enemy', 'enemy': ei}, gs, gm):
                         return ret
                     continue
 
-            print(f"\n{Warna.ABU_GELAP}W/A/S/D=Gerak | I=Barang | Q=Quest NPC | B=Toko Bran | X=Simpan | ESC=Keluar{Warna.RESET}")
+            # HUD: slot indicator + checkpoint saved flash (3 second duration)
+            slot_label = f"Slot {gs.current_slot + 1}"
+            cp_hint = (f" {Warna.HIJAU}[✓ Checkpoint Saved]{Warna.RESET}"
+                       if time.time() - _checkpoint_flash < 3 else "")
+            print(f"\n{Warna.ABU_GELAP}W/A/S/D=Gerak | I=Barang | Q=NPC | B=Toko | "
+                  f"X=Simpan({slot_label}) | ESC=Keluar{Warna.RESET}{cp_hint}")
 
-            # Clear input buffer BEFORE reading to prevent ghosting
             flush_input()
             cmd = input(f"{Warna.CYAN}> {Warna.RESET}").strip().lower()
-
             if not cmd:
                 continue
 
@@ -927,17 +933,34 @@ def loop_eksplorasi(gs, gm):
             if cmd == 'w':
                 hasil = gm.attempt_move(0, -1, gs)
             elif cmd == 's':
-                hasil = gm.attempt_move(0, 1, gs)
+                hasil = gm.attempt_move(0,  1, gs)
             elif cmd == 'a':
                 hasil = gm.attempt_move(-1, 0, gs)
             elif cmd == 'd':
-                hasil = gm.attempt_move(1, 0, gs)
+                hasil = gm.attempt_move(1,  0, gs)
+
+            # Logic: item pickup with respawn timer + pre-pickup quest credit
             if hasil and hasil.get('type') == 'item':
-                coord_key = f"{gm.player_x},{gm.player_y}"
+                coord_key  = f"{gm.player_x},{gm.player_y}"
+                item_name  = hasil.get('item', '')
                 taken_items.add(coord_key)
                 gs.story_flags[taken_key] = list(taken_items)
+                # Record pickup time for timed respawn items
+                item_obj = next((it for it in gm.items
+                                 if f"{it['x']},{it['y']}" == coord_key), None)
+                if item_obj and item_obj.get('respawn_delay', 0) > 0:
+                    respawn_log[coord_key] = time.time()
+                    gs.story_flags[f"item_respawn_{gm.map_id}"] = respawn_log
+                # Quest: credit item even if quest wasn't active yet when picked up
+                for q in list(gs.active_quests):
+                    if item_name in q.get('targets', []):
+                        gs.update_quest_progress(q['id'])
                 if gs.update_quest_progress("collect_items"):
                     gs.complete_quest("collect_items")
+
+            # Event: Door Checkpoint flash
+            if hasil and hasil.get('type') == 'exit':
+                _checkpoint_flash = time.time()
 
             if hasil:
                 if ret := handle_hasil(hasil, gs, gm):
@@ -948,7 +971,6 @@ def loop_eksplorasi(gs, gm):
             elif cmd == 'q':
                 tampilkan_npc_quests(gs)
             elif cmd == 'b':
-                # Bran's Shop — bisa diakses dari mana saja via radio/signal
                 _buka_toko_bran_remote(gs)
             elif cmd == 'x':
                 save_menu(gs)
@@ -964,11 +986,7 @@ def loop_eksplorasi(gs, gm):
             time.sleep(1)
 
 def _init_location_quests(gs, gm_map_id):
-    """
-#    Inisialisasi quest berdasarkan progress karakter.
-    - Main quest: dari CHARACTER_MAIN_QUESTS — tiap chapter ada boss unik
-    - Side quest: rekrut NPC (dari NPC_QUESTS) — muncul di HUD sebagai [REKRUT]
-    """
+    # Core: Init quests for current map/chapter — add_quest() deduplicates internally
     try:
         from characters import CHARACTER_MAIN_QUESTS, NPC_QUESTS
     except ImportError:
@@ -1018,10 +1036,7 @@ def _init_location_quests(gs, gm_map_id):
     # Ini mencegah quest rekrut muncul di HUD sebelum player bertemu NPC.
 
 def _add_recruit_quest_on_meet(gs, npc_id):
-    """
-#    Tambahkan quest rekrut ke HUD saat player pertama kali bertemu NPC.
-    Dipanggil dari interaksi_npc() saat player menyapa karakter.
-    """
+    # Core: Add recruit quest to HUD on first NPC contact
     try:
         from characters import NPC_QUESTS
     except ImportError:
@@ -1270,7 +1285,11 @@ def handle_hasil(hasil, gs, gm):
 
         elif hasil['type'] == 'item':
             item_name = hasil['item']
-            gs.add_item(item_name)
+            # Fix: Ao Linh Drop — quest items pakai add_quest_item (dedup), biasa pakai add_item
+            if is_quest_item(item_name):
+                gs.add_quest_item(item_name)
+            else:
+                gs.add_item(item_name)
             print(f"\n{Warna.HIJAU}✓ Dapat: {item_name}!{Warna.RESET}")
             time.sleep(0.5)
 
@@ -1390,10 +1409,16 @@ def handle_hasil(hasil, gs, gm):
                 from enemies import create_boss_instance
                 from contextlib import suppress
                 if boss := create_boss_instance(hasil['boss_id']):
-                    # Pre-boss dialog ch1 (ditampilkan 1x per boss per karakter)
                     boss_id_key  = hasil['boss_id']
                     preboss_flag = f'preboss_shown_{boss_id_key}'
                     chapter      = int(gs.story_flags.get('current_chapter', 1))
+
+                    # Logic: Boss Memory — if already defeated, show [Memory] variant
+                    defeated_ids = gs.story_flags.get('defeated_boss_ids', [])
+                    is_memory_boss = boss_id_key in defeated_ids
+                    if is_memory_boss:
+                        boss['name'] = f"[Memory] {boss.get('name', boss_id_key)}"
+                        boss['_memory'] = True   # Flag: no story progression on kill
 
                     # ── ENCOUNTER DIALOG singkat sebelum boss cinematic ──────
                     try:
@@ -1516,14 +1541,25 @@ def handle_hasil(hasil, gs, gm):
                         time.sleep(1)
                         return 'checkpoint'
                     elif ret == 'victory':
-                        # Victory Sync: record defeated boss, remove from map
                         boss_id = boss.get('id', '')
+
+                        # Logic: Boss Memory — if [Memory] boss, give XP/dollars only, skip story
+                        if boss.get('_memory'):
+                            xp_gain  = int(boss.get('xp', 50) * 0.5)
+                            dol_gain = int(boss.get('dollars', 20) * 0.5)
+                            gs.gain_xp(xp_gain)
+                            gs.dollars += dol_gain
+                            print(f"\n  {Warna.ABU_GELAP}[Memory Boss] +{xp_gain} XP, "
+                                  f"+${dol_gain} (latihan — tanpa story progress){Warna.RESET}")
+                            time.sleep(2)
+                            return None  # stay in exploration loop
+
+                        # Victory Sync: record defeated boss, remove from map
                         if boss_id:
                             defeated_ids = gs.story_flags.get('defeated_boss_ids', [])
                             if boss_id not in defeated_ids:
                                 defeated_ids.append(boss_id)
                             gs.story_flags['defeated_boss_ids'] = defeated_ids
-                            # Remove from map immediately
                             gm.boss_doors = [d for d in gm.boss_doors if d['boss_id'] != boss_id]
 
                         # Check if this is a final boss
@@ -1532,8 +1568,12 @@ def handle_hasil(hasil, gs, gm):
                             return 'victory'
 
                         # Set special flags based on boss ID for character quests
+                        # Fix: Ao Linh Drop — theater_master drop ke quest_items (dedup guard)
                         if boss_id == 'theater_master' or 'theater' in boss_id.lower():
                             gs.story_flags['defeat_theater_guard'] = True
+                            if 'Tiket Backstage' not in gs.quest_items:
+                                gs.add_quest_item('Tiket Backstage')
+                                print(f"\n  {Warna.KUNING}★ Quest Item: Tiket Backstage didapat!{Warna.RESET}")
 
                         gs.bosses_defeated += 1
                         gs.save_to_file()  # auto-save after boss kill
@@ -1718,10 +1758,7 @@ BRAN_DIALOG = [
 ]
 
 def _buka_toko_bran_remote(gs):
-    """
-    Akses toko Bran dari mana saja via radio/walkie-talkie.
-    Pertama kali: kasih hadiah gratis (Health Potion + Bandage).
-    """
+    
     clear_screen()
     first_visit = not gs.story_flags.get('bran_shop_visited', False)
 
@@ -1983,16 +2020,21 @@ def interaksi_npc(npc_id, gs, gm):
 def tampilkan_inventory(gs):
     clear_screen()
     print(f"\n{Warna.CYAN + Warna.TERANG}BARANG{Warna.RESET}  ", end='')
-    print(f"{Warna.KUNING}★=Quest Item  I=Barang Biasa{Warna.RESET}\n")
+    print(f"{Warna.KUNING}★=Quest Item  ·=Barang Biasa{Warna.RESET}\n")
 
-    quest_inv  = [it for it in gs.inventory if is_quest_item(it)]
+    # Fix: HUD Update — quest_items dari gs.quest_items (terpisah, tidak duplikat)
+    quest_inv   = list(gs.quest_items)  # sudah dedup via add_quest_item()
+    # Juga ambil quest items yang mungkin masih tersimpan di inventory lama (backward compat)
+    for it in gs.inventory:
+        if is_quest_item(it) and it not in quest_inv:
+            quest_inv.append(it)
     regular_inv = [it for it in gs.inventory if not is_quest_item(it)]
 
-    if not gs.inventory:
+    if not quest_inv and not regular_inv:
         print(f"  {Warna.ABU_GELAP}Kosong{Warna.RESET}")
     else:
         if quest_inv:
-            print(f"  {Warna.KUNING + Warna.TERANG}[QUEST ITEMS]{Warna.RESET}")
+            print(f"  {Warna.KUNING + Warna.TERANG}[QUEST ITEMS — Tidak bisa dijual/dibuang]{Warna.RESET}")
             for item in quest_inv:
                 print(f"  {Warna.KUNING}★ {item}{Warna.RESET}")
             print()
@@ -2000,7 +2042,7 @@ def tampilkan_inventory(gs):
             print(f"  {Warna.PUTIH}[BARANG BIASA]{Warna.RESET}")
             for item in regular_inv:
                 print(f"  {Warna.ABU_GELAP}·{Warna.RESET} {item}")
-    print(f"\n  ${gs.dollars} tersedia")
+    print(f"\n  ${gs.dollars} tersedia | Slot {gs.current_slot + 1}")
     input(f"\n{Warna.ABU_GELAP}[ENTER]{Warna.RESET} ")
 
 def tampilkan_npc_quests(gs):
@@ -2063,20 +2105,45 @@ def tampilkan_party(gs):
     tampilkan_npc_quests(gs)
 
 def save_menu(gs):
+    # Core: Save Logic — show active slot, allow slot change before save
     clear_screen()
-    print(f"\n{Warna.CYAN}SIMPAN GAME{Warna.RESET}")
-    print(f"{Warna.ABU_GELAP}{'─' * (_tw() - 1)}{Warna.RESET}\n")
-
     try:
-        confirm = input(f"{Warna.CYAN}Simpan sekarang? (y/n): {Warna.RESET}").strip().lower()
-        if confirm == 'y':
-            sukses, msg = gs.save_to_file()
-            print(f"\n{Warna.HIJAU if sukses else Warna.MERAH}{msg}{Warna.RESET}")
-        else:
-            print(f"\n{Warna.ABU_GELAP}Dibatalkan.{Warna.RESET}")
+        from gamestate import SLOT_FILES
+        print(f"\n{Warna.CYAN}SIMPAN GAME{Warna.RESET}")
+        print(f"{Warna.ABU_GELAP}{'─' * (_tw() - 1)}{Warna.RESET}")
+        print(f"  Slot aktif: {Warna.KUNING}Slot {gs.current_slot + 1} "
+              f"({SLOT_FILES.get(gs.current_slot, 'data.txt')}){Warna.RESET}\n")
+        print(f"  [1] Simpan ke Slot {gs.current_slot + 1}")
+        print(f"  [2] Ganti Slot Simpan")
+        print(f"  [0] Batal\n")
+        ch = input(f"{Warna.CYAN}Pilihan: {Warna.RESET}").strip()
+        if ch == '0':
+            return
+        if ch == '2':
+            # Inline slot picker
+            for idx, fname in SLOT_FILES.items():
+                try:
+                    from gamestate import GameState as _GS
+                    tmp = _GS()
+                    s = tmp.get_save_summary(fname)
+                    label = (f"Lv.{s['level']} | {s['player']} | {s['playtime']}"
+                             if s else "Kosong")
+                except Exception:
+                    label = "Kosong"
+                mark = "◉" if idx == gs.current_slot else "○"
+                print(f"  {mark} [{idx + 1}] Slot {idx + 1} — {label}")
+            try:
+                sel = int(input(f"\n{Warna.CYAN}Pilih slot (1-5): {Warna.RESET}").strip()) - 1
+                if 0 <= sel <= 4:
+                    gs.current_slot = sel
+            except (ValueError, KeyboardInterrupt, EOFError):
+                pass
+        sukses, msg = gs.save_to_file()
+        print(f"\n{Warna.HIJAU if sukses else Warna.MERAH}{msg}{Warna.RESET}")
+        if sukses:
+            print(f"{Warna.ABU_GELAP}Tersimpan di Slot {gs.current_slot + 1}.{Warna.RESET}")
     except Exception as e:
         print(f"\n{Warna.MERAH}Simpan error: {e}{Warna.RESET}")
-
     time.sleep(2)
 
 def konfirmasi_quit():

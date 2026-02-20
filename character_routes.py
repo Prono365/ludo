@@ -15,7 +15,6 @@ from constants import (
     SIDEQUESTS_NEEDED_FOR_CH4, SIDEQUESTS_NEEDED_FOR_CH6,
 )
 
-
 #───────────────────────────
 #  CHAPTER OBJECTIVES — narasi singkat per chapter
 #───────────────────────────
@@ -28,7 +27,6 @@ CHAPTER_OBJECTIVES = {
     6: "Konfrontasi Final — lawan Jeffrey Epstein",
 }
 
-
 #───────────────────────────
 #  BOSS DATA
 #───────────────────────────
@@ -37,7 +35,7 @@ BOSS_DATA = {
         'name':       'Kepala Penjaga',
         'chapter':    2,
         'location':   'prison_north',
-        'hp':         250,
+        'hp':         350,      # Balance: Boss HP +40%
         'attack':     22,
         'defense':    15,
         'speed':      12,
@@ -59,7 +57,7 @@ BOSS_DATA = {
         'name':       "Maxwell's Agent",
         'chapter':    4,
         'location':   'laboratory',
-        'hp':         380,
+        'hp':         530,      # Balance: Boss HP +40%
         'attack':     35,
         'defense':    22,
         'speed':      18,
@@ -82,7 +80,7 @@ BOSS_DATA = {
         'name':       'Jeffrey Epstein',
         'chapter':    6,
         'location':   'mansion_east',
-        'hp':         600,
+        'hp':         850,      # Balance: Final boss HP +42%
         'attack':     45,
         'defense':    30,
         'speed':      20,
@@ -103,7 +101,6 @@ BOSS_DATA = {
         ],
     },
 }
-
 
 #───────────────────────────
 #  MAP ITEM → CH1 OBJECTIVE + DIALOG
@@ -134,10 +131,11 @@ CH1_ITEM_OBJECTIVE_MAP = {
             "Haikaru: Layout yang ditunjukkan kartu ini mengkonfirmasi blind spot ketiga."),
     },
     'aolinh': {
+        # Fix: Ao Linh Route — Bandage removed as clue; replaced with narrative items
         'Health Potion':   ('find_jiejie_clues',
             "Aolinh: *menemukan sesuatu* ...Ini pita rambut Jiejie. Dia pernah di sini!"),
-        'Bandage':         ('find_jiejie_clues',
-            "Aolinh: Di balik ini... nada yang Jiejie ajarkan tergores di dinding. Bukti kedua!"),
+        'Gantungan Kunci Musik': ('find_jiejie_clues',
+            "Aolinh: *mengangkat gantungan berbentuk not* ...Ini milik Jiejie! Nada favoritnya tergores di sini!"),
         'Tiket Backstage': ('find_jiejie_clues',
             "Aolinh: Tiket backstage! Jiejie pasti dibawa lewat sini. 我找到了！"),
         'Info Pulau':      ('find_jiejie_clues',
@@ -401,7 +399,6 @@ CH1_QUESTS = {
     },
 }
 
-
 #───────────────────────────
 #  CHAPTER PROGRESSION REQUIREMENTS
 #  Apa yang dibutuhkan untuk unlock chapter berikutnya
@@ -444,7 +441,6 @@ CHAPTER_REQUIREMENTS = {
     },
 }
 
-
 #───────────────────────────
 #  LOCATION AVAILABILITY PER CHAPTER
 #───────────────────────────
@@ -482,7 +478,6 @@ CHAPTER_LOCATIONS = {
                 'mansion_west', 'mansion_east', 'laboratory'],
     },
 }
-
 
 #───────────────────────────
 #  CHARACTER ROUTE CONFIGS
@@ -590,7 +585,6 @@ def get_character_route(char_id):
     }
     return routes.get(char_id, routes['haikaru'])
 
-
 #───────────────────────────
 #  FUNGSI CHAPTER 1 QUEST
 #───────────────────────────
@@ -599,22 +593,13 @@ def get_ch1_quest(char_id):
     """Return data quest Chapter 1 untuk karakter yang dipilih."""
     return CH1_QUESTS.get(char_id)
 
-
 def get_ch1_item_objective(char_id, item_name):
-    """
-    Cek apakah item yang dipickup terkait dengan ch1 objective karakter.
-    Return (objective_id, dialog_line) atau None.
-    """
+    
     return CH1_ITEM_OBJECTIVE_MAP.get(char_id, {}).get(item_name)
 
-
 def get_ch1_pre_boss_dialog(char_id, boss_id):
-    """
-    Return list (kind, text) untuk cinematic dialog sebelum boss ch1.
-    Return [] jika tidak ada dialog untuk kombinasi ini.
-    """
+    
     return CH1_PRE_BOSS_DIALOGS.get(char_id, {}).get(boss_id, [])
-
 
 def init_ch1_quest(game_state):
     # Menginisialisasi quest Chapter 1 ke game_state
@@ -640,13 +625,8 @@ def init_ch1_quest(game_state):
         quest_type='main',
     )
 
-
 def update_ch1_objective(game_state, objective_id, amount=1):
-    """
-    Update progress satu objective di Ch1 quest.
-    Kembalikan True jika seluruh quest Ch1 selesai.
-    Selalu sync active_quests.progress setelah update agar HUD akurat.
-    """
+    
     char_id    = game_state.player_character
     quest_data = get_ch1_quest(char_id)
     if not quest_data:
@@ -666,7 +646,6 @@ def update_ch1_objective(game_state, objective_id, amount=1):
 
     return check_ch1_complete(game_state)
 
-
 def check_ch1_objective_progress(game_state, objective_id):
     """Return (current, target) progress untuk satu objective."""
     char_id = game_state.player_character
@@ -679,12 +658,8 @@ def check_ch1_objective_progress(game_state, objective_id):
     current = game_state.story_flags.get(f"ch1_obj_{objective_id}", 0)
     return current, obj['target']
 
-
 def check_ch1_complete(game_state):
-    """
-    Cek apakah semua objective Ch1 sudah tercapai.
-    Kalau sudah: set completion flag, tambah reward item, advance ke chapter 2.
-    """
+    
     char_id    = game_state.player_character
     quest_data = get_ch1_quest(char_id)
     if not quest_data:
@@ -704,11 +679,11 @@ def check_ch1_complete(game_state):
     game_state.story_flags[comp_flag] = True
     game_state.story_flags['chapter_1_complete'] = True
 
-    # Berikan reward
+    # Fix: Ao Linh Drop — gunakan add_quest_item agar tidak duplikat
     reward = quest_data.get('reward_item')
     reward_flag = quest_data.get('reward_flag')
     if reward and not game_state.story_flags.get(reward_flag):
-        game_state.add_item(reward)
+        game_state.add_item(reward)  # add_item auto-route ke add_quest_item jika quest item
         if reward_flag:
             game_state.story_flags[reward_flag] = True
 
@@ -718,11 +693,8 @@ def check_ch1_complete(game_state):
 
     return True
 
-
 def sync_ch1_quest_hud(game_state):
-    """Sync active_quests.progress ke jumlah objective yang sudah selesai.
-    Dipanggil setiap kali objective di-update agar HUD selalu akurat.
-    """
+    
     char_id    = game_state.player_character
     quest_data = get_ch1_quest(char_id)
     if not quest_data:
@@ -738,11 +710,8 @@ def sync_ch1_quest_hud(game_state):
             q['total']    = len(quest_data['objectives'])
             break
 
-
 def get_ch1_objective_status(game_state):
-    """Return list of (obj_id, desc, cur, target, done) untuk semua objective Ch1.
-    Digunakan HUD untuk tampilkan per-objective progress bar.
-    """
+    
     char_id    = game_state.player_character
     quest_data = get_ch1_quest(char_id)
     if not quest_data:
@@ -753,7 +722,6 @@ def get_ch1_objective_status(game_state):
         done = cur >= obj['target']
         result.append((obj['id'], obj['desc'], cur, obj['target'], done))
     return result
-
 
 def get_ch1_next_incomplete_objective(game_state):
     """Return (obj_id, obj_def) objective Ch1 pertama yang belum selesai, atau None."""
@@ -766,7 +734,6 @@ def get_ch1_next_incomplete_objective(game_state):
         if cur < obj['target']:
             return obj['id'], obj
     return None, None
-
 
 #───────────────────────────
 #  DIALOG OBJECTIVE SELESAI + INTRO OBJECTIVE BERIKUTNYA
@@ -859,16 +826,13 @@ CH1_NEXT_OBJECTIVE_DIALOGS = {
     },
 }
 
-
 def get_ch1_objective_complete_dialog(char_id, obj_id):
     """Return list dialog setelah objective selesai. Empty list jika tidak ada."""
     return CH1_OBJECTIVE_COMPLETE_DIALOGS.get(char_id, {}).get(obj_id, [])
 
-
 def get_ch1_next_objective_dialog(char_id, next_obj_id):
     """Return list dialog intro untuk objective berikutnya. Empty list jika tidak ada."""
     return CH1_NEXT_OBJECTIVE_DIALOGS.get(char_id, {}).get(next_obj_id, [])
-
 
 def display_ch1_completion(game_state):
     """Tampilkan teks penyelesaian Ch1 dan transisi ke Ch2."""
@@ -895,7 +859,6 @@ def display_ch1_completion(game_state):
     separator()
     wait_input("Tekan ENTER untuk lanjut ke Chapter 2... ")
 
-
 #───────────────────────────
 #  CHAPTER PROGRESSION
 #───────────────────────────
@@ -907,12 +870,8 @@ def get_current_chapter(game_state):
     except (ValueError, TypeError):
         return 1
 
-
 def check_chapter_unlock(game_state, target_chapter):
-    """
-    Cek apakah player bisa unlock chapter target_chapter.
-    Return (can_unlock, reason_string)
-    """
+    
     if target_chapter > MAX_CHAPTERS:
         return False, "Chapter tidak ada."
 
@@ -949,7 +908,6 @@ def check_chapter_unlock(game_state, target_chapter):
         return False, " | ".join(reasons)
     return True, "OK"
 
-
 def advance_chapter(game_state):
     """Maju ke chapter berikutnya. Return True jika berhasil."""
     current = get_current_chapter(game_state)
@@ -962,11 +920,8 @@ def advance_chapter(game_state):
         return True
     return False
 
-
 def check_chapter_complete(game_state):
-    """
-    Cek apakah chapter saat ini sudah selesai (bisa advance).
-    """
+    
     chapter = get_current_chapter(game_state)
     char_id = game_state.player_character
 
@@ -979,11 +934,8 @@ def check_chapter_complete(game_state):
         can, _ = check_chapter_unlock(game_state, target)
         return can
 
-
 def get_chapter_progress_info(game_state):
-    """
-    Return dict info progress chapter saat ini untuk UI.
-    """
+    
     chapter = get_current_chapter(game_state)
     char_id = game_state.player_character
 
@@ -1012,7 +964,6 @@ def get_chapter_progress_info(game_state):
         info['can_advance'] = game_state.story_flags.get('boss_ch6_defeated', False)
 
     return info
-
 
 #───────────────────────────
 #  ROUTE UTILITIES
@@ -1044,7 +995,6 @@ def display_route_intro(char_id):
     print()
     wait_input()
 
-
 def apply_route_bonuses(game_state, char_id):
     # Menerapkan bonus stat dan item sesuai rute karakter
     """Apply stat dan item bonuses sesuai rute karakter. Dipanggil sekali saat new game."""
@@ -1075,14 +1025,9 @@ def apply_route_bonuses(game_state, char_id):
     game_state.story_flags['sidequests_completed']  = 0
     return game_state
 
-
 def get_chapter_locations(chapter):
-    """Return dict lokasi yang tersedia untuk chapter tertentu.
-    BUG FIX: Fungsi ini ditambahkan karena exploration.py mengimpornya,
-    namun sebelumnya tidak ada di character_routes.py.
-    """
+    
     return CHAPTER_LOCATIONS.get(chapter, CHAPTER_LOCATIONS.get(2, {}))
-
 
 def can_access_location(char_id, location, chapter):
     """Cek apakah karakter bisa akses lokasi di chapter saat ini."""
@@ -1093,12 +1038,10 @@ def can_access_location(char_id, location, chapter):
         allowed = chapter_data.get('all', [])
     return location in allowed
 
-
 def get_boss_for_current_chapter(game_state):
     """Return boss_id jika chapter saat ini adalah boss chapter, else None."""
     chapter = get_current_chapter(game_state)
     return CHAPTER_BOSSES.get(chapter)
-
 
 def mark_boss_defeated(game_state, boss_id):
     """Tandai boss sebagai sudah dikalahkan dan update bosses_defeated count."""
@@ -1113,7 +1056,6 @@ def mark_boss_defeated(game_state, boss_id):
         game_state.add_item(reward)
     return boss_data
 
-
 def get_npc_display_name(npc_id):
     """Nama tampilan NPC (wrapper ke npc_interactions jika tersedia)."""
     names = {
@@ -1125,13 +1067,8 @@ def get_npc_display_name(npc_id):
     }
     return names.get(npc_id, npc_id.capitalize())
 
-
 def check_candala_encounter(game_state):
-    """
-    Cek apakah harus trigger encounter 'Candala' (NPC misterius) setelah victory.
-    Candala muncul sekali setelah beberapa battle di chapter 2+.
-    Saat ini: stub yang bisa dikembangkan untuk event story.
-    """
+    
     chapter = int(game_state.story_flags.get('current_chapter', 1))
     if chapter < 2:
         return

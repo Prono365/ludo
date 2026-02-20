@@ -9,12 +9,12 @@ ENEMIES = {
         "id": "guard_novice",
         "name": "Security Guard - Novice",
         "level": 1,
-        "hp": 94,       # buffed dari 80 (+17%)
-        "max_hp": 94,
+        "hp": 85,       # Balance: Tier 1 enemy
+        "max_hp": 85,
         "attack": 14,   # buffed dari 12
         "defense": 9,   # buffed dari 8
         "speed": 13,    # buffed dari 12
-        "xp": 15,
+        "xp": 28,
         "dollars": 15,
         "desc": "Nervous rookie guard",
         "sprite": "G",
@@ -30,12 +30,12 @@ ENEMIES = {
         "id": "guard_veteran",
         "name": "Security Guard - Veteran",
         "level": 3,
-        "hp": 140,      # buffed dari 120 (+17%)
-        "max_hp": 140,
+        "hp": 110,      # Balance: Tier 2 enemy
+        "max_hp": 110,
         "attack": 19,   # buffed dari 16
         "defense": 16,  # buffed dari 14
         "speed": 17,    # buffed dari 15
-        "xp": 30,
+        "xp": 55,
         "dollars": 25,
         "desc": "Experienced guard",
         "sprite": "G",
@@ -51,12 +51,12 @@ ENEMIES = {
         "id": "guard_elite",
         "name": "Elite Security Guard",
         "level": 5,
-        "hp": 176,      # buffed dari 150 (+17%)
-        "max_hp": 176,
+        "hp": 140,      # Balance: Tier 3 enemy
+        "max_hp": 125,
         "attack": 23,   # buffed dari 20
         "defense": 23,  # buffed dari 20
         "speed": 21,    # buffed dari 18
-        "xp": 50,
+        "xp": 80,
         "dollars": 40,
         "desc": "Elite military background guard",
         "sprite": "G",
@@ -72,12 +72,12 @@ ENEMIES = {
         "id": "mercenary_thug",
         "name": "Mercenary Thug",
         "level": 2,
-        "hp": 117,      # buffed dari 100 (+17%)
-        "max_hp": 117,
+        "hp": 95,       # Balance: Tier 1-2 enemy
+        "max_hp": 95,
         "attack": 23,   # buffed dari 20
         "defense": 12,  # buffed dari 10
         "speed": 18,    # buffed dari 16
-        "xp": 25,
+        "xp": 40,
         "dollars": 30,
         "desc": "Hired muscle",
         "sprite": "M",
@@ -93,12 +93,12 @@ ENEMIES = {
         "id": "mercenary_sniper",
         "name": "Mercenary Sniper",
         "level": 4,
-        "hp": 110,
-        "max_hp": 110,
+        "hp": 105,      # Balance: Tier 2 ranged
+        "max_hp": 105,
         "attack": 21,
         "defense": 12,
         "speed": 20,
-        "xp": 45,
+        "xp": 65,
         "dollars": 40,
         "desc": "Long-range specialist",
         "sprite": "S",
@@ -114,12 +114,12 @@ ENEMIES = {
         "id": "scientist",
         "name": "Corrupted Scientist",
         "level": 3,
-        "hp": 90,
-        "max_hp": 90,
+        "hp": 85,       # Balance: Tier 1 non-combatant
+        "max_hp": 85,
         "attack": 17,
         "defense": 15,
         "speed": 14,
-        "xp": 35,
+        "xp": 55,
         "dollars": 30,
         "desc": "Researcher in dark experiments",
         "sprite": "R",
@@ -135,12 +135,12 @@ ENEMIES = {
         "id": "mansion_guard",
         "name": "Mansion Security",
         "level": 2,
-        "hp": 100,
-        "max_hp": 100,
+        "hp": 95,       # Balance: Tier 2 enemy
+        "max_hp": 95,
         "attack": 17,
         "defense": 12,
         "speed": 14,
-        "xp": 25,
+        "xp": 40,
         "dollars": 25,
         "desc": "Regular mansion security patrol",
         "sprite": "G",
@@ -156,12 +156,12 @@ ENEMIES = {
         "id": "tech_guard",
         "name": "Tech Security",
         "level": 3,
-        "hp": 110,
-        "max_hp": 110,
+        "hp": 105,      # Balance: Tier 2 enemy
+        "max_hp": 105,
         "attack": 19,
         "defense": 15,
         "speed": 16,
-        "xp": 35,
+        "xp": 55,
         "dollars": 35,
         "desc": "Guard protecting server room",
         "sprite": "T",
@@ -181,8 +181,8 @@ BOSSES = {
         "id": "maxwell_enforcer",
         "name": "Maxwell - Head of Security",
         "level": 8,
-        "hp": 150,
-        "max_hp": 150,
+        "hp": 230,      # Balance: Boss HP ~210-250
+        "max_hp": 230,
         "attack": 24,
         "defense": 18,
         "speed": 22,
@@ -232,8 +232,8 @@ BOSSES = {
         "id": "doctor_rousseau",
         "name": "Dr. Rousseau - Lead Researcher",
         "level": 9,
-        "hp": 100,
-        "max_hp": 100,
+        "hp": 215,      # Balance: Boss HP ~210-250
+        "max_hp": 210,
         "attack": 20,
         "defense": 15,
         "speed": 25,
@@ -284,8 +284,8 @@ BOSSES = {
         "id": "ghislaine_maxwell",
         "name": "Ghislaine Maxwell - The Facilitator",
         "level": 10,
-        "hp": 140,
-        "max_hp": 140,
+        "hp": 230,      # Balance: Boss HP ~210-250
+        "max_hp": 250,
         "attack": 23,
         "defense": 20,
         "speed": 26,
@@ -339,8 +339,8 @@ BOSSES = {
         "id": "prince_andrew",
         "name": "Prince Andrew - The Royal Predator",
         "level": 10,
-        "hp": 130,
-        "max_hp": 130,
+        "hp": 230,      # Balance: Boss HP ~210-250
+        "max_hp": 235,
         "attack": 25,
         "defense": 18,
         "speed": 24,
@@ -393,8 +393,8 @@ BOSSES = {
         "id": "bill_clinton",
         "name": "Bill Clinton - The Former President",
         "level": 11,
-        "hp": 160,
-        "max_hp": 160,
+        "hp": 250,      # Balance: Boss HP ~210-250
+        "max_hp": 260,
         "attack": 27,
         "defense": 19,
         "speed": 24,
@@ -448,8 +448,8 @@ BOSSES = {
         "id": "warden_elite",
         "name": "Warden Elite - Kepala Penjaga",
         "level": 7,
-        "hp": 130,
-        "max_hp": 130,
+        "hp": 215,      # Balance: Boss HP ~210-250
+        "max_hp": 215,
         "attack": 20,
         "defense": 15,
         "speed": 18,
@@ -476,8 +476,8 @@ BOSSES = {
         "id": "theater_master",
         "name": "Theater Master - Penguasa Panggung",
         "level": 7,
-        "hp": 120,
-        "max_hp": 120,
+        "hp": 215,      # Balance: Boss HP ~210-250
+        "max_hp": 210,
         "attack": 18,
         "defense": 14,
         "speed": 22,
@@ -505,8 +505,8 @@ BOSSES = {
         "id": "harbor_captain",
         "name": "Harbor Captain - Kapten Pelabuhan",
         "level": 7,
-        "hp": 140,
-        "max_hp": 140,
+        "hp": 215,      # Balance: Boss HP ~210-250
+        "max_hp": 220,
         "attack": 21,
         "defense": 16,
         "speed": 16,
@@ -533,8 +533,8 @@ BOSSES = {
         "id": "security_bot",
         "name": "Security Bot Mk-II",
         "level": 8,
-        "hp": 155,
-        "max_hp": 155,
+        "hp": 230,      # Balance: Boss HP ~210-250
+        "max_hp": 240,
         "attack": 22,
         "defense": 20,
         "speed": 14,
@@ -562,8 +562,8 @@ BOSSES = {
         "id": "epstein_boss",
         "name": "Jeffrey Epstein",
         "level": 15,
-        "hp": 300,
-        "max_hp": 300,
+        "hp": 400,      # Balance: Final Boss HP
+        "max_hp": 400,
         "attack": 34,
         "defense": 25,
         "speed": 28,
@@ -750,20 +750,26 @@ def get_boss_count():
 
 
 def scale_enemy_for_chapter(enemy, chapter, player_level=1):
-    # Private: scale enemy stats — Hard Mode locked at 1.2x on top of chapter scaling
+    # Balance: Regular enemy scale with player level; boss HP fixed (no level scale)
     import copy
     e = copy.deepcopy(enemy)
-    ch_factor    = 1.0 + (max(1, int(chapter)) - 1) * 0.15
-    lv_factor    = 1.0 + (max(1, int(player_level)) // 3) * 0.10
-    hard_factor  = 1.2   # Hard Mode locked
-    total        = ch_factor * lv_factor * hard_factor
+    is_boss = e.get('boss', False)
+
+    ch_factor = 1.0 + (max(1, int(chapter)) - 1) * 0.12
+    if is_boss:
+        # Boss: chapter scale only, no player_level scaling (HP already tuned)
+        total = ch_factor
+    else:
+        # Regular enemy: scale with player level (+8% per level above 1)
+        lv_factor = 1.0 + (max(1, int(player_level)) - 1) * 0.08
+        total     = ch_factor * lv_factor
 
     e['hp']      = max(e.get('hp', 50),      int(e['hp'] * total))
     e['max_hp']  = e['hp']
     e['attack']  = max(e.get('attack', 10),  int(e['attack'] * total))
     e['defense'] = max(e.get('defense', 5),  int(e['defense'] * total))
     e['speed']   = max(e.get('speed', 10),   int(e['speed'] * total))
-    e['xp']      = int(e.get('xp', 10) * total)
+    e['xp']      = int(e.get('xp', 10) * (ch_factor if is_boss else total))
     return e
 
 

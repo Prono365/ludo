@@ -9,8 +9,6 @@ def _tw():
     """Terminal width saat ini."""
     return max(40, shutil.get_terminal_size(fallback=(80, 24)).columns)
 
-
-
 def _get_character_gender_descriptor(player_character=''):
     # Mengambil descriptor gender untuk karakter pemain
     #  Get gender descriptor - avoids circular import
@@ -31,7 +29,6 @@ def _get_character_gender_descriptor(player_character=''):
         pass  # Fallback if import fails
     
     return 'orang biasa'  # Safe fallback
-
 
 def _interpolate_player_info(text, game_state=None):
     # Mengganti variabel template cerita dengan data pemain
@@ -55,7 +52,6 @@ def _interpolate_player_info(text, game_state=None):
     text = text.replace('{player_gender_adj}', gender_adj)
     
     return text
-
 
 STORY_CHAPTERS = {
     "prologue_1": {
@@ -2152,13 +2148,9 @@ CHARACTER_BACKSTORIES = {
     }
 }
 
-
 def print_story_slow(text, delay=0.03):
-    """Print text with typewriter effect and skip support.
-    Wraps the improved print_slow from utils to support ENTER key skip.
-    """
+    
     print_slow(text, delay=delay, allow_skip=True)
-
 
 def display_chapter(chapter_id, skip_delays=False, game_state=None):
     # Menampilkan chapter cerita dengan interpolasi nama pemain
@@ -2192,7 +2184,6 @@ def display_chapter(chapter_id, skip_delays=False, game_state=None):
 
     return True
 
-
 def display_backstory(character_id, skip_delays=False):
     # Menampilkan backstory karakter yang dipilih
     """Display character backstory"""
@@ -2220,7 +2211,6 @@ def display_backstory(character_id, skip_delays=False):
             if not skip_delays:
                 time.sleep(0.4)
     return True
-
 
 def display_route_chapter(chapter_id, skip_delays=False):
     """Display a route-specific chapter"""
@@ -2258,7 +2248,6 @@ def display_route_chapter(chapter_id, skip_delays=False):
 
     return True
 
-
 def play_route_story(char_id, gs=None, skip_delays=False):
     """Mainkan semua chapter untuk rute karakter tertentu"""
     route_map = {
@@ -2276,7 +2265,6 @@ def play_route_story(char_id, gs=None, skip_delays=False):
             with suppress(Exception):
                 input(f"\n{Warna.ABU_GELAP}[ENTER untuk lanjut]{Warna.RESET} ")
 
-
 def play_route_ending(char_id, skip_delays=False):
     """Mainkan ending khusus untuk karakter yang dipilih"""
     ending_map = {
@@ -2289,7 +2277,6 @@ def play_route_ending(char_id, skip_delays=False):
 
     ending_id = ending_map.get(char_id, 'epilogue_good')
     display_route_chapter(ending_id, skip_delays=skip_delays)
-
 
 def get_route_chapter_at(char_id, chapter_index):
     """Ambil satu chapter rute berdasarkan index"""
@@ -2304,31 +2291,24 @@ def get_route_chapter_at(char_id, chapter_index):
     chapters = route_map.get(char_id, [])
     return chapters[chapter_index] if 0 <= chapter_index < len(chapters) else None
 
-
 def get_prologue_chapters():
     """Get list of prologue chapters"""
     return ["prologue_1", "prologue_2", "prologue_3", "prologue_4"]
 
-
 def get_chapter_1():
     return ["chapter_1_intro", "chapter_1_meet", "chapter_1_crisis"]
-
 
 def get_chapter_2():
     return ["chapter_2_intro", "chapter_2_growing", "chapter_2_trust"]
 
-
 def get_chapter_3():
     return ["chapter_3_intro", "chapter_3_revelation", "chapter_3_decision"]
-
 
 def get_chapter_final():
     return ["chapter_final_intro", "chapter_final_confrontation"]
 
-
 def get_all_chapters():
     return list(STORY_CHAPTERS.keys())
-
 
 def get_route_chapters(char_id):
     """Get list of chapter IDs for a specific character route"""

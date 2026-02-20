@@ -8,19 +8,14 @@ from contextlib import suppress
 def separator():
     _sep('═')
 
-
 def wait_for_skip():
-    """
-    Wait for input dengan skip option.
-    flush_input() dulu biar nggak ghosting dari layar sebelumnya.
-    """
+    
     flush_input()
     time.sleep(0.02)
     with suppress(EOFError, KeyboardInterrupt):
         response = input(f"{Warna.ABU_GELAP}[ENTER lanjut / ketik 'skip' untuk lewati] {Warna.RESET}").strip().lower()
         return 'skip' if response == 'skip' else None
     return None
-
 
 def tutorial_eksplorasi():
     clear()
@@ -78,7 +73,6 @@ def tutorial_eksplorasi():
 
     resp = wait_for_skip()
     return resp != 'skip'
-
 
 def tutorial_combat():
     clear()
@@ -158,7 +152,6 @@ def tutorial_combat():
 
     resp = wait_for_skip()
     return resp != 'skip'
-
 
 def tutorial_skills():
     clear()
@@ -247,7 +240,6 @@ def tutorial_skills():
     resp = wait_for_skip()
     return resp != 'skip'
 
-
 def tutorial_chapter():
     clear()
     separator()
@@ -292,7 +284,6 @@ def tutorial_chapter():
 
     resp = wait_for_skip()
     return resp != 'skip'
-
 
 def tutorial_lengkap():
     clear()
@@ -361,7 +352,6 @@ def tutorial_lengkap():
     print()
 
     wait("Tekan ENTER untuk mulai petualangan... ")
-
 
 if __name__ == "__main__":
     tutorial_lengkap()

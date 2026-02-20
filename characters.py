@@ -49,7 +49,6 @@ def _load_card_dialogs():
     print("   Menggunakan fallback dialogs.")
     return FALLBACK_CARD_DIALOGS.copy()
 
-
 CARD_PLAY_DIALOGS = _load_card_dialogs()
 
 PLAYABLE_CHARACTERS = {
@@ -124,8 +123,6 @@ PLAYABLE_CHARACTERS = {
         "personality": "Tenang, analitis, sedikit addict gacha, sarkastik, bangga pada asal Skotlandia",
         "hobby": "Main gacha game, collect SSR characters, CTF hacking competition, flexing pull",
         "favorite_quote": "Pity system is for casuals. True whale goes all-in!",
-
-
 
         "card_dialogs": CARD_PLAY_DIALOGS.get("vio", {})
     },
@@ -426,7 +423,6 @@ PLAYABLE_CHARACTERS = {
     }
 }
 
-
 # LEVEL-UP STAT GAINS PER KARAKTER
 # Setiap karakter punya distribusi stat unik → level-up gains mencerminkan itu.
 #
@@ -484,7 +480,6 @@ CHARACTER_LEVEL_GAINS = {
         "note": "Pure ATK scaling — one-shot king dengan HP tipis",
     },
 }
-
 
 # NPC spesial (Candala, Joker, Phone Call)
 SPECIAL_NPC = {
@@ -789,11 +784,9 @@ CHARACTER_MAIN_QUESTS = {
     },
 }
 
-
 def get_main_quest(char_id, chapter):
     """Kembalikan data quest utama karakter untuk chapter tertentu."""
     return CHARACTER_MAIN_QUESTS.get(char_id, {}).get(chapter)
-
 
 # Quest rekrutmen NPC
 NPC_QUESTS = {
@@ -966,11 +959,7 @@ def get_character_name(char_id):
     return char["name"] if char else "Unknown"
 
 def get_card_dialog(char_id, hand_type):
-    """
-    Get random dialog for card play based on character and hand type.
-    Returns:
-        str — dialog, atau default string dari fallback jika tidak ada
-    """
+    
 
     char_id = char_id.lower().strip()
 
@@ -1016,7 +1005,6 @@ def get_card_dialog(char_id, hand_type):
 
     # Fallback 3: Gunakan global fallback
     return FALLBACK_CARD_DIALOGS.get("default", "Aksi!")
-
 
 def safe_get_card_dialog(char_id, hand_key):
     """FIX Bug 3: API aman untuk mengakses dialog kartu dari kode eksternal"""

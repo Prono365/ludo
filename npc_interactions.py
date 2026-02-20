@@ -5,7 +5,6 @@ import time
 from contextlib import suppress
 from utils import clear_screen, wait_input, separator, flush_input
 
-
 #  NPC sidequest data - available_chapter, reward_item, chapter_unlock tracking
 #  DATA SIDEQUEST NPC
 #  Setiap NPC punya:
@@ -321,7 +320,6 @@ NPC_SIDEQUEST_DATA = {
     },
 }
 
-
 #  FUNGSI DISPLAY DIALOG
 
 def _print_dialog_line(speaker, line, delay=0.035):
@@ -344,7 +342,6 @@ def _print_dialog_line(speaker, line, delay=0.035):
         else:
             print(f"\n  {speaker}: {line}")
 
-
 def _display_npc_header(npc_data, header_text="PERTEMUAN"):
     """Tampilkan header NPC interaction."""
     separator('═')
@@ -356,13 +353,9 @@ def _display_npc_header(npc_data, header_text="PERTEMUAN"):
     separator('═')
     print()
 
-
 def display_npc_intro(npc_id, game_state=None):
     # Menampilkan dialog pertemuan awal dengan NPC (hanya sekali)
-    """
-    Tampilkan dialog intro NPC — dipanggil saat pertama kali player bertemu NPC.
-    Hanya ditampilkan SEKALI seumur hidup (via intro_flag di story_flags).
-    """
+    
     npc_data = NPC_SIDEQUEST_DATA.get(npc_id)
     if not npc_data:
         return False
@@ -395,13 +388,9 @@ def display_npc_intro(npc_id, game_state=None):
 
     return True
 
-
 def display_npc_quest_briefing(npc_id, game_state=None):
     # Menampilkan briefing sidequest dari NPC (hanya sekali)
-    """
-    Tampilkan dialog sidequest NPC — hanya SEKALI saat player pertama menerima quest.
-    Setelah ditampilkan, quest_briefing_flag di-set dan tidak akan muncul lagi.
-    """
+    
     npc_data = NPC_SIDEQUEST_DATA.get(npc_id)
     if not npc_data:
         return False
@@ -450,7 +439,6 @@ def display_npc_quest_briefing(npc_id, game_state=None):
         game_state.story_flags[f"{npc_id}_quest_active"] = True
         game_state.story_flags[briefing_flag] = True   # Tandai sudah tampil — tidak akan muncul lagi
     return True
-
 
 def display_npc_completion(npc_id, game_state=None):
     """Tampilkan dialog completion NPC dan berikan reward item."""
@@ -504,7 +492,6 @@ def display_npc_completion(npc_id, game_state=None):
 
     return True, reward_item
 
-
 def display_npc_repeat_talk(npc_id, game_state=None):
     """Dialog saat player kembali berbicara dengan NPC setelah quest selesai."""
     npc_data = NPC_SIDEQUEST_DATA.get(npc_id)
@@ -545,7 +532,6 @@ def display_npc_repeat_talk(npc_id, game_state=None):
     print()
     wait_input()
 
-
 #  HELPER — CEK STATUS SIDEQUEST
 
 def can_trigger_sidequest(npc_id, game_state):
@@ -558,7 +544,6 @@ def can_trigger_sidequest(npc_id, game_state):
         return False  # Sudah selesai
     current_chapter = int(game_state.story_flags.get('current_chapter', 1))
     return current_chapter >= npc_data['available_chapter']
-
 
 def is_sidequest_complete(npc_id, game_state):
     """Return True jika semua syarat sidequest NPC sudah terpenuhi (siap redeem reward)."""
@@ -574,7 +559,6 @@ def is_sidequest_complete(npc_id, game_state):
         return game_state.story_flags.get(npc_data['required_action'], False)
     return False
 
-
 def get_npc_display_name(npc_id):
     """Terlebih dahulu mengecek NPC_SIDEQUEST_DATA, lalu cek game_state cache,"""
     # Priority 1: Check NPC_SIDEQUEST_DATA
@@ -586,14 +570,8 @@ def get_npc_display_name(npc_id):
     # (ini untuk NPC baru yang belum ditambah ke NPC_SIDEQUEST_DATA)
     return npc_id.capitalize()
 
-
 def get_sidequest_summary(game_state):
-    """
-    Kembalikan list ringkasan status semua sidequest untuk quest tracker.
-    Format: [{'npc': id, 'name': str, 'status': 'done'|'active'|'available'|'locked'}]
     
-    Safe version: handles current_chapter as either string or int, with fallback.
-    """
     result = []
     
     # Safe chapter retrieval: handles both string and int values
@@ -621,7 +599,6 @@ def get_sidequest_summary(game_state):
             'impact': data.get('main_quest_impact', ''),
         })
     return result
-
 
 #  ENCOUNTER DIALOGS — dialog saat ketemu enemy & masuk lokasi baru
 #  Terintegrasi langsung di npc_interactions.py sesuai permintaan.
@@ -846,10 +823,7 @@ _MAP_ENTRY_DIALOGS = {
 # ── Fungsi publik ────────────────────────────────────────────────────────────
 
 def show_enemy_encounter_dialog(enemy_id, player_char_id, enemy_name=None, is_boss=False):
-    """
-    Tampilkan dialog singkat sebelum combat dimulai.
-    Musuh bicara dulu, lalu player bereaksi.
-    """
+    
     import shutil as _shutil
     tw = max(40, _shutil.get_terminal_size(fallback=(80, 24)).columns)
 
@@ -893,12 +867,8 @@ def show_enemy_encounter_dialog(enemy_id, player_char_id, enemy_name=None, is_bo
     print(f"\n{Warna.ABU_GELAP}{sep}{Warna.RESET}")
     time.sleep(0.25)
 
-
 def show_map_entry_dialog(map_id, player_char_id, gs=None):
-    """
-    Tampilkan dialog singkat saat player masuk lokasi baru PERTAMA KALI.
-    Set flag 'map_entry_{map_id}' agar tidak repeat.
-    """
+    
     flag = f"map_entry_{map_id}_shown"
     if gs and gs.story_flags.get(flag):
         return

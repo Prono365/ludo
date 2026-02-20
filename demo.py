@@ -4,7 +4,6 @@ import sys
 import time
 import random
 
-
 try:
     if hasattr(sys.stdout, 'reconfigure'):
         sys.stdout.reconfigure(encoding='utf-8', errors='replace')
@@ -12,7 +11,6 @@ try:
         sys.stderr.reconfigure(encoding='utf-8', errors='replace')
 except Exception:
     pass
-
 
 try:
     from sprites import Warna
@@ -30,9 +28,6 @@ except ImportError as e:
     print(f"\nERROR: {e}")
     print("Pastikan semua file game ada di folder yang sama dengan demo.py\n")
     sys.exit(1)
-
-
-
 
 CHAR_COLOR = {
     "vio":      Warna.MERAH,
@@ -71,9 +66,6 @@ HAND_SEQUENCE = [
     ("Four of a Kind",  [('A', s) for s in SUITS]),
     ("Straight Flush",  [('9','\u2660'),('10','\u2660'),('J','\u2660'),('Q','\u2660'),('K','\u2660')]),
 ]
-
-
-
 
 def pilih_karakter():
     char_list = list(PLAYABLE_CHARACTERS.items())
@@ -120,9 +112,6 @@ def pilih_karakter():
                 return char_list[idx][0]
         except ValueError:
             pass
-
-
-
 
 def demo_showcase(char_id):
     # Menampilkan showcase karakter dengan stats dan info
@@ -173,9 +162,6 @@ def demo_showcase(char_id):
     print()
 
     wait()
-
-
-
 
 def demo_combat(char_id):
     # Menjalankan demo pertarungan karakter melawan musuh random
@@ -253,9 +239,6 @@ def demo_combat(char_id):
     print()
     wait()
 
-
-
-
 def _build_player_stats(char_id):
     """Bangun dict player_stats dari data PLAYABLE_CHARACTERS untuk dipass ke run_combat."""
     data = PLAYABLE_CHARACTERS[char_id]
@@ -273,10 +256,7 @@ def _build_player_stats(char_id):
     }
 
 def _handle_combat_result(result):
-    """
-    Normalkan return value dari run_combat ke string 'victory'/'defeat'/'fled'.
-    run_combat sekarang return: 'victory', 'player_dead', atau 'fled'
-    """
+    
     if result == 'fled':
         return 'fled'
     if result == 'victory':
@@ -339,9 +319,6 @@ def _result_screen(result_str, enemy_name):
     print()
     wait()
 
-
-
-
 def _menu_pilih_enemy():
     """Pilih enemy biasa dari daftar ENEMIES."""
     enemy_list = list(ENEMIES.items())
@@ -391,7 +368,6 @@ def demo_lawan_enemy(char_id):
     player_stats = _build_player_stats(char_id)
     inventory    = ['Health Potion', 'Health Potion', 'Med Kit']
 
-
     clear()
     separator('\u2550')
     print(f"{Warna.MERAH + Warna.TERANG}{'PERTARUNGAN!'.center(70)}{Warna.RESET}")
@@ -409,9 +385,6 @@ def demo_lawan_enemy(char_id):
         _show_defeat_dialog(enemy)
 
     _result_screen(result_str, enemy['name'])
-
-
-
 
 def _menu_pilih_boss():
     """Pilih boss dari daftar BOSSES."""
@@ -468,7 +441,6 @@ def demo_lawan_boss(char_id):
     inventory    = ['Health Potion', 'Health Potion', 'Health Potion', 'Med Kit']
     c            = CHAR_COLOR.get(char_id, Warna.PUTIH)
 
-
     clear()
     separator('\u2550')
     is_final = boss.get('final_boss', False)
@@ -485,7 +457,6 @@ def demo_lawan_boss(char_id):
     print(f"  {Warna.ABU_GELAP}{boss['desc']}{Warna.RESET}")
     print()
 
-
     _show_encounter_dialog(boss)
 
     separator('\u2500')
@@ -500,9 +471,6 @@ def demo_lawan_boss(char_id):
         _show_defeat_dialog(boss)
 
     _result_screen(result_str, boss['name'])
-
-
-
 
 def menu_karakter(char_id):
     data  = PLAYABLE_CHARACTERS[char_id]
@@ -565,9 +533,6 @@ def menu_karakter(char_id):
                 fn()
                 break
 
-
-
-
 def main():
     # Entry point untuk mode demo
     if sys.version_info < (3, 6):
@@ -594,7 +559,6 @@ def main():
         import traceback
         traceback.print_exc()
         sys.exit(1)
-
 
 if __name__ == "__main__":
     main()

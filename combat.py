@@ -13,7 +13,6 @@ def _tw():
     """Terminal width saat ini."""
     return max(40, shutil.get_terminal_size(fallback=(80, 24)).columns)
 
-
 try:
     from utils import clear_screen, get_stat
 except ImportError:
@@ -64,9 +63,7 @@ def create_deck():
     return [Card(rank, suit) for suit in SUITS for rank in RANKS]
 
 def refill_deck_if_needed(deck, discard_pile=None, min_cards=10):
-    """
-    Jika deck hampir habis, reshuffle kartu dari discard_pile.
-    """
+    
     if len(deck) < min_cards:
         if discard_pile:
             random.shuffle(discard_pile)
@@ -78,9 +75,7 @@ def refill_deck_if_needed(deck, discard_pile=None, min_cards=10):
             deck.extend(new_deck)
 
 def ensure_hand_size(hand, deck, discard_pile=None, target_size=5):
-    """
-    Pastikan tangan memiliki minimal target_size kartu
-    """
+    
     refill_deck_if_needed(deck, discard_pile, min_cards=target_size * 2)
     while len(hand) < target_size:
         if deck:
@@ -90,10 +85,7 @@ def ensure_hand_size(hand, deck, discard_pile=None, target_size=5):
 
 # Evaluasi kombinasi kartu poker
 def evaluate_hand(cards, allow_four_straight=False):
-    """
-    Evaluate poker hand - returns (hand_typescore)
-    allow_four_straight: jika True, 4 kartu berurutan dihitung sebagai Straight
-    """
+    
     if not cards:
         return ("Nothing", 0)
 
@@ -121,9 +113,7 @@ def evaluate_hand(cards, allow_four_straight=False):
     return best_hand or ("Nothing", 0)
 
 def _evaluate_five_card_hand(cards, allow_four_straight=False):
-    """Evaluasi 5 (atau 4) kartu poker, return (hand_type, score).
-    allow_four_straight: jika True dan ada 4 kartu berurutan, dihitung Straight.
-    """
+    
     if not cards:
         return ("Nothing", 0)
 
@@ -185,12 +175,7 @@ def _evaluate_five_card_hand(cards, allow_four_straight=False):
 
 # Hitung damage berdasarkan kombinasi kartu
 def calculate_kerusakan(hand_type, hand_score, base_attack, level=1, is_enemy=False, defense=0):
-    """
-    Hitung damage berdasarkan kombinasi kartu, level, dan stat.
     
-    Level scaling signifikan: level 10 = ~3x base damage.
-    Defense berbasis persentase: 20 DEF = -40% damage (lebih berarti di level tinggi).
-    """
     hand_multipliers = {
         "Straight Flush": 5.0,
         "Four of a Kind": 4.5,
@@ -332,7 +317,6 @@ def show_combat_ui(player, enemy, overtime_progress=0, overtime_required=8, over
 
     print(f"\n{Warna.ABU_GELAP}{'─' * (tw - 1)}{Warna.RESET}")
 
-
 def make_energy_bar(current, maximum, length=20):
     """Create energy bar untuk skill display — warna teal kalem."""
     if maximum <= 0:
@@ -410,7 +394,6 @@ def _show_boss_retry_menu(retries_left, boss_name, Warna=Warna):
         except (KeyboardInterrupt, EOFError):
             return 'give_up'
 
-
 def run_combat(player_stats, enemy_data, inventory, party_members=None):
     """Card-based combat system dengan Boss Retry (max 3x) dan Checkpoint support."""
     import copy
@@ -481,7 +464,6 @@ def run_combat(player_stats, enemy_data, inventory, party_members=None):
             print(f"  {Warna.KUNING}Inventory dipulihkan ke kondisi sebelum battle.{Warna.RESET}")
             time.sleep(2)
             return 'checkpoint'
-
 
 def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
     """Internal: satu sesi combat (dipanggil oleh run_combat dengan retry wrapper)."""
@@ -974,27 +956,31 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
             print(f"\n{Warna.KUNING}═══════════════════════════════════════{Warna.RESET}")
             print(f"  {Warna.KUNING + Warna.TERANG}ITEMS{Warna.RESET}")
             print(f"{Warna.KUNING}═══════════════════════════════════════{Warna.RESET}\n")
-            
-            if not inventory:
-                print(f"  {Warna.ABU_GELAP}Tidak ada barang{Warna.RESET}")
+
+            # Fix: HUD Update — hanya tampilkan item biasa (bukan quest items) di combat
+            from constants import QUEST_ITEM_NAMES
+            usable_items = [it for it in inventory if it not in QUEST_ITEM_NAMES]
+
+            if not usable_items:
+                print(f"  {Warna.ABU_GELAP}Tidak ada barang yang bisa dipakai{Warna.RESET}")
                 time.sleep(1)
                 continue
-            
-            for i, item in enumerate(inventory, 1):
+
+            for i, item in enumerate(usable_items, 1):
                 print(f"  {Warna.KUNING}[{i}]{Warna.RESET} {item}")
-            
+
             print(f"\n  {Warna.ABU_GELAP}[0] Kembali{Warna.RESET}")
-            
+
             item_choice = input(f"\n  {Warna.PUTIH}Pilih barang: {Warna.RESET}").strip()
-            
+
             try:
                 idx = int(item_choice)
                 if idx == 0:
                     continue
-                if 1 <= idx <= len(inventory):
-                    item = inventory[idx - 1]
-                    inventory.pop(idx - 1)
-                    
+                if 1 <= idx <= len(usable_items):
+                    item = usable_items[idx - 1]
+                    inventory.remove(item)
+
                     if "Health" in item or "Healing" in item:
                         heal = 50
                         player['hp'] = min(player['max_hp'], player['hp'] + heal)
@@ -1003,9 +989,17 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
                         kerusakan_dealt = 40
                         enemy['hp'] -= kerusakan_dealt
                         action_taken = f"{Warna.MERAH}Pakai {item}: {kerusakan_dealt} kerusakan{Warna.RESET}"
+                    elif "Med Kit" in item:
+                        heal = 80
+                        player['hp'] = min(player['max_hp'], player['hp'] + heal)
+                        action_taken = f"{Warna.HIJAU}Pakai {item}: +{heal} HP{Warna.RESET}"
+                    elif "Bandage" in item:
+                        heal = 30
+                        player['hp'] = min(player['max_hp'], player['hp'] + heal)
+                        action_taken = f"{Warna.HIJAU}Pakai {item}: +{heal} HP{Warna.RESET}"
                     else:
                         action_taken = f"Pakai {item}"
-                    
+
                     combat_log.append(action_taken)
             except (ValueError, IndexError, KeyError):
                 print(f"\n  {Warna.MERAH}Input salah!{Warna.RESET}")

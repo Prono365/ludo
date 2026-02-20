@@ -17,6 +17,7 @@ from constants import (
     MAX_PARTY_SIZE,
     DEFAULT_PARTY_MEMBER_HP,
     GAME_VERSION,
+    QUEST_ITEM_NAMES,
 )
 
 # Data Sync
@@ -67,6 +68,7 @@ class GameState:
 
         self.inventory = []
         self.key_items = []
+        self.quest_items = []  # Fix: Quest item unik — dedup via add_quest_item()
 
         self.current_location = "island"
         self.visited_locations = set()
@@ -175,11 +177,7 @@ class GameState:
         return leveled_up
 
     def apply_character_level_gains(self, char_id):
-        """
-        Terapkan stat level-up gains sesuai karakter yang dipilih.
-        Dipanggil saat new game (setelah pilih karakter) DAN setelah load save
-        agar gains selalu sinkron dengan karakter.
-        """
+        
         try:
             from characters import CHARACTER_LEVEL_GAINS
             gains = CHARACTER_LEVEL_GAINS.get(char_id)
@@ -206,10 +204,27 @@ class GameState:
             return True
         return False
 
+    def add_quest_item(self, item_name):
+        # Fix: Ao Linh Drop — dedup guard untuk quest item unik
+        if item_name not in self.quest_items:
+            self.quest_items.append(item_name)
+        # Juga pastikan tidak ada duplikat di inventory biasa
+        while self.inventory.count(item_name) > 1:
+            self.inventory.remove(item_name)
+        if item_name in self.inventory:
+            self.inventory.remove(item_name)
+
     def add_item(self, item_name):
-        self.inventory.append(item_name)
+        # Fix: Auto-route quest items ke add_quest_item agar tidak duplikat
+        if item_name in QUEST_ITEM_NAMES:
+            self.add_quest_item(item_name)
+        else:
+            self.inventory.append(item_name)
 
     def remove_item(self, item_name):
+        if item_name in self.quest_items:
+            self.quest_items.remove(item_name)
+            return True
         if item_name in self.inventory:
             self.inventory.remove(item_name)
             return True
@@ -299,11 +314,7 @@ class GameState:
         return f"{hours}h {minutes}m"
 
     def save_checkpoint(self, location=None):
-        """
-        Simpan checkpoint sebelum boss fight.
-        Menyimpan: posisi/lokasi, HP, energy, inventory, key_items, story_flags.
-        Dipanggil dari exploration.py SEBELUM run_combat untuk boss.
-        """
+        
         import copy
         self.checkpoint_data = {
             'location':     location or self.current_location,
@@ -313,6 +324,7 @@ class GameState:
             'max_energy':   self.max_energy,
             'inventory':    list(self.inventory),
             'key_items':    list(self.key_items),
+            'quest_items':  list(self.quest_items),  # Fix: Boss Memory — save quest items
             'story_flags':  copy.deepcopy(self.story_flags),
             'dollars':      self.dollars,
             'xp':           self.xp,
@@ -321,11 +333,7 @@ class GameState:
         self.boss_retry_count = 0   # reset retry counter untuk boss baru
 
     def load_checkpoint(self):
-        """
-        Kembalikan state ke kondisi sebelum boss (checkpoint terakhir).
-        Dipanggil saat run_combat mengembalikan 'checkpoint'.
-        Returns True jika berhasil, False jika tidak ada checkpoint tersimpan.
-        """
+        
         import copy
         if not self.checkpoint_data:
             self.hp = max(1, int(self.max_hp * 0.50))
@@ -339,11 +347,11 @@ class GameState:
         self.max_energy        = data.get('max_energy', self.max_energy)
         self.inventory         = list(data.get('inventory', self.inventory))
         self.key_items         = list(data.get('key_items', self.key_items))
+        self.quest_items       = list(data.get('quest_items', self.quest_items))  # Fix: restore quest items
         self.story_flags       = copy.deepcopy(data.get('story_flags', self.story_flags))
         self.dollars           = data.get('dollars', self.dollars)
         self.xp                = data.get('xp', self.xp)
         return True
-
 
     def get_slot_filename(self):
         # Public: resolve active slot → filename
@@ -414,10 +422,7 @@ class GameState:
             return False, f"Save failed: {e}. Data backup preserved."
 
     def _check_tampering(self, save_data):
-        """
-        Detect jika file telah dimodifikasi secara manual.
-        Return (is_valid, error_message)
-        """
+        
         if '_checksum' not in save_data:
             return False, "Missing checksum - file corrupted or invalid"
         
@@ -436,10 +441,7 @@ class GameState:
         return True, "OK"
 
     def _show_vio_tampering_message(self):
-        """
-        Tampilkan pesan "nakal" dari Vio saat detect tampering.
-        Hanya bisa dipanggil jika game sudah running (imports available).
-        """
+        
         try:
             from sprites import Warna
             import time
