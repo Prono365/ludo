@@ -19,12 +19,15 @@ Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara me
 
 ## Fitur Utama
 
-- **Sistem Karakter Unik:** 5 karakter pilihan (Vio, Haikaru, Ao Lin, Arganta, Ignatius) dengan latar belakang, stats, dan skill spesifik.
-- **Mekanisme Combat Kartu:** Sistem pertarungan turn-based menggunakan logika poker (High Card, Pair, Flush, Straight Flush, dll).
-- **Inventory:** Pengelolaan item kunci untuk memecahkan puzzle.
-- **Peta Eksplorasi:** Sistem pergerakan pemain di peta 2D dengan musuh, NPC, dan interaksi objek.
-- **Save/Load System:** Kemampuan untuk menyimpan dan memuat progres permainan.
-- **Multi-language UI:** Antarmuka mendukung karakter UTF-8 untuk visualisasi peta dan warna.
+- **Sistem Karakter Unik:** 5 karakter pilihan (Vio, Haikaru, Ao Lin, Arganta, Ignatius) dengan latar belakang, stats, dan skill spesifik yang memengaruhi strategi permainan.
+- **Mekanisme Combat Kartu:** Sistem pertarungan turn-based menggunakan logika poker (High Card, Pair, Flush, Straight Flush, dll) untuk menentukan kekuatan serangan.
+- **Inventory:** Pengelolaan item kunci dan *quest items* untuk memecahkan puzzle lingkungan serta membuka progres chapter.
+- **Peta Eksplorasi:** Sistem pergerakan pemain di peta 2D yang dinamis, lengkap dengan kemunculan musuh, NPC interaktif, dan objek tersembunyi.
+- **Save/Load System:** Fitur penyimpanan progres yang kini mendukung hingga 5 slot (data.txt hingga data4.txt) dengan sistem proteksi data Base64.
+- **Multi-language UI:** Antarmuka yang mendukung karakter UTF-8 untuk visualisasi peta yang kaya warna dan fitur *autofit* yang responsif terhadap ukuran terminal.
+- **Boss Retry & Checkpoint:** Mekanisme percobaan ulang hingga 3 kali saat kalah melawan Boss dan sistem *snapshot* status otomatis sebelum pertempuran besar dimulai.
+- **Layanan Walkie-Talkie:** Akses menu toko dan interaksi NPC khusus (Bran Edwards) secara praktis melalui tombol pintas **[B]** tanpa harus kembali ke lokasi tertentu.
+- **Progresi Chapter:** Alur cerita mendalam yang terbagi dalam 6 Chapter, di mana setiap Chapter memiliki objektif unik dan syarat penyelesaian *sidequest* tertentu.
 
 ---
 
