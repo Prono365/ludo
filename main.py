@@ -228,7 +228,7 @@ def tampilkan_kredit():
     clear()
     header("KREDIT")
     
-    print(f)
+    print(TITLE_ART)
     
     wait()
 
