@@ -116,6 +116,13 @@ def _evaluate_five_card_hand(cards, allow_four_straight=False):
     
     if not cards:
         return ("Nothing", 0)
+    
+    # Validasi: semua kartu harus unik (tidak boleh kartu duplikat dari posisi yang sama)
+    # Cek dengan membandingkan identitas objek kartu
+    card_ids = [id(c) for c in cards]
+    if len(card_ids) != len(set(card_ids)):
+        # Ada kartu duplikat! Reject hand ini
+        return ("Invalid Hand (Duplicate Cards)", 0)
 
     sorted_cards = sorted(cards, key=lambda c: c.value, reverse=True)
     values = [c.value for c in sorted_cards]
@@ -1012,11 +1019,20 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
         
         else:
             try:
+                original_input = action
                 indices = [int(x.strip()) for x in action.split(',')]
+                
+                # Check for duplicates — reject if any found
+                if len(indices) != len(set(indices)):
+                    print(f"\n  {Warna.MERAH}Input salah! (tidak boleh ada duplikat indeks){Warna.RESET}")
+                    time.sleep(1)
+                    continue
+                
                 indices = [i for i in indices if 0 <= i < len(player_hand)]
+                indices = indices[:5]                            # max 5 kartu per aksi
                 
                 if not indices:
-                    print(f"\n  {Warna.MERAH}Pilihan kartu salah!{Warna.RESET}")
+                    print(f"\n  {Warna.MERAH}Pilihan kartu salah (indeks tidak valid atau di luar range)!{Warna.RESET}")
                     time.sleep(1)
                     continue
                 
@@ -1029,6 +1045,15 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
                 if allow_4s:
                     player['_buffs']['four_straight'] = 0
                 hand_type, hand_score = evaluate_hand(played_cards, allow_four_straight=allow_4s)
+                
+                # Validasi: reject invalid hands
+                if hand_type == "Invalid Hand (Duplicate Cards)" or hand_type == "Nothing":
+                    print(f"\n  {Warna.MERAH}Kombinasi kartu tidak valid!{Warna.RESET}")
+                    # Return cards ke hand
+                    for card in played_cards:
+                        player_hand.append(card)
+                    time.sleep(1)
+                    continue
                 
                 dialog = get_card_dialog(player.get('character_id', 'vio'), hand_type)
                 if dialog:
@@ -1099,25 +1124,41 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
                     if action2 and action2 != '':
                         try:
                             idx2 = [int(x.strip()) for x in action2.split(',')]
-                            idx2 = [i for i in idx2 if 0 <= i < len(player_hand)]
-                            if idx2:
-                                played2 = [player_hand[i] for i in sorted(idx2, reverse=True)]
-                                for i in sorted(idx2, reverse=True):
-                                    player_hand.pop(i)
-                                ht2, hs2 = evaluate_hand(played2)
-                                p_atk2  = int(player_attack * 1.75)  # Overtime boost tetap aktif
-                                dmg2    = calculate_kerusakan(ht2, hs2, p_atk2,
-                                                              player.get('level', 1),
-                                                              defense=defense_reduction)
-                                enemy['hp'] -= dmg2
-                                combo_msg = (f"{Warna.MERAH}⚡ OVERTIME Combo-2: {ht2}: "
-                                             f"{dmg2} kerusakan!{Warna.RESET}")
-                                combat_log.append(combo_msg)
-                                print(f"  {combo_msg}")
+                            
+                            # Check for duplicates — reject if any found
+                            if len(idx2) != len(set(idx2)):
+                                print(f"\n  {Warna.MERAH}Input salah! (tidak boleh ada duplikat indeks){Warna.RESET}")
                                 time.sleep(1)
-                                for _ in played2:
-                                    if deck:
-                                        player_hand.append(deck.pop())
+                            else:
+                                idx2 = [i for i in idx2 if 0 <= i < len(player_hand)]
+                                idx2 = idx2[:5]                            # max 5 kartu per aksi
+                                if idx2:
+                                    played2 = [player_hand[i] for i in sorted(idx2, reverse=True)]
+                                    for i in sorted(idx2, reverse=True):
+                                        player_hand.pop(i)
+                                    ht2, hs2 = evaluate_hand(played2)
+                                    
+                                    # Validasi: reject invalid hands
+                                    if ht2 == "Invalid Hand (Duplicate Cards)":
+                                        print(f"\n  {Warna.MERAH}Kombinasi kartu tidak valid!{Warna.RESET}")
+                                        # Return cards ke hand
+                                        for card in played2:
+                                            player_hand.append(card)
+                                        time.sleep(1)
+                                    else:
+                                        p_atk2  = int(player_attack * 1.75)  # Overtime boost tetap aktif
+                                        dmg2    = calculate_kerusakan(ht2, hs2, p_atk2,
+                                                                      player.get('level', 1),
+                                                                      defense=defense_reduction)
+                                        enemy['hp'] -= dmg2
+                                        combo_msg = (f"{Warna.MERAH}⚡ OVERTIME Combo-2: {ht2}: "
+                                                     f"{dmg2} kerusakan!{Warna.RESET}")
+                                        combat_log.append(combo_msg)
+                                        print(f"  {combo_msg}")
+                                        time.sleep(1)
+                                        for _ in played2:
+                                            if deck:
+                                                player_hand.append(deck.pop())
                         except (ValueError, IndexError):
                             pass
 

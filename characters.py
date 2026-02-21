@@ -686,13 +686,13 @@ CHARACTER_MAIN_QUESTS = {
         1: {
             "id":     "ignatius_ch1_main",
             "title":  "Engineering Time: Sabotase Sistem",
-            "objective": "Kumpulkan komponen EMP — kalahkan Security Bot Mk-II",
+            "objective": "Kumpulkan komponen EMP — kalahkan AmBOTukam Mk II",
             "boss_id":   "security_bot",
-            "boss_name": "Security Bot Mk-II",
+            "boss_name": "AmBOTukam Mk II",
             "steps": [
                 "Kumpulkan 'Kapasitor Besar' dari panel listrik basement",
                 "Kumpulkan 'Relay Switch' dan 'Copper Coil' di storage room",
-                "Kalahkan Security Bot Mk-II yang menjaga generator utama",
+                "Kalahkan AmBOTukam Mk II yang menjaga generator utama",
             ],
             "completion_flag": "ignatius_ch1_complete",
             "next_chapter_msg": "SISTEM DIRETAS! Generator down. EZ hack. Let's blow this joint!",

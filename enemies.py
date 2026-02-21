@@ -531,7 +531,7 @@ BOSSES = {
     
     "security_bot": {
         "id": "security_bot",
-        "name": "Security Bot Mk-II",
+        "name": "AmBOTukam Mk II",
         "level": 8,
         "hp": 230,      # Balance: Boss HP ~210-250
         "max_hp": 240,
@@ -546,12 +546,12 @@ BOSSES = {
         "loot": ["Generator Key", "Circuit Fragments"],
         "dialog": {
             "encounter": [
-                "SECURITY BOT: INTRUDER DETECTED.",
-                "SECURITY BOT: INITIATING THREAT ELIMINATION PROTOCOL.",
-                "SECURITY BOT: RESISTANCE IS FUTILE."
+                "AMBOTUKAM MK II: INTRUDER DETECTED.",
+                "AMBOTUKAM MK II: INITIATING THREAT ELIMINATION PROTOCOL.",
+                "AMBOTUKAM MK II: RESISTANCE IS FUTILE."
             ],
             "defeat": [
-                "SECURITY BOT: SYSTEM FAIL... CORE BREACH...",
+                "AMBOTUKAM MK II: SYSTEM FAIL... CORE BREACH...",
                 "*Robot berhenti bergerak. Lampu merahnya mati perlahan.*",
                 "Ignatius: Satu EMP tepat sasaran. Seperti yang sudah kuhitung."
             ]

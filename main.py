@@ -558,7 +558,7 @@ def layar_kemenangan(gs):
 
     print(f"\n{sep_gold}")
     print(f"{Warna.KUNING + Warna.TERANG}{'TERIMA KASIH SUDAH BERMAIN!'.center(tw)}{Warna.RESET}")
-    print(f"{Warna.ABU_GELAP}{'Cursed Island Escape — by AoLinh Dev'.center(tw)}{Warna.RESET}")
+    print(f"{Warna.ABU_GELAP}{'Cursed Island Escape — by Kelompok Ludo'.center(tw)}{Warna.RESET}")
     print(sep_gold)
     wait()
 

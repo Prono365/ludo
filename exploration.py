@@ -407,7 +407,7 @@ class GameMap:
             "haikaru":  ("warden_elite",      12, self.height - 3, "Warden Elite"),
             "aolinh":   ("theater_master",    12, 4,               "Theater Master"),
             "arganta":  ("harbor_captain",    8,  self.height // 2, "Harbor Captain"),
-            "ignatius": ("security_bot",      12, self.height - 3, "Security Bot Mk-II"),
+            "ignatius": ("security_bot",      12, self.height - 3, "AmBOTukam Mk II"),
         }
         
         if chapter == 1:
@@ -884,9 +884,18 @@ def create_game_map(map_id, gs=None):
             taken_items = set(gs.story_flags.get(taken_key, []))
             respawn_log = gs.story_flags.get(f"item_respawn_{map_id}", {}) or {}
             now = time.time()
+            
+            player_inventory_items = set(gs.inventory) if hasattr(gs, 'inventory') else set()
+            player_quest_items = set(gs.quest_items) if hasattr(gs, 'quest_items') else set()
+            player_items = player_inventory_items | player_quest_items
 
             def _item_visible(it):
+                item_name = it.get('item', '')
                 coord = f"{it['x']},{it['y']}"
+                
+                if item_name in player_items:
+                    return False
+                
                 if coord not in taken_items:
                     return True
                 delay = it.get('respawn_delay', 0)
@@ -906,8 +915,12 @@ def loop_eksplorasi(gs, gm):
 
     taken_key   = f"items_taken_{gm.map_id}"
     taken_items = set(gs.story_flags.get(taken_key, []))
-    respawn_log = gs.story_flags.get(f"item_respawn_{gm.map_id}", {})
+    respawn_log = gs.story_flags.get(f"item_respawn_{gm.map_id}", {}) or {}
     now = time.time()
+    
+    # Ensure the taken_items key is initialized in story_flags to track items across map changes
+    if taken_key not in gs.story_flags:
+        gs.story_flags[taken_key] = []
 
     # Logic: Timed item respawn — filter only items not yet due for respawn
     def _item_visible(it):

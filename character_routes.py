@@ -223,11 +223,11 @@ CH1_PRE_BOSS_DIALOGS = {
     },
     'ignatius': {
         'security_bot': [
-            ('narasi', "Generator room utama. Security Bot Mk-II aktif dan berputar menghadap Ignatius."),
-            ('system', ">> SECURITY BOT: UNAUTHORIZED PERSONNEL DETECTED"),
+            ('narasi', "Generator room utama. AmBOTukam Mk II aktif dan berputar menghadap Ignatius."),
+            ('system', ">> AMBOTUKAM MK II: UNAUTHORIZED PERSONNEL DETECTED"),
             ('system', ">> INITIATING ELIMINATION PROTOCOL"),
             ('dialog', "Ignatius: *tersenyum lebar* Oh halo juga, teman lama."),
-            ('inner',  "[Security Bot Mk-II. Model 2019. Weakpoint: central capacitor bank.]"),
+            ('inner',  "[AmBOTukam Mk II. Model 2019. Weakpoint: central capacitor bank.]"),
             ('inner',  "[Kalau EMP prototype deliver pulse ke capacitor... sistem crash total.]"),
             ('dialog', "Ignatius: Kamu jaga generator. Bagus."),
             ('dialog', "Ignatius: Tapi aku akan matiin kamu pakai generator kamu sendiri."),
