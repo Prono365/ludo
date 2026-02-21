@@ -228,7 +228,31 @@ def tampilkan_kredit():
     clear()
     header("KREDIT")
     
-    print(TITLE_ART)
+    print(f"""
+{Warna.KUNING}CURSED ISLAND ESCAPE v{VERSI}{Warna.RESET}
+
+{Warna.CYAN}Developers:{Warna.RESET}
+  - Ahmad Haikal Ramadhan
+  - Alif Rizky Ramadhan Atmadja
+  - M Vallerian Aprilio Gunawan
+  - Ignatius Nino Jumantoro
+  - Evan Arganta
+
+{Warna.HIJAU}SMKN 2 JAKARTA Class X RPL 1{Warna.RESET}
+
+{Warna.CYAN}Inspirasi/Referensi:{Warna.RESET}
+  - Sword and Poker
+  - Final Fantasy Adventure
+  - Atari Adventure
+  - The Legend of Zelda
+  - Balatro
+  - jeffrey Epstein Case and Files #justiceforvictim
+
+{Warna.CYAN}Engine:{Warna.RESET}
+  Python 3.6+ CLI
+
+{Warna.ABU_GELAP}
+    """)
     
     wait()
 
