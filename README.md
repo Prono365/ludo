@@ -2,7 +2,7 @@
 
 <img width="3780" height="1890" alt="CURSED(1)" src="https://github.com/user-attachments/assets/a6bd0ded-f651-48ea-a334-554426b8d1f0" />
 
-**RPG Adventure Game dengan Sistem Pertarungan Kartu (Poker) Berbasis Command Line Interface (CLI)**
+**RPG Adventure Game dengan Sistem Pertarungan Kartu (Big Two) Berbasis Command Line Interface (CLI)**
 
 ![Python](https://img.shields.io/badge/Python-3.6%2B-blue)
 ![License](https://img.shields.io/badge/License-Educational-green)
@@ -51,7 +51,7 @@ Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara me
     Pastikan file utama `main.py` dan file pendukung lainnya (`characters.py`, `story.py`, `combat.py`, dll.) berada dalam satu folder yang sama.
 
 3.  **Jalankan Game**
-    Buka terminal di dalam folder proyek, lalu ketik perintah berikut:
+    Buka terminal di dalam folder proyek, jalankan `launcher.bat` atau ketik perintah berikut:
 
     ```bash
     python main.py
@@ -68,6 +68,7 @@ Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara me
 Berikut adalah penjelasan singkat mengenai struktur utama proyek ini:
 
 ```
+├── launcher.bat           # Launcher program.
 ├── main.py                # Entry point utama program, loop game, dan menu.
 ├── characters.py          # Database karakter, stats, skill, dan data NPC.
 ├── enemies.py             # Data musuh, boss, dan logika spawn musuh.

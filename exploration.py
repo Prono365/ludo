@@ -81,7 +81,6 @@ def _direction_arrow(px, py, tx, ty):
     return "↖" if dx < 0 and dy < 0 else "↙"
 
 def _manhattan(px, py, tx, ty):
-#   Calculate Manhattan distance
     return abs(tx - px) + abs(ty - py)
 
 def _distance_label(dist):
@@ -424,16 +423,18 @@ class GameMap:
                     self.place_boss_door(boss_x, boss_y, boss_id, boss_desc)
         elif chapter == 2:
             if gs.story_flags.get('ch2_bosses_available', False):
-                for boss_id, (boss_x, boss_y) in {('island_mid_boss', (11, 9)), ('prison_south_boss', (12, 14))}:
-                    if all(d['boss_id'] != boss_id for d in self.boss_doors):
-                        self.place_boss_door(boss_x, boss_y, boss_id, "BOSS")
+                boss_id = 'kepala_penjaga'
+                if not any(d['boss_id'] == boss_id for d in self.boss_doors):
+                    self.place_boss_door(
+                        self.width // 2, self.height // 2,
+                        boss_id, "Kepala Penjaga"
+                    )
         elif chapter == 3:
             if gs.story_flags.get('final_bosses_available', False):
-                for boss_id, (boss_x, boss_y) in {('doctor_rousseau', (10, 7)), ('mysterious_benefactor', (14, 11))}:
-                    if all(d['boss_id'] != boss_id for d in self.boss_doors):
-                        self.place_boss_door(boss_x, boss_y, boss_id, "BOSS")
+                if all(d['boss_id'] != 'doctor_rousseau' for d in self.boss_doors):
+                    self.place_boss_door(10, 7, 'doctor_rousseau', "Dr. Rousseau")
                 if all(d['boss_id'] != 'epstein_boss' for d in self.boss_doors):
-                    self.place_boss_door(self.width // 2, self.height // 2, "epstein_boss", "FINAL BOSS")
+                    self.place_boss_door(self.width // 2, self.height // 2, 'epstein_boss', "FINAL BOSS")
 
     def check_and_spawn_bosses(self, gs):
         # Public: check and spawn bosses based on chapter and character.
@@ -721,7 +722,7 @@ class GameMap:
             row = "  "
             for x in range(cx, min(cx + vw, self.width)):
                 if x == self.player_x and y == self.player_y:
-                    row += f"{Warna.HIJAU + Warna.TERANG}@ {Warna.RESET}"
+                    row += f"{Warna.UNGU + Warna.TERANG}P {Warna.RESET}"
                     continue
                 rendered = False
                 for enemy in self.enemies:
@@ -796,7 +797,7 @@ class GameMap:
                     rows.append(f"  {col}{_trunc(label, max_w - 3)}{Warna.RESET}")
             return rows
 
-        legend = (f"{Warna.HIJAU}@{Warna.RESET}=Kamu "
+        legend = (f"{Warna.UNGU}P{Warna.RESET}=Kamu "
                   f"{Warna.CYAN}N{Warna.RESET}=NPC "
                   f"{Warna.KUNING}I{Warna.RESET}=Item "
                   f"{Warna.MERAH}E{Warna.RESET}=Musuh "
@@ -821,7 +822,7 @@ class GameMap:
                 print(f"{left}{sep} {right}")
 
             print(f"{Warna.ABU_GELAP}{'─' * (tw - 1)}{Warna.RESET}")
-            ctrl = "W/A/S/D=Gerak  I=Barang  Q=NPC Quest  B=Bran  X=Save  ESC=Keluar"
+            ctrl = "W/A/S/D=Gerak  I=Barang  Q=NPC Quest  B=Bran  X=Save  E=Keluar"
             print(f"  {legend}  {Warna.ABU_GELAP}|{Warna.RESET}  {Warna.ABU_GELAP}{ctrl}{Warna.RESET}")
             print(f"{Warna.ABU_GELAP}{'─' * (tw - 1)}{Warna.RESET}")
         else:
@@ -876,6 +877,28 @@ def create_game_map(map_id, gs=None):
             if f"{map_id}:{e['x']}:{e['y']}" not in defeated_set
         ]
 
+        # Filter items that were already taken (persisted in story_flags) so they
+        # don't reappear when the map is regenerated. Also respect respawn_delay.
+        try:
+            taken_key = f"items_taken_{map_id}"
+            taken_items = set(gs.story_flags.get(taken_key, []))
+            respawn_log = gs.story_flags.get(f"item_respawn_{map_id}", {}) or {}
+            now = time.time()
+
+            def _item_visible(it):
+                coord = f"{it['x']},{it['y']}"
+                if coord not in taken_items:
+                    return True
+                delay = it.get('respawn_delay', 0)
+                if not delay or delay <= 0:
+                    return False
+                ts = respawn_log.get(coord, 0)
+                return (now - ts) >= delay
+
+            gm.items = [it for it in gm.items if _item_visible(it)]
+        except Exception:
+            pass
+
     return gm
 
 def loop_eksplorasi(gs, gm):
@@ -922,7 +945,7 @@ def loop_eksplorasi(gs, gm):
             cp_hint = (f" {Warna.HIJAU}[✓ Checkpoint Saved]{Warna.RESET}"
                        if time.time() - _checkpoint_flash < 3 else "")
             print(f"\n{Warna.ABU_GELAP}W/A/S/D=Gerak | I=Barang | Q=NPC | B=Toko | "
-                  f"X=Simpan({slot_label}) | ESC=Keluar{Warna.RESET}{cp_hint}")
+                  f"X=Simpan({slot_label}) | E=Keluar{Warna.RESET}{cp_hint}")
 
             flush_input()
             cmd = input(f"{Warna.CYAN}> {Warna.RESET}").strip().lower()
@@ -1581,6 +1604,53 @@ def handle_hasil(hasil, gs, gm):
                         char_id = gs.player_character
                         chapter = int(gs.story_flags.get('current_chapter', 1))
 
+                        # Bug Fix: Ch1 boss kill credits remaining combat objectives
+                        # then uses dedicated ch1 system instead of generic quest tracker.
+                        if chapter == 1:
+                            try:
+                                from character_routes import (
+                                    get_ch1_quest, update_ch1_objective,
+                                    check_ch1_objective_progress, check_ch1_complete,
+                                    display_ch1_completion,
+                                )
+                                q_data = get_ch1_quest(char_id)
+                                if q_data:
+                                    for obj in q_data['objectives']:
+                                        if obj.get('type') == 'combat':
+                                            cur, tot = check_ch1_objective_progress(gs, obj['id'])
+                                            if cur < tot:
+                                                update_ch1_objective(gs, obj['id'], tot - cur)
+                                    if check_ch1_complete(gs):
+                                        # Reward XP/dollars before completion screen
+                                        xp_gain = boss.get('xp', 50)
+                                        if leveled := gs.gain_xp(xp_gain):
+                                            gains = getattr(gs, 'level_up_gains', {})
+                                            print(f"\n{Warna.KUNING}  ⭐ LEVEL UP! Level {gs.level}{Warna.RESET}")
+                                        dol = boss.get('dollars', 0)
+                                        if dol > 0:
+                                            gs.dollars += dol
+                                            print(f"  {Warna.KUNING}💵 +${dol}{Warna.RESET}")
+                                        display_ch1_completion(gs)
+                                        return 'map_change'
+                            except Exception:
+                                pass
+                            # Fallback: force chapter advance even if ch1 system fails
+                            gs.story_flags['current_chapter'] = 2
+                            gs.story_flags['ch2_bosses_available'] = True
+                            gs.active_quests = [q for q in gs.active_quests if q.get('quest_type') == 'side']
+                            print(f"\n{Warna.KUNING}{'═'*60}{Warna.RESET}")
+                            print(f"  {Warna.KUNING + Warna.TERANG}★  CHAPTER 1 SELESAI!  ★{Warna.RESET}")
+                            print(f"  {Warna.HIJAU}Chapter 2 dimulai — Eksplorasi Pulau!{Warna.RESET}")
+                            print(f"{Warna.KUNING}{'═'*60}{Warna.RESET}")
+                            time.sleep(3)
+
+                            xp_gain = boss.get('xp', 50)
+                            gs.gain_xp(xp_gain)
+                            dol = boss.get('dollars', 0)
+                            if dol > 0:
+                                gs.dollars += dol
+                            return 'map_change'
+
                         # Ambil data quest utama chapter ini
                         try:
                             from characters import CHARACTER_MAIN_QUESTS
@@ -1975,6 +2045,18 @@ def interaksi_npc(npc_id, gs, gm):
             # Tampilkan briefing quest — hanya ditampilkan sekali
             display_npc_quest_briefing(npc_id, gs)
             gs.story_flags[sq_started_flag] = True
+            # Jika pemain sudah memiliki item yang dibutuhkan sebelum menerima quest,
+            # langsung selesaikan sidequest agar tidak butuh pickup ulang.
+            try:
+                from npc_interactions import is_sidequest_complete, display_npc_completion
+                if is_sidequest_complete(npc_id, gs):
+                    gs.story_flags[sq_flag] = True
+                    gs.complete_quest(f"recruit_{npc_id}")
+                    display_npc_completion(npc_id, gs)
+                    time.sleep(1.2)
+                    return
+            except Exception:
+                pass
         else:
             # Quest sudah dimulai — cek apakah sudah selesai
             # FIX bug: urutan parameter yang benar — (npc_id, game_state)
@@ -2138,6 +2220,14 @@ def save_menu(gs):
                     gs.current_slot = sel
             except (ValueError, KeyboardInterrupt, EOFError):
                 pass
+        
+        # Copy current settings to game state before saving
+        try:
+            from main import SETTINGS
+            gs.settings = dict(SETTINGS)
+        except (ImportError, AttributeError):
+            pass
+        
         sukses, msg = gs.save_to_file()
         print(f"\n{Warna.HIJAU if sukses else Warna.MERAH}{msg}{Warna.RESET}")
         if sukses:

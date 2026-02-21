@@ -114,6 +114,14 @@ class GameState:
         self.last_save = None
         self.game_completed = False
         self.current_slot = 0  # Public: active save slot (0–4)
+        
+        # Game settings - saved with game state
+        self.settings = {
+            'dialog_speed': 0.03,
+            'combat_difficulty': 1.2,
+            'auto_save': False,
+            'show_tutorial': True
+        }
 
         # ── CHECKPOINT SYSTEM ──────────────────────────────────────────────
         # Checkpoint di-set otomatis sebelum boss fight (dipanggil dari exploration.py)
@@ -364,6 +372,15 @@ class GameState:
             filename = self.get_slot_filename()
         backup_name = f"{filename}.bak"
         try:
+            # Ensure playtime and last_save are up-to-date in the serialized data
+            try:
+                self.update_playtime()
+            except Exception:
+                pass
+            try:
+                self.last_save = datetime.now()
+            except Exception:
+                pass
             if os.path.exists(filename):
                 shutil.copy2(filename, backup_name)
 

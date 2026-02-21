@@ -558,6 +558,62 @@ BOSSES = {
         }
     },
 
+    "kepala_penjaga": {
+        "id": "kepala_penjaga",
+        "name": "Kepala Penjaga",
+        "level": 10,
+        "hp": 350,
+        "max_hp": 350,
+        "attack": 22,
+        "defense": 15,
+        "speed": 12,
+        "xp": 300,
+        "dollars": 80,
+        "desc": "Kepala Penjaga pulau yang memblokir jalan utama",
+        "sprite": "K",
+        "boss": True,
+        "loot": ["Kunci Master Penjara", "Walkie-Talkie Penjaga"],
+        "dialog": {
+            "encounter": [
+                "Kepala Penjaga memblokir jalan kalian.",
+                "'Kamu pikir bisa kabur? Pulau ini penjara sempurna.'",
+                "'Tidak ada yang pernah berhasil keluar.'",
+            ],
+            "defeat": [
+                "Kepala Penjaga jatuh. Kunci master-nya terlepas dari sakunya.",
+                "Jalan menuju chapter berikutnya terbuka.",
+            ]
+        }
+    },
+
+    "agen_maxwell": {
+        "id": "agen_maxwell",
+        "name": "Maxwell's Agent",
+        "level": 13,
+        "hp": 530,
+        "max_hp": 530,
+        "attack": 35,
+        "defense": 22,
+        "speed": 18,
+        "xp": 500,
+        "dollars": 150,
+        "desc": "Agen Maxwell yang menjaga laboratorium dengan instruksi tanpa ampun",
+        "sprite": "A",
+        "boss": True,
+        "loot": ["Kartu Akses Lab", "Encrypted Files"],
+        "dialog": {
+            "encounter": [
+                "Maxwell's Agent berdiri di tengah laboratorium.",
+                "'Anak-anak kecil yang mana coba berani masuk ke sini.'",
+                "'Maxwell sudah kasih instruksi jelas: tidak ada saksi.'",
+            ],
+            "defeat": [
+                "Agent jatuh. Sistem keamanan lab tidak merespons lagi.",
+                "Kartu akses ke vault dokumen kini ada di tanganmu.",
+            ]
+        }
+    },
+
     "epstein_boss": {
         "id": "epstein_boss",
         "name": "Jeffrey Epstein",

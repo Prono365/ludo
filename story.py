@@ -2148,7 +2148,14 @@ CHARACTER_BACKSTORIES = {
     }
 }
 
-def print_story_slow(text, delay=0.03):
+def print_story_slow(text, delay=None):
+    # Use dialog_speed from SETTINGS if available, otherwise use provided delay or default
+    if delay is None:
+        try:
+            from main import SETTINGS
+            delay = SETTINGS.get('dialog_speed', 0.03)
+        except (ImportError, AttributeError):
+            delay = 0.03
     
     print_slow(text, delay=delay, allow_skip=True)
 
@@ -2164,9 +2171,6 @@ def display_chapter(chapter_id, skip_delays=False, game_state=None):
     print(f"{Warna.KUNING + Warna.TERANG}{chapter['title'].center(_tw())}{Warna.RESET}")
     print(f"{Warna.CYAN}{'═' * (_tw() - 1)}{Warna.RESET}\n")
 
-    if not skip_delays:
-        time.sleep(0.3)
-
     for line in chapter['content']:
         # Interpolate player info before displaying
         display_line = _interpolate_player_info(line, game_state)
@@ -2176,11 +2180,8 @@ def display_chapter(chapter_id, skip_delays=False, game_state=None):
                 print(f"  {display_line}")
             else:
                 print_story_slow(f"  {display_line}")
-                time.sleep(0.4)
         else:
             print()
-            if not skip_delays:
-                time.sleep(0.5)
 
     return True
 
@@ -2196,20 +2197,14 @@ def display_backstory(character_id, skip_delays=False):
     print(f"{Warna.KUNING + Warna.TERANG}{backstory['title'].center(_tw())}{Warna.RESET}")
     print(f"{Warna.CYAN}{'═' * (_tw() - 1)}{Warna.RESET}\n")
 
-    if not skip_delays:
-        time.sleep(0.3)
-
     for line in backstory['content']:
         if line:
             if skip_delays:
                 print(f"  {line}")
             else:
                 print_story_slow(f"  {line}")
-                time.sleep(0.3)
         else:
             print()
-            if not skip_delays:
-                time.sleep(0.4)
     return True
 
 def display_route_chapter(chapter_id, skip_delays=False):
@@ -2231,21 +2226,14 @@ def display_route_chapter(chapter_id, skip_delays=False):
     print(f"{title_color}{chapter['title'].center(_tw())}{Warna.RESET}")
     print(f"{border_color}{'═' * (_tw() - 1)}{Warna.RESET}\n")
 
-    if not skip_delays:
-        time.sleep(0.3)
-
     for line in chapter['content']:
         if line:
             if skip_delays:
                 print(f"  {line}")
             else:
                 print_story_slow(f"  {line}")
-                time.sleep(0.4)
         else:
             print()
-            if not skip_delays:
-                time.sleep(0.5)
-
     return True
 
 def play_route_story(char_id, gs=None, skip_delays=False):

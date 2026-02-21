@@ -36,11 +36,11 @@ def tutorial_eksplorasi():
     print(f"    {Warna.KUNING}B{Warna.RESET}   = Buka Toko Bran (dari mana saja!)")
     print(f"    {Warna.CYAN}Q{Warna.RESET}   = Status Quest & NPC")
     print(f"    {Warna.CYAN}X{Warna.RESET}   = Save Game")
-    print(f"    {Warna.ABU_GELAP}ESC/E{Warna.RESET} = Keluar")
+    print(f"    {Warna.ABU_GELAP}E{Warna.RESET}   = Keluar")
 
     print()
     print(f"  {Warna.KUNING}Simbol di Peta:{Warna.RESET}")
-    print(f"    {Warna.HIJAU}@{Warna.RESET}  = Kamu")
+    print(f"    {Warna.UNGU}P{Warna.RESET}  = Kamu")
     print(f"    {Warna.CYAN}N{Warna.RESET}  = NPC (punya sidequest penting!)")
     print(f"    {Warna.KUNING}I{Warna.RESET}  = Item")
     print(f"    {Warna.MERAH}E{Warna.RESET}  = Musuh biasa (bisa dicoba kabur)")

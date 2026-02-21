@@ -279,10 +279,11 @@ def pilih_slot(gs, aksi="load"):
 
         if summary:
             has_any = True
+            loc = summary.get('location','?').capitalize()[:8]
             print(f"  {Warna.KUNING}[{slot_idx + 1}]{Warna.RESET} "
                   f"Slot {slot_idx + 1} — {summary['player']} "
-                  f"Lv.{summary['level']} | {summary['playtime']} "
-                  f"| Ch.{summary.get('location','?')[:8]}")
+                  f"| Level: {summary['level']} | Waktu: {summary['playtime']} "
+                  f"| Lokasi: {loc}")
         else:
             empty_label = f"  {Warna.ABU_GELAP}[{slot_idx + 1}]{Warna.RESET} Slot {slot_idx + 1} — Kosong"
             if aksi == "load":
@@ -338,10 +339,15 @@ def muat_game(gs):
         if confirm == 'y':
             sukses, msg = gs.load_from_file(fname)
             print(f"\n{Warna.HIJAU if sukses else Warna.MERAH}{msg}{Warna.RESET}\n")
-            if sukses and gs.player_character:
-                char_data = PLAYABLE_CHARACTERS.get(gs.player_character, {})
-                if char_data and 'player_skills' not in gs.story_flags:
-                    gs.story_flags['player_skills'] = char_data.get('skills', {})
+            if sukses:
+                # Apply loaded settings to the global SETTINGS dict
+                if hasattr(gs, 'settings') and isinstance(gs.settings, dict):
+                    SETTINGS.update(gs.settings)
+                
+                if gs.player_character:
+                    char_data = PLAYABLE_CHARACTERS.get(gs.player_character, {})
+                    if char_data and 'player_skills' not in gs.story_flags:
+                        gs.story_flags['player_skills'] = char_data.get('skills', {})
                 if not hasattr(gs, 'energy') or gs.energy == 0:
                     base_energy = 20 + char_data.get('stats', {}).get('speed', 10) // 2
                     gs.energy     = base_energy
@@ -356,19 +362,16 @@ def muat_game(gs):
     return False
 
 def wait_or_timeout(timeout_seconds=1.5):
-    """Auto-advance atau skip dengan ENTER"""
-    # Just sleep - simple and reliable
-    # Input masking bikin hang, jadi skip aja
-    time.sleep(timeout_seconds)
+    """Auto-advance atau skip dengan ENTER - respects dialog speed setting"""
+    pass
 
 def menu_utama():
     # Menampilkan dan mengelola menu utama permainan
     """Menu utama"""
     clear()
     
-    # Just print title art directly - no typewriter effect to avoid hang
+    # Print title art with dialog speed scaling
     print(f"{TITLE_ART}")
-    wait_or_timeout(1.5)
     
     clear()
     print(f"\n{get_title_simple(VERSI)}")
@@ -402,6 +405,9 @@ def menu_utama():
             # Pilih slot untuk menyimpan game baru
             if not pilih_slot(gs, aksi="save"):
                 continue
+
+            # Store current settings in game state
+            gs.settings = dict(SETTINGS)
 
             clear()
             display_backstory(gs.player_character)

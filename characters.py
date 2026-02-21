@@ -481,7 +481,7 @@ CHARACTER_LEVEL_GAINS = {
     },
 }
 
-# NPC spesial (Candala, Joker, Phone Call)
+# NPC spesial (Candala)
 SPECIAL_NPC = {
     "candala": {
         "name": "Candala",
@@ -501,64 +501,6 @@ SPECIAL_NPC = {
         "encounter_chance": 0.03,
         "location": "special_hidden",
         "can_join": False
-    },
-    
-    "balatro_joker": {
-        "name": "The Joker",
-        "title": "Master of Cards",
-        "age": "???",
-        "gender": "Unknown",
-        "desc": "Mysterious figure yang master dalam card games",
-        "sprite": ("🃏", Warna.UNGU + Warna.TERANG, ""),
-        "backstory": "Figura misterius yang muncul saat poker hand dimainkan dengan sempurna. Konon dia adalah representasi dari 'luck' itu sendiri.",
-        "dialog": [
-            "Joker: *appears with a flourish of cards* Impressive hand, young one...",
-            "Joker: In the grand casino of life, you're playing your cards well.",
-            "Joker: The house always wins? Not if you know the game!",
-            "Joker: Here's a secret: sometimes the joker is wild, sometimes it's wisdom.",
-            "Joker: *scatters into playing cards* Remember: every hand is a new chance!",
-            "Joker: FLUSH FIVE activated! MEGA BOOST!",
-            "Joker: HIGH CARD into STRAIGHT FLUSH? That's MY kind of play!",
-            "Joker: Ride the Chaos! Let's MULTIPLY those chips!"
-        ],
-        "encounter_chance": 0.05,
-        "location": "combat_special",
-        "can_join": False,
-        "bonus": {
-            "mult": 1.5,
-            "chips": 100,
-            "buff": "Lucky Joker: +50% damage next turn"
-        }
-    },
-    
-    "prabowo_phone": {
-        "name": "???",
-        "title": "Mysterious Phone Call",
-        "age": "???",
-        "gender": "Male",
-        "desc": "Suara familiar yang terdengar dari ruang komunikasi...",
-        "sprite": ("📞", Warna.HIJAU + Warna.TERANG, ""),
-        "backstory": "Sebuah phone call yang tidak disengaja Dia dengar di communication room pulau...",
-        "dialog": [
-            "*Phone ringing... someone picks up*",
-            "Voice 1: \"Jeffrey, the shipment is delayed. My contacts in Jakarta are getting nervous.\"",
-            "Voice 2 (Epstein): \"Relax, my friend. The operation has been running smoothly for years.\"",
-            "Voice 1: \"Those kids you requested... they'll arrive next week. Very discreet.\"",
-            "Voice 2: \"Excellent. And the offshore accounts?\"",
-            "Voice 1: \"All clean. Nobody will trace anything back to either of us.\"",
-            "Voice 2: \"That's why I work with you. Always reliable, always powerful.\"",
-            "Voice 1: \"Just keep your end clean. If this goes public—\"",
-            "Voice 2: \"It won't. We have friends in very high places. Even presidents.\"",
-            "*Footsteps approaching... you quickly hide*",
-            "*The voices fade as the call ends*",
-            "",
-            f"{Warna.MERAH}[You've uncovered something dark... This information could change everything.]{Warna.RESET}",
-            f"{Warna.ABU_GELAP}[Evidence recorded in your memory. This could expose the whole network...]{Warna.RESET}"
-        ],
-        "encounter_chance": 0.02,
-        "location": "mansion_communication_room",
-        "can_join": False,
-        "unlocks": "secret_evidence"
     }
 }
 

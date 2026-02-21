@@ -858,6 +858,14 @@ def display_ch1_completion(game_state):
     print()
     separator()
     wait_input("Tekan ENTER untuk lanjut ke Chapter 2... ")
+    # Auto-advance chapter so the game immediately recognizes Ch2 is available
+    try:
+        game_state.story_flags['current_chapter'] = 2
+        game_state.story_flags['ch2_bosses_available'] = True
+        # Keep only side quests in active_quests (main quest completed)
+        game_state.active_quests = [q for q in game_state.active_quests if q.get('quest_type') == 'side']
+    except Exception:
+        pass
 
 #───────────────────────────
 #  CHAPTER PROGRESSION
@@ -983,10 +991,8 @@ def display_route_intro(char_id):
     for line in route['intro']:
         if line:
             print(f"  {Warna.KUNING}{line}{Warna.RESET}")
-            time.sleep(0.4)
         else:
             print()
-            time.sleep(0.15)
     print()
     separator()
     print(f"  {Warna.CYAN}Objektif: {route['special_objective']}{Warna.RESET}")

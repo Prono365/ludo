@@ -123,8 +123,8 @@ def _evaluate_five_card_hand(cards, allow_four_straight=False):
     rank_counter = Counter(c.rank for c in sorted_cards)
     counts = sorted(rank_counter.values(), reverse=True)
 
-    suit_counter = Counter(c.suit for c in sorted_cards)
-    is_flush = len(cards) >= 5 and any(v >= 5 for v in suit_counter.values())
+    unique_suits = set(c.suit for c in sorted_cards)
+    is_flush = len(sorted_cards) >= 5 and len(unique_suits) == 1
 
     is_straight = False
     straight_high_value = 0
@@ -273,7 +273,7 @@ def show_combat_ui(player, enemy, overtime_progress=0, overtime_required=8, over
     if buffs.get('atk_up', 0)         > 0: btags.append(f"{Warna.HIJAU}ATK↑{buffs['atk_up']}t{Warna.RESET}")
     if buffs.get('def_up', 0)         > 0: btags.append(f"{Warna.HIJAU}DEF↑{buffs['def_up']}t{Warna.RESET}")
     if buffs.get('evade', 0)          > 0: btags.append(f"{Warna.CYAN}DODGE{Warna.RESET}")
-    if buffs.get('card_power_mult',0) >= 2: btags.append(f"{Warna.UNGU}×{buffs['card_power_mult']}PWR{Warna.RESET}")
+    if buffs.get('card_power_mult',0) > 0: btags.append(f"{Warna.UNGU}×{buffs['card_power_mult']}PWR{Warna.RESET}")
     if buffs.get('four_straight', 0)  > 0: btags.append(f"{Warna.CYAN}4STR{Warna.RESET}")
     if buffs.get('ambush_stun', 0)    > 0: btags.append(f"{Warna.UNGU}AMBUSH{Warna.RESET}")
     buff_str = " ".join(btags)
@@ -332,9 +332,14 @@ def make_energy_bar(current, maximum, length=20):
     return f"{color}{'▪' * filled}{Warna.ABU_GELAP}{'░' * (length - filled)}{Warna.RESET}"
 
 def _tick_buffs(player):
-    """Kurangi durasi buff aktif player tiap turn."""
+    """Kurangi durasi buff time-based tiap turn.
+    Buff consume-on-use (card_power_mult, ambush_stun, four_straight, evade)
+    tidak didecremen di sini — dikonsumsi saat kartu dimainkan."""
+    CONSUME_ON_USE = {'card_power_mult', 'ambush_stun', 'four_straight', 'evade'}
     buffs = player.get('_buffs', {})
     for key in list(buffs.keys()):
+        if key in CONSUME_ON_USE:
+            continue
         if isinstance(buffs[key], int):
             buffs[key] -= 1
             if buffs[key] <= 0:
@@ -497,8 +502,7 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
     MAX_DISCARD_SLOTS  = 3
     bonus_tokens       = player_stats.get('bonus_discard_tokens', 0)
     discard_remaining  = MAX_DISCARD_SLOTS + bonus_tokens
-    # 
-    
+
     player_hand = []
     enemy_hand = []
     
@@ -508,7 +512,7 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
     turn = 1
     combat_log = []
     
-        # Bar overtime terisi setiap player mainkan kartu (bukan skill/discard/pass)
+    # Bar overtime terisi setiap player mainkan kartu (bukan skill/discard/pass)
     # Setelah 8 turn attack → bar penuh → player bisa aktifkan OVERTIME mode
     # OVERTIME: 2 turn kebal serangan + damage ×1.75 + bisa main 2 combo hand sekaligus
     OVERTIME_REQUIRED   = 8      # Turn attack yang dibutuhkan
@@ -1047,7 +1051,7 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
                 # Cek buff card_power_mult (skill Vio/Arganta/Ignatius) — damage ×N
                 card_mult = player.get('_buffs', {}).get('card_power_mult', 0)
                 mult_tag = ""
-                if card_mult >= 2:
+                if card_mult > 0:
                     kerusakan_dealt = kerusakan_dealt * card_mult
                     mult_tag = f" {Warna.UNGU}[×{card_mult} POWER!]{Warna.RESET}"
                     player['_buffs']['card_power_mult'] = 0  # consume

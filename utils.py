@@ -58,6 +58,7 @@ def flush_input():
     except Exception:
         pass
 
+
 def print_slow(text, delay=0.03, allow_skip=True):
     if delay <= 0:
         print(text)
