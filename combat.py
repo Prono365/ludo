@@ -1,9 +1,8 @@
-# Sistem pertarungan berbasis kartu poker
-
 import random
 import time
 import shutil
 import os
+import sys
 from collections import Counter
 from itertools import combinations
 from sprites import Warna
@@ -238,17 +237,17 @@ def show_combat_ui(player, enemy, overtime_progress=0, overtime_required=8, over
     clear_screen()
     tw = _tw()
 
-    # ── HEADER────────────
+    # HEADER
     border = Warna.MERAH + '═' * (tw - 1) + Warna.RESET
     print(f"\n{border}")
     print(f"{Warna.MERAH + Warna.TERANG}{'  ⚔  PERTARUNGAN  ⚔'.center(tw - 1)}{Warna.RESET}")
     print(f"{border}\n")
 
-    # ── Lebar tiap kolom──
+    # Lebar tiap kolom
     col  = max(30, (tw - 3) // 2)
     bar  = max(10, col - 18)       # panjang HP/EN bar
 
-    # ── KOLOM KIRI: MUSUH──
+    # KOLOM KIRI: MUSUH
     boss_tag  = f" {Warna.KUNING}[BOSS]{Warna.RESET}"  if enemy.get('boss')             else ""
     stun_tag  = f" {Warna.CYAN}[STUN]{Warna.RESET}"    if enemy.get('_stunned', 0) > 0  else ""
     e_debuffs = []
@@ -267,7 +266,7 @@ def show_combat_ui(player, enemy, overtime_progress=0, overtime_required=8, over
         "",
     ]
 
-    # ── KOLOM KANAN: KAMU──
+    # KOLOM KANAN: KAMU
     energy     = player.get('energy', 0)
     max_energy = player.get('max_energy', 30)
     p_atk      = get_stat(player, 'attack',  '?')
@@ -314,7 +313,7 @@ def show_combat_ui(player, enemy, overtime_progress=0, overtime_required=8, over
                            for sk, cd in active_cd[:3])
         right_lines.append(f"  {Warna.ABU_GELAP}CD:{Warna.RESET} {cd_str}")
 
-    # ── Render side-by-side
+    # Render side-by-side
     div = f"{Warna.ABU_GELAP}│{Warna.RESET}"
     n   = max(len(left_lines), len(right_lines))
     for i in range(n):
@@ -369,6 +368,116 @@ def make_hp_bar(current, maximum, length=30):
     bar = f"{color}{'█' * filled}{'░' * empty}{Warna.RESET}"
     return f"[{bar}]"
 
+def _run_qte(timeout=1.8):
+    """Quick Time Event saat musuh menyerang.
+    Returns: 'a'=Blok, 'd'=Counter, 's'=Dodge, None=gagal/timeout
+    """
+    bar_chars = int(timeout * 10)
+    print(f"\n  {Warna.MERAH + Warna.TERANG}⚡ QTE! ▶ A=Blok(-50% damage)  D=Counter(balik serangan)  S=Dodge(hindari){Warna.RESET}")
+    print(f"  {Warna.KUNING}Waktu: [{' ' * bar_chars}] ketik + Enter{Warna.RESET}", flush=True)
+
+    try:
+        if os.name == 'nt':
+            import msvcrt
+            deadline = time.time() + timeout
+            buf = ''
+            while time.time() < deadline:
+                if msvcrt.kbhit():
+                    ch = msvcrt.getch()
+                    try:
+                        ch = ch.decode('utf-8').lower()
+                    except Exception:
+                        continue
+                    if ch in ('\r', '\n'):
+                        key = buf.strip().lower()
+                        if key in ('a', 'd', 's'):
+                            return key
+                        buf = ''
+                    else:
+                        buf += ch
+                time.sleep(0.05)
+        else:
+            import select, termios, tty
+            fd = sys.stdin.fileno()
+            try:
+                old = termios.tcgetattr(fd)
+            except Exception:
+                ans = input(f"  {Warna.CYAN}> {Warna.RESET}").strip().lower()
+                return ans if ans in ('a', 'd', 's') else None
+
+            try:
+                tty.setcbreak(fd)
+                buf = ''
+                deadline = time.time() + timeout
+                while time.time() < deadline:
+                    remaining = deadline - time.time()
+                    r, _, _ = select.select([sys.stdin], [], [], min(0.1, remaining))
+                    if r:
+                        ch = sys.stdin.read(1)
+                        if ch in ('\n', '\r'):
+                            key = buf.strip().lower()
+                            if key in ('a', 'd', 's'):
+                                termios.tcsetattr(fd, termios.TCSADRAIN, old)
+                                return key
+                            buf = ''
+                        elif ch.lower() in ('a', 'd', 's'):
+                            buf = ch.lower()
+            finally:
+                try:
+                    termios.tcsetattr(fd, termios.TCSADRAIN, old)
+                except Exception:
+                    pass
+    except Exception:
+        try:
+            import signal
+            def _alarm(*_): raise TimeoutError()
+            old_handler = signal.signal(signal.SIGALRM, _alarm)
+            signal.alarm(int(timeout) + 1)
+            try:
+                ans = input(f"  {Warna.CYAN}> {Warna.RESET}").strip().lower()
+                return ans if ans in ('a', 'd', 's') else None
+            except TimeoutError:
+                return None
+            finally:
+                signal.alarm(0)
+                signal.signal(signal.SIGALRM, old_handler)
+        except Exception:
+            return None
+    return None
+
+
+def _apply_qte_result(qte_key, enemy_kerusakan, player, enemy, combat_log, Warna=Warna):
+    """Terapkan hasil QTE — kembalikan (damage_final, message, counter_dmg)."""
+    counter_dmg = 0
+    if qte_key == 'a':
+        reduced = max(1, enemy_kerusakan // 2)
+        msg = (f"{Warna.CYAN}⚡ QTE BLOK! Damage dikurangi 50%: "
+               f"{enemy_kerusakan} → {reduced}{Warna.RESET}")
+        combat_log.append(msg)
+        return reduced, msg, 0
+    elif qte_key == 'd':
+        counter_dmg = max(5, enemy_kerusakan // 3)
+        enemy['hp'] = max(0, enemy['hp'] - counter_dmg)
+        msg = (f"{Warna.MERAH}⚡ QTE COUNTER! Kamu membalas {counter_dmg} damage!"
+               f" Damage masuk: {enemy_kerusakan}{Warna.RESET}")
+        combat_log.append(msg)
+        return enemy_kerusakan, msg, counter_dmg
+    elif qte_key == 's':
+        if random.random() < 0.80:
+            msg = f"{Warna.HIJAU}⚡ QTE DODGE! Serangan dihindari total!{Warna.RESET}"
+            combat_log.append(msg)
+            return 0, msg, 0
+        else:
+            msg = (f"{Warna.KUNING}⚡ QTE DODGE GAGAL! Kena penuh: "
+                   f"{enemy_kerusakan}{Warna.RESET}")
+            combat_log.append(msg)
+            return enemy_kerusakan, msg, 0
+    else:
+        msg = f"{Warna.MERAH}⚡ QTE MISS! Kena damage penuh!{Warna.RESET}"
+        combat_log.append(msg)
+        return enemy_kerusakan, msg, 0
+
+
 def show_hand(hand, selectable=True):
     """Display hand with selection"""
     if not hand:
@@ -406,7 +515,7 @@ def _show_boss_retry_menu(retries_left, boss_name, Warna=Warna):
         except (KeyboardInterrupt, EOFError):
             return 'give_up'
 
-def run_combat(player_stats, enemy_data, inventory, party_members=None):
+def run_combat(player_stats, enemy_data, inventory):
     """Card-based combat system dengan Boss Retry (max 3x) dan Checkpoint support."""
     import copy
 
@@ -414,7 +523,7 @@ def run_combat(player_stats, enemy_data, inventory, party_members=None):
     MAX_RETRIES = 3
     retries_left = MAX_RETRIES
 
-    # ── SNAPSHOT sebelum boss untuk retry / checkpoint ─────────────────────
+    # SNAPSHOT sebelum boss untuk retry / checkpoint
     # Snapshot menyimpan: HP, energy, dan salinan inventory
     # Retry     → restore HP saja (partial)
     # Give Up / retries habis → full restore (HP + inventory) → return 'checkpoint'
@@ -423,14 +532,14 @@ def run_combat(player_stats, enemy_data, inventory, party_members=None):
         snap_energy    = player_stats.get('energy', 30)
         snap_inventory = list(inventory)
 
-    # ── OUTER RETRY LOOP ───────────────────────────────────────────────────
+    # OUTER RETRY LOOP
     while True:
-        result = _run_single_combat(player_stats, enemy_data, inventory, party_members)
+        result = _run_single_combat(player_stats, enemy_data, inventory)
 
         if result != 'player_dead' or not is_boss:
             return result
 
-        # ── Player mati lawan boss ─────────────────────────────────────────
+        # Player mati lawan boss
         boss_name = enemy_data.get('name', 'Boss')
 
         if retries_left > 0:
@@ -477,7 +586,7 @@ def run_combat(player_stats, enemy_data, inventory, party_members=None):
             time.sleep(2)
             return 'checkpoint'
 
-def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
+def _run_single_combat(player_stats, enemy_data, inventory):
     """Internal: satu sesi combat (dipanggil oleh run_combat dengan retry wrapper)."""
     import copy
     
@@ -496,7 +605,7 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
     if 'hp' not in enemy:
         enemy['hp'] = enemy.get('max_hp', 100)
     
-    # party_members parameter diabaikan — sistem party sudah dihapus
+
 
     deck = create_deck()
     random.shuffle(deck)
@@ -510,15 +619,38 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
     bonus_tokens       = player_stats.get('bonus_discard_tokens', 0)
     discard_remaining  = MAX_DISCARD_SLOTS + bonus_tokens
 
+    # Hitung speed DULU sebelum deal kartu
+    player_speed = get_stat(player, 'speed', 10)
+    enemy_speed  = get_stat(enemy,  'speed', 10)
+    player_turn_first = player_speed >= enemy_speed
+
+    speed_ratio        = player_speed / max(enemy_speed, 1)
+    player_extra_cards = 0
+    if speed_ratio >= 2.0:
+        player_extra_cards = 2
+    elif speed_ratio >= 1.5:
+        player_extra_cards = 1
+
+    player_dodge_base = min(0.35, 0.10 + (player_speed - 10) * 0.01)
+    if player_dodge_base < 0.05:
+        player_dodge_base = 0.05
+
     player_hand = []
-    enemy_hand = []
-    
-    ensure_hand_size(player_hand, deck, discard_pile, target_size=8)
-    ensure_hand_size(enemy_hand, deck, discard_pile, target_size=8)
-    
+    enemy_hand  = []
+
+    ensure_hand_size(player_hand, deck, target_size=8)
+    ensure_hand_size(enemy_hand,  deck, target_size=8)
+
+    if player_extra_cards > 0:
+        for _ in range(player_extra_cards):
+            if deck:
+                player_hand.append(deck.pop())
+        print(f"\n  {Warna.CYAN}⚡ Kecepatan lebih tinggi! +{player_extra_cards} kartu awal!{Warna.RESET}")
+        time.sleep(1)
+
     turn = 1
     combat_log = []
-    
+
     # Bar overtime terisi setiap player mainkan kartu (bukan skill/discard/pass)
     # Setelah 8 turn attack → bar penuh → player bisa aktifkan OVERTIME mode
     # OVERTIME: 2 turn kebal serangan + damage ×1.75 + bisa main 2 combo hand sekaligus
@@ -527,10 +659,6 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
     overtime_active     = False  # Mode overtime sedang aktif
     overtime_turns_left = 0      # Sisa turn overtime
     overtime_available  = False  # Bar penuh, siap diaktifkan
-    
-    player_speed = get_stat(player, 'speed', 10)
-    enemy_speed = get_stat(enemy, 'speed', 10)
-    player_turn_first = player_speed >= enemy_speed
 
     player['hp'] = player.get('hp', player.get('max_hp', 100))
     player['max_hp'] = player.get('max_hp', 100)
@@ -723,8 +851,9 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
                 print(f"  {Warna.CYAN}[{i}]{Warna.RESET} {Warna.TERANG}{skill['name']}{Warna.RESET}"
                       f"  {type_col}[{sk_type.upper()}]{Warna.RESET}"
                       f"  EN:{cost_col}{e_cost}{Warna.RESET}"
-                      f"  CD:{sk_cd}t  {cd_str}")
-                print(f"      {Warna.ABU_GELAP}{skill['desc']}{Warna.RESET}")
+                      f"  CD:{sk_cd} turn  {cd_str}")
+                desc_full = skill['desc']
+                print(f"      {Warna.ABU_GELAP}{desc_full}{Warna.RESET}")
                 print()
 
             print(f"  {Warna.ABU_GELAP}[0] Kembali{Warna.RESET}")
@@ -763,7 +892,7 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
                 player['energy'] = max(0, player.get('energy', 0) - e_cost)
                 cooldowns[skill['name']] = skill.get('cooldown', 0)
 
-                # ── Implementasi efek skill ──────────────────────────────────
+                # Implementasi efek skill
                 buffs = player.setdefault('_buffs', {})
 
                 # HEAL
@@ -903,7 +1032,7 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
                         action_taken = (f"{Warna.CYAN}⚡ {skill['name']}: "
                                         f"ENERGY PULL! +{en_gain} EN!{Warna.RESET}")
 
-                # ── Skill berbasis KARTU (baru) ──────────────────────────────
+                # Skill berbasis KARTU (baru)
 
                 # DOUBLE CARD DAMAGE — hand berikutnya 2× damage (Vio: Data Overload)
                 elif effect == 'buff_card_power':
@@ -1088,7 +1217,7 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
                     player['_buffs']['ambush_stun'] = 0
                     mult_tag += f" {Warna.CYAN}[STUN!]{Warna.RESET}"
 
-                # ── OVERTIME DAMAGE BOOST ──────────────────────────────────
+                # OVERTIME DAMAGE BOOST
                 if overtime_active:
                     kerusakan_dealt = int(kerusakan_dealt * 1.75)
                     mult_tag += f" {Warna.MERAH + Warna.TERANG}[OVERTIME ×1.75!]{Warna.RESET}"
@@ -1115,7 +1244,7 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
                         print(f"\n  {Warna.KUNING + Warna.TERANG}⚡ OVERTIME BAR PENUH! Ketik 'OT' untuk aktifkan!{Warna.RESET}")
                         time.sleep(1)
 
-                # ── OVERTIME: 2 COMBO HAND ─────────────────────────────────
+                # OVERTIME: 2 COMBO HAND
                 # Jika overtime aktif, player bisa langsung main combo kedua
                 if overtime_active and enemy['hp'] > 0:
                     print(f"\n  {Warna.MERAH + Warna.TERANG}⚡ OVERTIME: Main combo ke-2! (atau Enter untuk skip){Warna.RESET}")
@@ -1211,7 +1340,7 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
             # - Base 20% chance setiap giliran (pasif, tanpa skill)
             # - Shadow Step (buff_evade) boost ke 70% selama 1 giliran
             evade_buffed = player.get('_buffs', {}).get('evade', 0) > 0
-            dodge_chance  = 0.70 if evade_buffed else 0.20
+            dodge_chance  = 0.70 if evade_buffed else player_dodge_base
             player_dodges = random.random() < dodge_chance
             if evade_buffed:
                 player['_buffs']['evade'] = 0  # consume buff
@@ -1222,25 +1351,35 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
                 combat_log.append(enemy_action)
                 print(f"  {enemy_action}")
             elif overtime_active:
-                # OVERTIME: player kebal serangan musuh
                 enemy_action = (f"{Warna.MERAH}Musuh mainkan {hand_type} — "
                                 f"{Warna.MERAH + Warna.TERANG}[OVERTIME SHIELD! Serangan diabaikan!]{Warna.RESET}")
                 combat_log.append(enemy_action)
                 print(f"  {enemy_action}")
             else:
                 player_defense = get_stat(player, 'defense', 5)
-                # Bonus DEF buff (+50%)
                 if player.get('_buffs', {}).get('def_up', 0) > 0:
                     player_defense = int(player_defense * 1.50)
-                enemy_kerusakan = calculate_kerusakan(
+                base_enemy_dmg = calculate_kerusakan(
                     hand_type, hand_score,
                     enemy.get('attack', 15),
                     enemy.get('level', 1),
                     is_enemy=True,
                     defense=player_defense
                 )
-                player['hp'] -= enemy_kerusakan
-                enemy_action = f"{Warna.MERAH}Musuh mainkan {hand_type}: {enemy_kerusakan} kerusakan{Warna.RESET}"
+
+                enemy_action_pre = (f"{Warna.MERAH}Musuh mainkan {hand_type}: "
+                                    f"{base_enemy_dmg} damage {Warna.KUNING}[QTE!]{Warna.RESET}")
+                combat_log.append(enemy_action_pre)
+                print(f"  {enemy_action_pre}")
+
+                qte_key = _run_qte(timeout=1.8)
+                final_dmg, qte_msg, _ = _apply_qte_result(
+                    qte_key, base_enemy_dmg, player, enemy, combat_log
+                )
+                print(f"  {qte_msg}")
+
+                player['hp'] -= final_dmg
+                enemy_action = (f"{Warna.MERAH}Damage diterima: {final_dmg}{Warna.RESET}")
                 combat_log.append(enemy_action)
                 print(f"  {enemy_action}")
             
@@ -1255,7 +1394,7 @@ def _run_single_combat(player_stats, enemy_data, inventory, party_members=None):
         if player['hp'] <= 0:
             break
         
-        # ── INDEPENDENT COOLDOWN & ENERGY REGEN ─────────────────────────────
+        # INDEPENDENT COOLDOWN & ENERGY REGEN
         # FIX: Cooldown dan energy regen HANYA berjalan saat player menyerang (main kartu)
         # atau Pass. Saat player pakai Skill / Discard, cooldown skill LAIN tidak boleh
         # berkurang — mencegah efek "EMP Stun mengurangi CD Overclock" dan infinite loop.

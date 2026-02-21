@@ -15,21 +15,58 @@ from constants import (
     SIDEQUESTS_NEEDED_FOR_CH4, SIDEQUESTS_NEEDED_FOR_CH6,
 )
 
-#───────────────────────────
-#  CHAPTER OBJECTIVES — narasi singkat per chapter
-#───────────────────────────
 CHAPTER_OBJECTIVES = {
-    1: "Escape dari area awal — selesaikan quest awal sebelum bisa lanjut",
-    2: "Eksplorasi pulau, cari info, kalahkan Kepala Penjaga",
-    3: "Selidiki mansion & temui NPC untuk sidequest kunci",
-    4: "Gunakan item sidequest — kalahkan Maxwell's Agent",
-    5: "Kumpulkan semua bukti & selesaikan sidequest yang tersisa",
-    6: "Konfrontasi Final — lawan Jeffrey Epstein",
+    1: "Kabur dari area starting — selesaikan semua objektif Chapter 1",
+    2: "Bersihkan pulau, kalahkan Kepala Penjaga di Penjara Utara",
+    3: "Bangun aliansi — selesaikan minimal 2 sidequest NPC",
+    4: "Infiltrasi laboratorium — kalahkan Maxwell's Agent",
+    5: "Kumpulkan semua bukti — selesaikan 4 sidequest NPC",
+    6: "Konfrontasi final — hentikan Jeffrey Epstein di Mansion Timur",
 }
 
-#───────────────────────────
-#  BOSS DATA
-#───────────────────────────
+CHAPTER_OBJECTIVES_BY_CHAR = {
+    "vio": {
+        1: "Hack server mansion, jebol sistem keamanan, kabur dari ruang server",
+        2: "Dominasi jaringan pulau, singkirkan Kepala Penjaga",
+        3: "Rekrut sekutu — kumpulkan item kunci dari NPC",
+        4: "Tembus lab Maxwell, ambil data intel, kalahkan Maxwell's Agent",
+        5: "Upload deadman switch — kumpulkan semua bukti digital",
+        6: "Server final — expose Epstein ke dunia",
+    },
+    "haikaru": {
+        1: "Eksekusi rencana 47 langkah — kabur dari sel penjara",
+        2: "Taktik superioritas — netralkan Kepala Penjaga",
+        3: "Kalkulasi aliansi — rekrut sekutu strategis",
+        4: "Checkmate Maxwell's Agent — probabilitas menang 99.9%",
+        5: "Kumpulkan semua variabel bukti — persiapkan strategi final",
+        6: "Checkmate Epstein — eksekusi rencana akhir",
+    },
+    "aolinh": {
+        1: "Cari jejak Jiejie di theater, kalahkan penjaga yang mengurungnya",
+        2: "Simfoni kebebasan — singkirkan Kepala Penjaga",
+        3: "Nyanyikan harapan — rekrut sekutu dengan melodimu",
+        4: "Melodi perlawanan — jebol lab Maxwell bersama tim",
+        5: "Kumpulkan bukti untuk Jiejie — akhiri penderitaan ini",
+        6: "Final crescendo — kalahkan Epstein untuk semua anak yang terjebak",
+    },
+    "arganta": {
+        1: "Survival mode — kumpulkan bekal, buka jalur dermaga",
+        2: "Navigator memimpin — singkirkan Kepala Penjaga",
+        3: "Per famiglia — rekrut sekutu untuk keadilan",
+        4: "La via è sempre avanti — tembus lab Maxwell",
+        5: "Requiescat in pace — kumpulkan semua bukti kejahatan",
+        6: "Vendetta finale — kalahkan Epstein untuk keluargamu",
+    },
+    "ignatius": {
+        1: "Rekayasa mesin — rakit EMP, sabotase alarm, hancurkan Security Bot",
+        2: "Engineering bergerak — Kepala Penjaga harus disingkirkan",
+        3: "Tim engineer — rekrut sekutu dengan keahlian teknis",
+        4: "EMP total — matikan lab Maxwell dengan teknologimu",
+        5: "Blueprint keadilan — kumpulkan semua bukti elektronik",
+        6: "Blackout Epstein — matikan sistem terakhirnya selamanya",
+    },
+}
+
 BOSS_DATA = {
     'kepala_penjaga': {
         'name':       'Kepala Penjaga',
@@ -102,11 +139,6 @@ BOSS_DATA = {
     },
 }
 
-#───────────────────────────
-#  MAP ITEM → CH1 OBJECTIVE + DIALOG
-#  Saat player pickup item tertentu di ch1, otomatis trigger progress + dialog
-#  Format: { char_id: { item_name: (objective_id, dialog_line) } }
-#───────────────────────────
 CH1_ITEM_OBJECTIVE_MAP = {
     'vio': {
         'Keycard Level 1': ('hack_terminal',
@@ -121,14 +153,18 @@ CH1_ITEM_OBJECTIVE_MAP = {
             "Vio: Access card. Lumayan untuk akses server room utama."),
     },
     'haikaru': {
-        'Buku Catatan':    ('find_blind_spots',
+        'Buku Catatan':         ('find_blind_spots',
             "Haikaru: Catatan tambahan. Blind spot barat laut terkonfirmasi. Update kalkulasi."),
-        'Info Pulau':      ('find_blind_spots',
+        'Buku Catatan Haikaru': ('find_blind_spots',
+            "Haikaru: *menggenggam buku* Ini catatanku yang disita! Sekarang analisa bisa dilanjutkan."),
+        'Info Pulau':           ('find_blind_spots',
             "Haikaru: Data baru. Pola patroli teridentifikasi. Efisiensi rencana naik 12%."),
-        'Med Kit':         ('find_blind_spots',
+        'Med Kit':              ('find_blind_spots',
             "Haikaru: *melihat posisi loker* Blind spot area ini teridentifikasi dari sini."),
-        'Keycard Level 1': ('find_blind_spots',
+        'Keycard Level 1':      ('find_blind_spots',
             "Haikaru: Layout yang ditunjukkan kartu ini mengkonfirmasi blind spot ketiga."),
+        'Kunci Wing-C':         ('find_wingc_key',
+            "Haikaru: *menggenggam kunci* Ini yang aku cari. Loker 7, bukan 12. Asumsi awal salah 3%."),
     },
     'aolinh': {
         # Fix: Ao Linh Route — Bandage removed as clue; replaced with narrative items
@@ -165,11 +201,6 @@ CH1_ITEM_OBJECTIVE_MAP = {
     },
 }
 
-#───────────────────────────
-#  PRE-BOSS DIALOG CH1 — dialog cinematic sebelum boss battle
-#  Muncul 1x saat player pertama kali mendekati boss di chapter 1
-#  Format: list of (kind, text) — kind: 'narasi'|'dialog'|'inner'|'system'
-#───────────────────────────
 CH1_PRE_BOSS_DIALOGS = {
     'vio': {
         'maxwell_enforcer': [
@@ -236,173 +267,182 @@ CH1_PRE_BOSS_DIALOGS = {
     },
 }
 
-#───────────────────────────
-#  CHAPTER 1 QUESTS — spesifik per karakter, di lokasi starting mereka
-#───────────────────────────
 CH1_QUESTS = {
     'vio': {
-        'title':       'Hack & Escape: Mansion Server Room',
-        'description': 'Vio terjebak di ruang server mansion. Hack sistem dan kabur sebelum ketahuan.',
+        'title':       'Hack & Escape: Ruang Server Mansion',
+        'description': 'Vio terjebak di ruang server mansion. Tembus sistem enkripsi dan kalahkan Maxwell Enforcer sebelum ketahuan.',
         'location':    'mansion',
         'objectives': [
             {
                 'id':     'hack_terminal',
-                'desc':   'Hack server terminal mansion',
+                'desc':   'Tembus 2 terminal server mansion',
                 'target': 2,
                 'type':   'interact',
-                'label':  'Terminal ter-hack: {}/{}'
+                'label':  'Terminal di-hack: {}/{}'
             },
             {
-                'id':     'defeat_mansion_guards_ch1',
-                'desc':   'Kalahkan penjaga mansion',
-                'target': 2,
-                'type':   'combat',
-                'label':  'Penjaga dikalahkan: {}/{}'
+                'id':     'defeat_maxwell_enforcer',
+                'desc':   'Kalahkan Maxwell Enforcer — kepala keamanan jaringan (Boss Ch.1)',
+                'target': 1,
+                'type':   'boss',
+                'label':  'Maxwell Enforcer: {}/{}'
             },
         ],
         'completion_flag': 'ch1_vio_complete',
         'reward_item':     'Akses Level 3',
         'reward_flag':     'vio_ch1_reward_given',
         'completion_text': [
-            "Server ter-hack. Data mulai mengalir ke USB-mu.",
-            "Dua penjaga sudah tidak berdiri. Jalur keluar terbuka.",
-            "Kamu mengenggam 'Akses Level 3' — kunci ke area mansions selanjutnya.",
+            "Server ter-hack. Data jutaan dollar mulai mengalir ke USB-mu.",
+            "Maxwell Enforcer sudah dikalahkan. Jalur keluar mansion terbuka.",
+            "Kamu menggenggam 'Akses Level 3' — kunci ke area island selanjutnya.",
         ],
         'next_area': 'island',
     },
 
     'haikaru': {
-        'title':       'Escape Analysis: Prison North',
-        'description': 'Haikaru sudah hitung semua. 47 detik. Window 6:00 pagi. Sekarang atau tidak sama sekali.',
+        'title':       'Escape Analysis: Penjara Utara',
+        'description': 'Haikaru sudah 2 minggu kalkulasi rencana kabur. Identifikasi blind spot, ambil kunci Wing-C, kalahkan Warden Elite.',
         'location':    'prison_north',
         'objectives': [
             {
                 'id':     'find_blind_spots',
-                'desc':   'Identifikasi blind spot penjaga',
+                'desc':   'Identifikasi 3 blind spot penjaga (via item observasi)',
                 'target': 3,
                 'type':   'interact',
-                'label':  'Blind spot ditemukan: {}/{}'
+                'label':  'Blind spot terkonfirmasi: {}/{}'
             },
             {
-                'id':     'defeat_prison_guards_ch1',
-                'desc':   'Netralkan penjaga yang menghalangi',
-                'target': 2,
-                'type':   'combat',
-                'label':  'Penjaga dinetralkan: {}/{}'
+                'id':     'find_wingc_key',
+                'desc':   'Ambil Kunci Wing-C dari loker tersembunyi di Wing-C',
+                'target': 1,
+                'type':   'interact',
+                'label':  'Kunci Wing-C: {}/{}'
+            },
+            {
+                'id':     'defeat_warden_elite',
+                'desc':   'Kalahkan Warden Elite yang memblokir pintu utama (Boss Ch.1)',
+                'target': 1,
+                'type':   'boss',
+                'label':  'Warden Elite: {}/{}'
             },
         ],
         'completion_flag': 'ch1_haikaru_complete',
         'reward_item':     'Peta Blind Spot Penjara',
         'reward_flag':     'haikaru_ch1_reward_given',
         'completion_text': [
-            "Semua blind spot teridentifikasi. Peta mental kamu sudah lengkap.",
-            "Dua penjaga dinetralkan tepat sesuai kalkulasi.",
+            "Semua blind spot teridentifikasi. Peta mental 100% lengkap.",
+            "Kunci Wing-C berhasil diambil — celah dalam sistem dikonfirmasi.",
+            "Warden Elite dinetralkan. Waktu eksekusi: tepat sesuai kalkulasi.",
             "Kamu menerima 'Peta Blind Spot Penjara' — keunggulan navigasi chapter berikutnya.",
         ],
         'next_area': 'island',
     },
 
     'aolinh': {
-        'title':       'Melody of Escape: Theater',
-        'description': 'Aolinh terjebak di theater. Cari jejak Jiejie, kalahkan penjaga, dan kabur via backstage.',
+        'title':       'Melodi Kebebasan: Cari Jejak Jiejie',
+        'description': 'Aolinh terjebak di theater. Cari 2 jejak Jiejie, lalu hadapi Theater Master yang mengurungnya.',
         'location':    'theater',
         'objectives': [
             {
                 'id':     'find_jiejie_clues',
-                'desc':   'Temukan jejak Jiejie di theater',
+                'desc':   'Temukan 2 jejak Jiejie di area theater',
                 'target': 2,
                 'type':   'interact',
                 'label':  'Jejak Jiejie ditemukan: {}/{}'
             },
             {
-                'id':     'defeat_theater_guard_ch1',
-                'desc':   'Kalahkan penjaga theater',
+                'id':     'defeat_theater_master',
+                'desc':   'Kalahkan Theater Master yang mengurung Jiejie (Boss Ch.1)',
                 'target': 1,
-                'type':   'combat',
-                'label':  'Penjaga theater: {}/{}'
+                'type':   'boss',
+                'label':  'Theater Master: {}/{}'
             },
         ],
         'completion_flag': 'ch1_aolinh_complete',
         'reward_item':     'Tiket Backstage',
         'reward_flag':     'aolinh_ch1_reward_given',
         'completion_text': [
-            "Dua jejak Jiejie ditemukan. Dia pernah di sini — artinya dia masih di pulau ini.",
-            "Penjaga theater sudah dikalahkan. Backstage terbuka.",
-            "Kamu menerima 'Tiket Backstage' — izin masuk ke area tersembunyi.",
-            "♪ Jiejie... Aolinh akan menemukanmu. ♪",
+            "Dua jejak Jiejie ditemukan — dia masih di pulau ini!",
+            "Theater Master telah dikalahkan. Backstage terbuka.",
+            "Kamu menerima 'Tiket Backstage' — izin masuk area tersembunyi.",
+            "♪ Jiejie... Aolinh sudah dekat. Musik memberi kekuatan. ♪",
         ],
         'next_area': 'island',
     },
 
     'arganta': {
-        'title':       'Survival Route: Beach',
-        'description': 'Arganta terdampar di pantai. Kumpulkan perlengkapan dan buka jalur ke dermaga.',
+        'title':       'Survival Route: Pantai Karibia',
+        'description': 'Arganta terdampar di pantai. Kumpulkan perlengkapan survival dan kalahkan Harbor Captain untuk buka jalur dermaga.',
         'location':    'beach',
         'objectives': [
             {
                 'id':     'collect_survival_kit',
-                'desc':   'Kumpulkan perlengkapan survival',
+                'desc':   'Kumpulkan 2 perlengkapan survival (obat, perban, atau bekal)',
                 'target': 2,
                 'type':   'interact',
                 'label':  'Perlengkapan terkumpul: {}/{}'
             },
             {
-                'id':     'defeat_beach_patrol',
-                'desc':   'Kalahkan patroli pantai',
-                'target': 2,
-                'type':   'combat',
-                'label':  'Patroli dikalahkan: {}/{}'
+                'id':     'defeat_harbor_captain',
+                'desc':   'Kalahkan Harbor Captain yang menjaga dermaga (Boss Ch.1)',
+                'target': 1,
+                'type':   'boss',
+                'label':  'Harbor Captain: {}/{}'
             },
         ],
         'completion_flag': 'ch1_arganta_complete',
         'reward_item':     'Kompas Aktif',
         'reward_flag':     'arganta_ch1_reward_given',
         'completion_text': [
-            "Perlengkapan survival terkumpul. Cukup untuk perjalanan.",
-            "Dua patroli pantai dikalahkan. Jalur ke dermaga terbuka.",
-            "Il compasso Nonno menyala — 'Kompas Aktif' menunjukkan jalur barat.",
+            "Perlengkapan survival terkumpul. Cukup untuk perjalanan panjang.",
+            "Harbor Captain telah dikalahkan. Dermaga terbuka.",
+            "Il compasso Nonno menyala — 'Kompas Aktif' menunjuk jalur barat.",
             "Per Nonno. La via è sempre avanti.",
         ],
         'next_area': 'island',
     },
 
     'ignatius': {
-        'title':       'Engineering Breakout: Basement',
-        'description': 'Ignatius ada di habitat alaminya — basement listrik. Saatnya sabotase sistem alarm.',
+        'title':       'Engineering Breakout: Basement Listrik',
+        'description': 'Ignatius di ruang listrik basement — pusat saraf seluruh pulau. Rakit EMP, sabotase alarm, hancurkan Security Bot.',
         'location':    'basement',
         'objectives': [
             {
                 'id':     'collect_emp_parts_ch1',
-                'desc':   'Kumpulkan komponen awal',
+                'desc':   'Kumpulkan 3 komponen EMP: Kapasitor Besar, Relay Switch, Copper Coil',
                 'target': 3,
                 'type':   'interact',
-                'label':  'Komponen dikumpulkan: {}/{}'
+                'label':  'Komponen EMP terkumpul: {}/{}'
             },
             {
                 'id':     'sabotage_alarm_panel',
-                'desc':   'Sabotase panel alarm',
+                'desc':   'Sabotase panel alarm utama basement (gunakan Blueprint/EMP)',
                 'target': 1,
                 'type':   'interact',
-                'label':  'Panel alarm: {}/{}'
+                'label':  'Panel alarm disabotase: {}/{}'
+            },
+            {
+                'id':     'defeat_security_bot',
+                'desc':   'Kalahkan AmBOTukam Mk II dengan EMP prototype (Boss Ch.1)',
+                'target': 1,
+                'type':   'boss',
+                'label':  'AmBOTukam Mk II: {}/{}'
             },
         ],
         'completion_flag': 'ch1_ignatius_complete',
         'reward_item':     'EMP Prototype',
         'reward_flag':     'ignatius_ch1_reward_given',
         'completion_text': [
-            "Tiga komponen awal terkumpul. Sudah cukup untuk prototype.",
+            "Tiga komponen terkumpul dan dirakit menjadi EMP Prototype.",
             "Panel alarm berhasil disabotase — 30% sistem keamanan offline.",
-            "Kamu menerima 'EMP Prototype' — versi awal yang bisa dikembangkan Ignatius nanti.",
-            "Engineering time? Engineering done.",
+            "AmBOTukam Mk II dihancurkan dengan EMP-nya sendiri. Poetic.",
+            "Kamu menerima 'EMP Prototype' — senjata kunci untuk chapter berikutnya.",
+            "Engineering time? Engineering DONE.",
         ],
         'next_area': 'island',
     },
 }
 
-#───────────────────────────
-#  CHAPTER PROGRESSION REQUIREMENTS
-#  Apa yang dibutuhkan untuk unlock chapter berikutnya
-#───────────────────────────
 CHAPTER_REQUIREMENTS = {
     2: {
         'description': 'Selesaikan quest Chapter 1 dan kabur dari area starting',
@@ -441,47 +481,41 @@ CHAPTER_REQUIREMENTS = {
     },
 }
 
-#───────────────────────────
-#  LOCATION AVAILABILITY PER CHAPTER
-#───────────────────────────
 CHAPTER_LOCATIONS = {
     1: {
-        # Ch1: hanya area starting + safe zone
-        'vio':      ['mansion', 'safe_zone'],
-        'haikaru':  ['prison_north', 'safe_zone'],
-        'aolinh':   ['theater', 'safe_zone'],
-        'arganta':  ['beach', 'safe_zone'],
-        'ignatius': ['basement', 'mansion', 'safe_zone'],
+        # Ch1: hanya area starting + command_center tidak tersedia
+        'vio':      ['mansion'],
+        'haikaru':  ['prison_north'],
+        'aolinh':   ['theater'],
+        'arganta':  ['beach'],
+        'ignatius': ['basement', 'mansion'],
     },
     2: {
         'all': ['island', 'prison_north', 'prison_south', 'mansion',
-                'dock', 'theater', 'beach', 'basement', 'safe_zone'],
+                'dock', 'theater', 'beach', 'basement', 'command_center'],
     },
     3: {
         'all': ['island', 'prison_north', 'prison_south', 'mansion',
-                'dock', 'theater', 'beach', 'basement', 'safe_zone',
+                'dock', 'theater', 'beach', 'basement', 'command_center',
                 'mansion_west', 'mansion_east'],
     },
     4: {
         'all': ['island', 'prison_north', 'prison_south', 'mansion',
-                'dock', 'theater', 'beach', 'basement', 'safe_zone',
+                'dock', 'theater', 'beach', 'basement', 'command_center',
                 'mansion_west', 'mansion_east', 'laboratory'],
     },
     5: {
         'all': ['island', 'prison_north', 'prison_south', 'mansion',
-                'dock', 'theater', 'beach', 'basement', 'safe_zone',
+                'dock', 'theater', 'beach', 'basement', 'command_center',
                 'mansion_west', 'mansion_east', 'laboratory'],
     },
     6: {
         'all': ['island', 'prison_north', 'prison_south', 'mansion',
-                'dock', 'theater', 'beach', 'basement', 'safe_zone',
+                'dock', 'theater', 'beach', 'basement', 'command_center',
                 'mansion_west', 'mansion_east', 'laboratory'],
     },
 }
 
-#───────────────────────────
-#  CHARACTER ROUTE CONFIGS
-#───────────────────────────
 def get_character_route(char_id):
     # Mengambil konfigurasi route untuk setiap karakter
     """Return route configuration untuk setiap karakter."""
@@ -585,9 +619,6 @@ def get_character_route(char_id):
     }
     return routes.get(char_id, routes['haikaru'])
 
-#───────────────────────────
-#  FUNGSI CHAPTER 1 QUEST
-#───────────────────────────
 
 def get_ch1_quest(char_id):
     """Return data quest Chapter 1 untuk karakter yang dipilih."""
@@ -720,7 +751,8 @@ def get_ch1_objective_status(game_state):
     for obj in quest_data['objectives']:
         cur  = game_state.story_flags.get(f"ch1_obj_{obj['id']}", 0)
         done = cur >= obj['target']
-        result.append((obj['id'], obj['desc'], cur, obj['target'], done))
+        obj_type = obj.get('type', 'interact')
+        result.append((obj['id'], obj['desc'], cur, obj['target'], done, obj_type))
     return result
 
 def get_ch1_next_incomplete_objective(game_state):
@@ -735,19 +767,15 @@ def get_ch1_next_incomplete_objective(game_state):
             return obj['id'], obj
     return None, None
 
-#───────────────────────────
-#  DIALOG OBJECTIVE SELESAI + INTRO OBJECTIVE BERIKUTNYA
-#  Format: { char_id: { obj_id: [baris dialog, ...] } }
-#───────────────────────────
 CH1_OBJECTIVE_COMPLETE_DIALOGS = {
     'vio': {
         'hack_terminal': [
             "Vio: Terminal berhasil ditembus. Data jaringan mulai terbuka.",
-            "Vio: *menutup laptop sebentar* Oke. Fase selanjutnya.",
+            "Vio: *menutup laptop sebentar* Oke. Tinggal satu hal lagi.",
         ],
-        'defeat_mansion_guards_ch1': [
-            "Vio: Dua penjaga down. Server room bersih.",
-            "Vio: *menghembuskan napas* Akhirnya.",
+        'defeat_maxwell_enforcer': [
+            "Vio: Maxwell Enforcer down. Server room bersih.",
+            "Vio: *menghembuskan napas* Ada exploit-nya kan. Selalu ada.",
         ],
     },
     'haikaru': {
@@ -755,73 +783,89 @@ CH1_OBJECTIVE_COMPLETE_DIALOGS = {
             "Haikaru: Semua blind spot terkonfirmasi. Peta mental diperbarui.",
             "Haikaru: Efisiensi rute naik 23%. Sesuai proyeksi.",
         ],
-        'defeat_prison_guards_ch1': [
-            "Haikaru: Dua penjaga dinetralkan. Waktu: tepat sesuai kalkulasi.",
-            "Haikaru: *mengangguk singkat* Bisa dilanjutkan.",
+        'find_wingc_key': [
+            "Haikaru: Kunci Wing-C. Bagian yang hilang dari kalkulasi awal.",
+            "Haikaru: *mengangguk* Sekarang satu obstacle tersisa: Warden Elite.",
+        ],
+        'defeat_warden_elite': [
+            "Haikaru: Warden Elite dinetralkan. Waktu: tepat sesuai kalkulasi.",
+            "Haikaru: *mengangguk singkat* Probabilitas keberhasilan: 100%. Sesuai.",
         ],
     },
     'aolinh': {
         'find_jiejie_clues': [
             "Aolinh: Aku menemukan jejaknya! Jiejie pernah ada di sini!",
-            "Aolinh: *memeluk biola* 我找到了！ Aku menemukannya!",
+            "Aolinh: *memeluk biola* 我找到了！ Dia masih di pulau ini!",
         ],
-        'defeat_theater_guard_ch1': [
-            "Aolinh: Penjaga theater sudah kalah. Backstage terbuka!",
-            "Aolinh: ♪ Jiejie... tunggu aku ♪",
+        'defeat_theater_master': [
+            "Aolinh: Theater Master sudah kalah. Backstage terbuka!",
+            "Aolinh: ♪ Jiejie... tunggu aku, Aolinh sudah dekat ♪",
         ],
     },
     'arganta': {
         'collect_survival_kit': [
             "Arganta: Perlengkapan terkumpul. Nonno akan setuju dengan ini.",
-            "Arganta: *menggenggam kompas* Per famiglia. Lanjutkan.",
+            "Arganta: *menggenggam kompas* Per famiglia. Satu lagi.",
         ],
-        'defeat_beach_patrol': [
-            "Arganta: Dua patroli dilumpuhkan. Jalur pantai barat aman.",
-            "Arganta: La via è sempre avanti. Dermaga sudah kelihatan.",
+        'defeat_harbor_captain': [
+            "Arganta: Harbor Captain dilumpuhkan. Dermaga sekarang milikku.",
+            "Arganta: La via è sempre avanti. *melihat kapal di kejauhan*",
         ],
     },
     'ignatius': {
         'collect_emp_parts_ch1': [
-            "Ignatius: Semua komponen awal terkumpul! Ini yang aku tunggu!",
-            "Ignatius: *mata berbinar* Sudah bisa mulai prototype-nya.",
+            "Ignatius: Semua komponen terkumpul! EMP prototype siap dirakit!",
+            "Ignatius: *mata berbinar* Engineering time dimulai sekarang.",
         ],
         'sabotage_alarm_panel': [
             "Ignatius: Panel alarm berhasil disabotase. 30% sistem keamanan offline.",
-            "Ignatius: *mengelap tangan* Sesuai rencana.",
+            "Ignatius: *mengelap tangan* Tinggal satu: AmBOTukam Mk II.",
+        ],
+        'defeat_security_bot': [
+            "Ignatius: AmBOTukam Mk II dihancurkan dengan EMP-nya sendiri. PERFECT.",
+            "Ignatius: *tertawa kecil* Kamu jaga generator. Aku pakein generatormu untuk matiin kamu.",
         ],
     },
 }
 
 CH1_NEXT_OBJECTIVE_DIALOGS = {
     'vio': {
-        'defeat_mansion_guards_ch1': [
-            "Vio: Tapi ada penjaga yang masih patroli...",
-            "Vio: Harus dinetralisir sebelum mereka memanggil bantuan.",
-            "Vio: *melihat sekeliling* Dua target. Bisa dihandle.",
+        'defeat_maxwell_enforcer': [
+            "Vio: Maxwell Enforcer masih menghalangi jalan keluar...",
+            "Vio: Former special forces. Bisa bunuh dengan tangan kosong.",
+            "Vio: *mengepalkan tangan* Semua boss ada exploit-nya. Temukan polanya.",
         ],
     },
     'haikaru': {
-        'defeat_prison_guards_ch1': [
-            "Haikaru: Ada dua penjaga yang memblokir jalur keluar.",
-            "Haikaru: Netralkan mereka sesuai window waktu — variabel sudah dihitung.",
+        'find_wingc_key': [
+            "Haikaru: Ada kunci tersembunyi di Wing-C. Di balik panel listrik ketiga.",
+            "Haikaru: Aku sudah kalkulasi posisinya. Estimasi waktu pengambilan: 8 detik.",
+        ],
+        'defeat_warden_elite': [
+            "Haikaru: Warden Elite memblokir pintu keluar. Reaksi 0.3 detik. Jangkauan 2.1m.",
+            "Haikaru: Sudah ada tiga skenario untuk ini. Skenario A: konfrontasi langsung. Efisiensi 73%.",
         ],
     },
     'aolinh': {
-        'defeat_theater_guard_ch1': [
-            "Aolinh: Ada penjaga yang menghalangi backstage...",
-            "Aolinh: *memegang biola erat* Tidak ada pilihan. Aku harus lawan dia.",
+        'defeat_theater_master': [
+            "Aolinh: Theater Master menghalangi backstage... Yang mengurung Jiejie di sini.",
+            "Aolinh: *mencengkeram biola* 妈妈... 给我力量。 Aku tidak akan lari.",
         ],
     },
     'arganta': {
-        'defeat_beach_patrol': [
-            "Arganta: Patroli pantai masih menghalangi jalur ke dermaga.",
-            "Arganta: *mengeluarkan pisau lipat* Nonno bilang: singkirkan yang menghalangi jalan.",
+        'defeat_harbor_captain': [
+            "Arganta: Harbor Captain berdiri di ujung dermaga. Yang menghalangi jalan pulang.",
+            "Arganta: *memegang kompas* Niente è reale, tutto è lecito. Per Nonno.",
         ],
     },
     'ignatius': {
         'sabotage_alarm_panel': [
             "Ignatius: Masih ada panel alarm utama yang perlu disabotase.",
             "Ignatius: Lokasi: sudut barat basement. Kalau itu mati, seluruh sistem alarm padam.",
+        ],
+        'defeat_security_bot': [
+            "Ignatius: AmBOTukam Mk II masih aktif dan menjaga generator utama.",
+            "Ignatius: *menyiapkan EMP prototype* Kamu jaga generator aku? Aku pakai generatormu untuk matiin kamu.",
         ],
     },
 }
@@ -867,9 +911,6 @@ def display_ch1_completion(game_state):
     except Exception:
         pass
 
-#───────────────────────────
-#  CHAPTER PROGRESSION
-#───────────────────────────
 
 def get_current_chapter(game_state):
     """Return current chapter sebagai int."""
@@ -973,9 +1014,6 @@ def get_chapter_progress_info(game_state):
 
     return info
 
-#───────────────────────────
-#  ROUTE UTILITIES
-#───────────────────────────
 
 def display_route_intro(char_id):
     """Tampilkan intro awal Chapter 1 untuk karakter yang dipilih."""

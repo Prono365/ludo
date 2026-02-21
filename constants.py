@@ -55,20 +55,16 @@ NPC_IDS = ['haikaru', 'aolinh', 'arganta', 'ignatius', 'vio']
 SIDEQUESTS_NEEDED_FOR_CH4 = 2   # Min sidequest selesai sebelum bisa ke Ch4
 SIDEQUESTS_NEEDED_FOR_CH6 = 4   # Min sidequest selesai sebelum Ch6
 
-# Party System — dipertahankan minimal untuk backward compat save file
-MAX_PARTY_SIZE = 5
-DEFAULT_PARTY_MEMBER_HP = 100
-
 # Dialog & UI
 # Quest Items — item objektif unik yang tidak boleh duplikat di inventory
 # Dipakai oleh GameState.add_quest_item() untuk dedup guard
 QUEST_ITEM_NAMES = {
     # Core: Vio route
     'Keycard Level 1', 'Keycard Level 2', 'Keycard Level 3', 'Access Card',
-    'USB Encrypted', 'Akses Level 3',
+    'USB Encrypted', 'Akses Level 3', 'USB Security Drive',
     # Core: Haikaru route
     'Buku Catatan', 'Buku Catatan Haikaru', 'Peta Blind Spot Penjara', 'Info Pulau',
-    'Catatan Sandi Haikaru',
+    'Catatan Sandi Haikaru', 'Kunci Wing-C',
     # Core: Aolinh route
     'Tiket Backstage', 'Rekaman Distraksi Aolinh',
     # Core: Arganta route

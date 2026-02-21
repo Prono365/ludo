@@ -30,8 +30,9 @@ def _trunc(text, maxlen, suffix='…'):
 QUEST_ITEMS = {
     # Vio
     'Keycard Level 1', 'Keycard Level 2', 'Access Card', 'USB Encrypted', 'Akses Level 3',
+    'USB Security Drive',
     # Haikaru
-    'Buku Catatan', 'Peta Blind Spot Penjara', 'Info Pulau',
+    'Buku Catatan', 'Buku Catatan Haikaru', 'Peta Blind Spot Penjara', 'Info Pulau', 'Kunci Wing-C',
     # Aolinh
     'Tiket Backstage',
     # Arganta
@@ -145,10 +146,11 @@ class GameMap:
         self.place_exit(18, 7,  "prison_south", "Penjara Selatan")
         self.place_exit(7,  13, "mansion",       "Mansion")
         self.place_exit(18, 13, "dock",          "Dermaga")
-        self.place_exit(12, 5,  "safe_zone",     "Safe Zone - Toko Bran")
-        # Exit ke area baru (chapter 2+)
+        self.place_exit(12, 5,  "command_center","Pusat Kontrol [Ch.2+]")
         self.place_exit(12, 15, "theater",       "Teater")
         self.place_exit(3,  9,  "beach",         "Pantai")
+        self.place_exit(22, 5,  "laboratory",    "Laboratorium [Ch.4+]")
+        self.place_exit(22, 13, "mansion_east",  "Mansion Timur - Area Final [Ch.5+]")
 
         self.add_enemy_patrol(6,  6,  "guard_novice",  [(6,6),  (9,6),  (9,9),  (6,9)])
         self.add_enemy_patrol(19, 6,  "guard_veteran", [(19,6), (22,6), (22,9), (19,9)])
@@ -194,9 +196,11 @@ class GameMap:
         self.place_npc(10, 9, "haikaru")
         self.place_item(15, 9, "Med Kit")
         self.place_item(5,  4, "Keycard Level 1")
-        self.place_item(18, 4, "Buku Catatan")
+        # Buku Catatan Haikaru — disimpan di Guard Station Wing-B (loker dekat penjaga)
+        # Hanya muncul jika bukan karakter Haikaru (Haikaru sudah punya Buku Catatan sendiri)
         self.place_item(20, 9, "Health Potion")
         self.place_item(8,  13, "Bandage")
+        self.place_item(20, 13, "Kunci Wing-C")
 
         self.player_x, self.player_y = self._validate_spawn_point(12, 3)
 
@@ -227,29 +231,37 @@ class GameMap:
 
         self.player_x, self.player_y = self._validate_spawn_point(12, 3)
 
-    def generate_safe_zone(self):
-        
+    def generate_command_center(self):
+        """Pusat Kontrol — server room / ruang operasi pulau.
+        Tersedia Ch.2+. Digunakan sebagai hub sidequest dan boss Ch.3.
+        """
         for y in range(self.height):
             for x in range(self.width):
                 if x == 0 or x == self.width - 1 or y == 0 or y == self.height - 1:
-                    self.tiles[y][x] = MapTile(1, False, "Tembok")
-                elif (x in (4, self.width - 5)) or (y in (4, self.height - 5)):
-                    self.tiles[y][x] = MapTile(8, True, "Tanaman")  # dekorasi
+                    self.tiles[y][x] = MapTile(1, False, "Dinding Beton")
+                elif (x % 5 == 0 and 0 < x < self.width - 1
+                      and 0 < y < self.height - 1):
+                    self.tiles[y][x] = MapTile(6, False, "Server Rack")
                 else:
-                    self.tiles[y][x] = MapTile(0, True, "Lantai Aman")
+                    self.tiles[y][x] = MapTile(0, True, "Lantai Kontrol")
 
-        # Blok counter / toko di tengah atas
-        for x in range(9, 16):
-            self.tiles[3][x] = MapTile(6, False, "Konter Toko")
+        for x in range(3, self.width - 3):
+            if 0 < x < self.width - 1:
+                self.tiles[4][x] = MapTile(11, False, "Konsol Utama")
+        for x in range(6, self.width - 6):
+            self.tiles[4][x] = MapTile(0, True, "Ruang Operator")
 
         self.place_exit(12, self.height - 2, "island", "Kembali ke Pulau")
 
-        # Bran Edwards hanya diakses via tombol [B] / Walkie Talkie — tidak ada NPC fisik
+        self.add_enemy_patrol(8,  8,  "tech_guard",    [(8,8),   (16,8)])
+        self.add_enemy_patrol(5,  12, "guard_elite",   [(5,12),  (10,12)])
+        self.add_enemy_patrol(18, 12, "mansion_guard", [(18,12), (22,12)])
 
-        # Dynamic: consumables respawn; key items permanent
         self.place_item(5,  8,  "Health Potion",  respawn_delay=420)
-        self.place_item(19, 8,  "Bandage",         respawn_delay=420)
-        self.place_item(12, 12, "Info Pulau")
+        self.place_item(19, 8,  "Med Kit",         respawn_delay=600)
+        self.place_item(10, 6,  "Keycard Level 2")
+        self.place_item(15, 6,  "Info Pulau")
+        self.place_item(12, 10, "Bandage",         respawn_delay=420)
 
         self.player_x, self.player_y = self._validate_spawn_point(12, self.height - 4)
 
@@ -307,7 +319,6 @@ class GameMap:
         self.place_item(3,  4,  "Health Potion")
         self.place_item(21, 4,  "Bandage")
         self.place_item(7,  4,  "Info Pulau")
-        self.place_item(17, 4,  "Tiket Backstage")
         self.place_item(12, 14, "Med Kit")
         self.player_x, self.player_y = self._validate_spawn_point(12, 9)
 
@@ -335,8 +346,6 @@ class GameMap:
         self.place_item(15, 6,  "Bandage")
         self.place_item(8,  4,  "Gantungan Kunci Musik")  # Fix: Ao Linh Route — clue item
         self.place_item(20, 9,  "Med Kit")
-        if self.current_player_char != "arganta":
-            self.place_item(15, 9, "Kompas Nonno Arganta")
         self.add_enemy_patrol(10, 5,  "guard_novice",   [(10,5),  (18,5), (18,8), (10,8)])
         self.add_enemy_patrol(5,  8,  "mercenary_thug", [(5,8),   (10,8)])
         self.add_enemy_patrol(18, 10, "guard_veteran",  [(18,10), (22,10)])
@@ -363,10 +372,62 @@ class GameMap:
         self.place_item(4, 7, "Kapasitor Besar")
         self.place_item(20, 4, "Relay Switch")
         self.place_item(4, 12, "Copper Coil")
-        self.place_item(18, 10, "EMP Prototype")     # Ignatius: sabotage_alarm_panel trigger
         self.add_enemy_patrol(10, 8,  "guard_novice",  [(10,8),  (14,8)])
         self.add_enemy_patrol(6,  10, "tech_guard",    [(6,10),  (6,14)])
         self.add_enemy_patrol(18, 5,  "scientist",     [(18,5),  (18,10)])
+        self.player_x, self.player_y = self._validate_spawn_point(12, 3)
+
+    def generate_laboratory(self):
+        """Laboratorium Maxwell — area Ch.4 dengan Maxwell's Agent boss."""
+        for y in range(self.height):
+            for x in range(self.width):
+                if x == 0 or x == self.width - 1 or y == 0 or y == self.height - 1:
+                    self.tiles[y][x] = MapTile(1, False, "Dinding Lab")
+                elif (x % 5 == 0 and y % 4 == 0 and
+                      0 < x < self.width - 1 and 0 < y < self.height - 1):
+                    self.tiles[y][x] = MapTile(6, False, "Meja Lab")
+                else:
+                    self.tiles[y][x] = MapTile(0, True, "Lantai Lab")
+
+        self.create_path(1, self.height // 2, self.width - 2, self.height // 2)
+        self.create_path(self.width // 2, 1, self.width // 2, self.height - 2)
+
+        self.place_exit(12, 1, "island", "Keluar Laboratorium")
+        self.add_enemy_patrol(8,   6,  "tech_guard",        [(8,6),   (16,6)])
+        self.add_enemy_patrol(6,   12, "scientist",         [(6,12),  (12,12)])
+        self.add_enemy_patrol(18,  8,  "guard_elite",       [(18,8),  (18,14)])
+        self.add_enemy_patrol(20,  5,  "mercenary_sniper",  [(20,5),  (20,12)])
+        self.place_item(19,  4,  "Med Kit",              respawn_delay=600)
+        self.place_item(5,   14, "Health Potion",        respawn_delay=420)
+        self.place_item(19,  14, "Encrypted Files")
+        # USB Security Drive — item yang dibutuhkan Vio untuk sidequestnya
+        # Ada di lab security room (lantai 2 mansion / laboratorium)
+        self.player_x, self.player_y = self._validate_spawn_point(12, 3)
+
+    def generate_mansion_east(self):
+        """Mansion Timur — area final Ch.6, Epstein's lair."""
+        for y in range(self.height):
+            for x in range(self.width):
+                if x == 0 or x == self.width - 1 or y == 0 or y == self.height - 1:
+                    self.tiles[y][x] = MapTile(1, False, "Tembok Mansion")
+                elif x % 3 == 0 and y % 4 == 0 and 0 < x < self.width - 1 and 0 < y < self.height - 1:
+                    self.tiles[y][x] = MapTile(6, False, "Pilar")
+                else:
+                    self.tiles[y][x] = MapTile(0, True, "Lantai Mewah")
+
+        self.create_path(1, self.height // 2, self.width - 2, self.height // 2)
+        self.create_path(self.width // 2, 1, self.width // 2, self.height - 2)
+
+        self.place_exit(12, 1, "island", "Keluar dari Mansion Timur")
+        self.add_enemy_patrol(6,   6,  "guard_elite",      [(6,6),   (12,6)])
+        self.add_enemy_patrol(18,  6,  "mercenary_thug",   [(18,6),  (22,6)])
+        self.add_enemy_patrol(6,   13, "guard_veteran",    [(6,13),  (12,13)])
+        self.add_enemy_patrol(18,  13, "mercenary_sniper", [(18,13), (22,13)])
+        self.place_item(4,   4,  "Health Potion",   respawn_delay=420)
+        self.place_item(20,  4,  "Med Kit",         respawn_delay=600)
+        self.place_item(4,   14, "Bandage",         respawn_delay=420)
+        # USB Evidence Drive TIDAK di-spawn bebas — hanya dari sidequest Vio
+        self.place_item(20,  14, "Dokumen Rahasia")  # Hint item, bukan quest reward
         self.player_x, self.player_y = self._validate_spawn_point(12, 3)
 
     def create_path(self, x1, y1, x2, y2):
@@ -401,40 +462,47 @@ class GameMap:
 
     def _spawn_boss_for_chapter(self, chapter, char_id, gs):
         
-        # Boss ch1 per karakter — sesuai dengan CHARACTER_MAIN_QUESTS
         CH1_BOSSES = {
-            "vio":      ("maxwell_enforcer",  8, self.height // 2, "Maxwell Enforcer"),
-            "haikaru":  ("warden_elite",      12, self.height - 3, "Warden Elite"),
-            "aolinh":   ("theater_master",    12, 4,               "Theater Master"),
-            "arganta":  ("harbor_captain",    8,  self.height // 2, "Harbor Captain"),
-            "ignatius": ("security_bot",      12, self.height - 3, "AmBOTukam Mk II"),
+            "vio":      ("maxwell_enforcer",  8,  self.height // 2, "Maxwell Enforcer"),
+            "haikaru":  ("warden_elite",      12, self.height - 3,  "Warden Elite"),
+            "aolinh":   ("theater_master",    12, 4,                "Theater Master"),
+            "arganta":  ("harbor_captain",    8,  self.height // 2,  "Harbor Captain"),
+            "ignatius": ("security_bot",      12, self.height - 3,  "AmBOTukam Mk II"),
         }
-        
+        CHAR_START_MAP = {
+            "vio": "mansion", "haikaru": "prison_north",
+            "aolinh": "theater", "arganta": "beach", "ignatius": "basement",
+        }
+
         if chapter == 1:
-            # BUG FIX: Selalu spawn boss ch1 — tidak perlu flag apapun
-            # Cek map_id cocok dengan karakter (jangan spawn di map yang salah)
-            CHAR_START_MAP = {
-                "vio": "mansion", "haikaru": "prison_north",
-                "aolinh": "theater", "arganta": "beach", "ignatius": "basement",
-            }
             if char_id in CH1_BOSSES and self.map_id == CHAR_START_MAP.get(char_id):
                 boss_id, boss_x, boss_y, boss_desc = CH1_BOSSES[char_id]
                 if not any(d['boss_id'] == boss_id for d in self.boss_doors):
                     self.place_boss_door(boss_x, boss_y, boss_id, boss_desc)
+
         elif chapter == 2:
-            if gs.story_flags.get('ch2_bosses_available', False):
-                boss_id = 'kepala_penjaga'
-                if not any(d['boss_id'] == boss_id for d in self.boss_doors):
+            if gs.story_flags.get('ch2_bosses_available', False) and self.map_id == 'prison_north':
+                if not any(d['boss_id'] == 'kepala_penjaga' for d in self.boss_doors):
+                    self.place_boss_door(
+                        self.width // 2, self.height - 3,
+                        'kepala_penjaga', "Kepala Penjaga"
+                    )
+
+        elif chapter == 4:
+            if self.map_id == 'laboratory':
+                if not any(d['boss_id'] == 'agen_maxwell' for d in self.boss_doors):
                     self.place_boss_door(
                         self.width // 2, self.height // 2,
-                        boss_id, "Kepala Penjaga"
+                        'agen_maxwell', "Maxwell's Agent"
                     )
-        elif chapter == 3:
-            if gs.story_flags.get('final_bosses_available', False):
-                if all(d['boss_id'] != 'doctor_rousseau' for d in self.boss_doors):
-                    self.place_boss_door(10, 7, 'doctor_rousseau', "Dr. Rousseau")
-                if all(d['boss_id'] != 'epstein_boss' for d in self.boss_doors):
-                    self.place_boss_door(self.width // 2, self.height // 2, 'epstein_boss', "FINAL BOSS")
+
+        elif chapter == 6:
+            if self.map_id == 'mansion_east':
+                if not any(d['boss_id'] == 'epstein_boss' for d in self.boss_doors):
+                    self.place_boss_door(
+                        self.width // 2, self.height // 2,
+                        'epstein_boss', "FINAL BOSS — Jeffrey Epstein"
+                    )
 
     def check_and_spawn_bosses(self, gs):
         # Public: check and spawn bosses based on chapter and character.
@@ -564,31 +632,34 @@ class GameMap:
         return None
 
     def _build_main_quest_lines(self, main_quests, gs=None):
-        
         if not main_quests:
             return []
-        mq       = main_quests[0]
-        quest_id = mq.get('id', '')
-
+        mq = main_quests[0]
         lines = [("quest", f"[M] {mq['title']}")]
+        _current_chapter = int(gs.story_flags.get('current_chapter', 1)) if gs else 1
 
-        # Ch1: per-objective progress
-        _current_chapter = int(gs.story_flags.get('current_chapter', 1))
         if _current_chapter == 1 and gs is not None:
             try:
-                from character_routes import get_ch1_objective_status, get_ch1_next_incomplete_objective
+                from characters import get_ch1_objective_status, get_ch1_next_incomplete_objective
                 obj_statuses = get_ch1_objective_status(gs)
                 if obj_statuses:
-                    for obj_id, desc, cur, tot, done in obj_statuses:
-                        bar    = '■' * cur + '□' * max(0, tot - cur)
-                        prefix = '✓' if done else '◐'
-                        tag    = "done" if done else "prog"
-                        lines.append((tag, f"  └ {prefix} {desc}"))
-                        lines.append((tag, f"      [{bar}] {cur}/{tot}"))
-                    # Next objective hint
+                    total_objs = len(obj_statuses)
+                    for step_num, (obj_id, desc, cur, tot, done, obj_type) in enumerate(obj_statuses, 1):
+                        bar = '■' * cur + '□' * max(0, tot - cur)
+                        if done:
+                            prefix = '✓'
+                            tag = "done"
+                        elif obj_type == 'boss':
+                            prefix = '⚔'
+                            tag = "prog"
+                        else:
+                            prefix = '◐'
+                            tag = "prog"
+                        lines.append((tag, f"  └ Langkah {step_num}/{total_objs}: {prefix} {desc}"))
+                        if tot > 1:
+                            lines.append((tag, f"      [{bar}] {cur}/{tot}"))
                     next_id, _ = get_ch1_next_incomplete_objective(gs)
                     if next_id:
-                        # Find nearest quest item or objective marker
                         for it in self.items:
                             if is_quest_item(it['item']):
                                 arrow = _direction_arrow(self.player_x, self.player_y, it['x'], it['y'])
@@ -599,40 +670,114 @@ class GameMap:
             except Exception:
                 pass
 
-        # Fallback: step linear
-        prog    = mq.get("progress", 0)
-        total   = mq.get("total", 1)
-        bar     = "■" * prog + "□" * (total - prog)
+        try:
+            from characters import CHARACTER_MAIN_QUESTS, CHAPTER_QUEST_TEMPLATES
+            char_id = gs.player_character if gs else ''
+            char_quests = CHARACTER_MAIN_QUESTS.get(char_id, {})
+            quest_data = char_quests.get(_current_chapter) or CHAPTER_QUEST_TEMPLATES.get(_current_chapter, {})
+            steps = quest_data.get('steps', [])
+            if steps and gs is not None:
+                total_steps = len(steps)
+                done_flag = quest_data.get('completion_flag', '')
+                quest_done = gs.story_flags.get(done_flag, False) if done_flag else False
+                completed_steps = self._get_completed_steps(_current_chapter, gs, total_steps, quest_done)
+                for i, step_text in enumerate(steps):
+                    step_num = i + 1
+                    is_done = i < completed_steps
+                    is_current = i == completed_steps and not quest_done
+                    if is_done:
+                        prefix = '✓'
+                        tag = "done"
+                    elif is_current:
+                        prefix = '◐'
+                        tag = "prog"
+                    else:
+                        prefix = '○'
+                        tag = "side"
+                    lines.append((tag, f"  └ Langkah {step_num}/{total_steps}: {prefix} {step_text}"))
+                if not quest_done and completed_steps < total_steps:
+                    next_step = steps[completed_steps]
+                    lines.append(("prog", f"  → Aktif: {next_step}"))
+                return lines
+        except Exception:
+            pass
+
+        prog = mq.get("progress", 0)
+        total = mq.get("total", 1)
+        bar = "■" * prog + "□" * (total - prog)
         targets_list = mq.get("targets", [])
-        if targets_list and prog < len(targets_list):
-            current_step = targets_list[prog]
-        elif targets_list:
-            current_step = targets_list[-1] + " ✓"
-        else:
+        total_t = len(targets_list)
+        for i, step_text in enumerate(targets_list):
+            step_num = i + 1
+            is_done = i < prog
+            is_current = i == prog
+            if is_done:
+                prefix = '✓'
+                tag = "done"
+            elif is_current:
+                prefix = '◐'
+                tag = "prog"
+            else:
+                prefix = '○'
+                tag = "side"
+            lines.append((tag, f"  └ Langkah {step_num}/{total_t}: {prefix} {step_text}"))
+        if not targets_list:
             current_step = mq.get("objective", "")
-        lines.append(("prog", f"  └ {current_step}"))
-        lines.append(("prog", f"    [{bar}] {prog}/{total}"))
-        # Next step hint
-        if prog + 1 < len(targets_list):
-            lines.append(("prog", f"  → Selanjutnya: {targets_list[prog + 1]}"))
+            lines.append(("prog", f"  └ {current_step}"))
+            lines.append(("prog", f"    [{bar}] {prog}/{total}"))
         return lines
 
-    def _build_tracker_lines(self, gs):
-        """Quest Tracker HUD lines."""
-        lines = []
-        chapter = int(gs.story_flags.get('current_chapter', 1))
-        sq_done = sum(1 for k, v in gs.story_flags.items()
-                      if k.startswith('sidequest_') and k.endswith('_complete') and v)
+    def _get_completed_steps(self, chapter, gs, total_steps, quest_done):
+        if quest_done:
+            return total_steps
+        flags = gs.story_flags if gs else {}
+        if chapter == 2:
+            boss_done = flags.get('boss_ch2_defeated', False)
+            return total_steps if boss_done else 0
+        if chapter == 3:
+            sq = gs.get_sidequest_progress() if gs else 0
+            if flags.get('ch3_sidequests_done'):
+                return total_steps
+            return min(sq, total_steps - 1)
+        if chapter == 4:
+            boss_done = flags.get('boss_ch4_defeated', False)
+            emp_used = flags.get('emp_device_used', False)
+            if boss_done:
+                return total_steps
+            if emp_used:
+                return 2
+            return 1
+        if chapter == 5:
+            sq = gs.get_sidequest_progress() if gs else 0
+            has_usb = 'USB Evidence Drive' in (gs.quest_items if gs else [])
+            if has_usb:
+                return total_steps
+            if sq >= 4:
+                return 2
+            return min(sq, 1)
+        if chapter == 6:
+            boss_done = flags.get('boss_ch6_defeated', False)
+            return total_steps if boss_done else 1
+        return 0
 
-        chapter_obj = gs.get_chapter_objective()
-        lines.append(("obj", f"Ch.{chapter} — {chapter_obj}  [S]:{sq_done}/5"))
+    def _build_tracker_lines(self, gs):
+        """Quest Tracker HUD lines — uses real-time GameState properties."""
+        lines = []
+        chapter  = int(gs.story_flags.get('current_chapter', 1))
+        sq_done  = gs.get_sidequest_progress()
+        sq_ready = gs.get_sidequest_ready_count()
+
+        # Use main_quest_status property for real-time accuracy
+        sq_suffix = f" [{sq_ready}★]" if sq_ready > 0 else ""
+        chapter_obj = gs.main_quest_status
+        lines.append(("obj", f"{chapter_obj}  [S]:{sq_done}/5{sq_suffix}"))
 
         main_quests = [q for q in gs.active_quests if q.get("quest_type") != "side"]
         side_quests = [q for q in gs.active_quests if q.get("quest_type") == "side"]
 
         lines.extend(self._build_main_quest_lines(main_quests, gs=gs))
 
-        # Active sidequest NPC (show [S] label)
+        # Active sidequest NPC (show [S] label) — WITH directional item/enemy hints
         for sq in side_quests[:2]:
             sq_prog  = sq.get("progress", 0)
             sq_total = sq.get("total", 1)
@@ -641,12 +786,52 @@ class GameMap:
                 ("side", f"[S] {sq['title']}  [{sq_bar}] {sq_prog}/{sq_total}"),
                 ("prog", f"  └ {sq['objective']}")
             ])
+            # Sidequest directional tracker — arah ke item/enemy yang dibutuhkan
+            try:
+                from npc_interactions import NPC_SIDEQUEST_DATA
+                sq_npc_id = sq.get('id', '').replace('recruit_', '')
+                npc_sq = NPC_SIDEQUEST_DATA.get(sq_npc_id, {})
+                req_items = list(npc_sq.get('required_items', []))
+                if not req_items and npc_sq.get('required_item'):
+                    req_items = [npc_sq['required_item']]
+                req_action = npc_sq.get('required_action')
+
+                for req_item in req_items:
+                    if req_item in (gs.inventory or []):
+                        lines.append(("done", f"  ✓ [{req_item}] sudah di inventori"))
+                    else:
+                        # Cari di map saat ini
+                        found_on_map = False
+                        for it in self.items:
+                            if it['item'] == req_item:
+                                d = _manhattan(self.player_x, self.player_y, it['x'], it['y'])
+                                arr = _direction_arrow(self.player_x, self.player_y, it['x'], it['y'])
+                                lines.append(("side", f"  ★ {arr} Cari [{req_item}] ({_distance_label(d)})"))
+                                found_on_map = True
+                                break
+                        if not found_on_map:
+                            sq_loc = npc_sq.get('location', '???').upper().replace('_', ' ')
+                            lines.append(("side", f"  ★ [{req_item}] → pergi ke {sq_loc}"))
+
+                if req_action and not gs.story_flags.get(req_action):
+                    # Cari enemy terdekat di map sebagai petunjuk
+                    if self.enemies:
+                        enemy = min(self.enemies,
+                                    key=lambda e: _manhattan(self.player_x, self.player_y, e['x'], e['y']))
+                        d = _manhattan(self.player_x, self.player_y, enemy['x'], enemy['y'])
+                        arr = _direction_arrow(self.player_x, self.player_y, enemy['x'], enemy['y'])
+                        lines.append(("side", f"  ⚔ {arr} Kalahkan penjaga ({_distance_label(d)})"))
+                    else:
+                        sq_loc = npc_sq.get('location', '???').upper().replace('_', ' ')
+                        lines.append(("side", f"  ⚔ Kalahkan musuh di {sq_loc}"))
+            except Exception:
+                pass
 
         # Target terdekat
         targets = []
 
         for npc in self.npcs:
-            if npc['id'] not in gs.party_members:
+            if npc['id'] not in gs.npcs_recruited:
                 dist = _manhattan(self.player_x, self.player_y, npc['x'], npc['y'])
                 arrow = _direction_arrow(self.player_x, self.player_y, npc['x'], npc['y'])
                 try:
@@ -679,18 +864,18 @@ class GameMap:
 
     def render(self, gs):
         """Render peta + Quest Tracker HUD — auto-fit, side-by-side saat layar lebar."""
+        # Real-time HUD: reconcile quest state on every render frame
+        gs.reconcile_state()
         self.check_and_spawn_bosses(gs)
         clear_screen()
 
         tw = _tw()
         SIDE_BY_SIDE = tw >= 110
 
-        # ── viewport map ─────────────────────────────────────────────────
         vw, vh = 23, 15
         cx = max(0, min(self.player_x - vw // 2, self.width  - vw))
         cy = max(0, min(self.player_y - vh // 2, self.height - vh))
 
-        # ── HUD bar adaptif ───────────────────────────────────────────────
         bar_len    = max(8, min(14, (tw - 55) // 2))
         map_name   = self.map_id.upper().replace('_', ' ')
 
@@ -704,8 +889,16 @@ class GameMap:
 
         chapter    = int(gs.story_flags.get('current_chapter', 1))
         dollars    = getattr(gs, 'dollars', 0)
-        sq_done    = sum(1 for k, v in gs.story_flags.items()
-                        if k.startswith('sidequest_') and k.endswith('_complete') and v)
+
+        # Real-time sidequest counts from GameState
+        sq_done    = gs.get_sidequest_progress()
+        sq_ready   = gs.get_sidequest_ready_count()
+
+        # Build SQ display with "Siap Lapor!" indicator if any quests ready
+        sq_color  = Warna.HIJAU if sq_done > 0 else Warna.ABU_GELAP
+        sq_str    = f"{sq_color}{sq_done}/5{Warna.RESET}"
+        if sq_ready > 0:
+            sq_str += f" {Warna.KUNING + Warna.TERANG}[{sq_ready}★Lapor!]{Warna.RESET}"
 
         print(f"\n{Warna.CYAN + Warna.TERANG}{map_name}{Warna.RESET}  "
               f"HP:[{hp_bar}]{gs.hp}/{gs.max_hp}  "
@@ -713,10 +906,10 @@ class GameMap:
               f"Lv:{Warna.KUNING}{gs.level}{Warna.RESET}  "
               f"Ch:{Warna.KUNING}{chapter}{Warna.RESET}  "
               f"${Warna.KUNING}{dollars}{Warna.RESET}  "
-              f"SQ:{Warna.HIJAU}{sq_done}/5{Warna.RESET}")
+              f"SQ:{sq_str}")
         print(f"{Warna.ABU_GELAP}{'─' * (tw - 1)}{Warna.RESET}")
 
-        # ── render map ke buffer ──────────────────────────────────────────
+
         map_rows = []
         for y in range(cy, min(cy + vh, self.height)):
             row = "  "
@@ -766,7 +959,7 @@ class GameMap:
                         row += "  "
             map_rows.append(row)
 
-        # ── quest tracker ─────────────────────────────────────────────────
+
         tracker_lines = self._build_tracker_lines(gs)
         COLOR_MAP = {
             "obj":       Warna.KUNING + Warna.TERANG,
@@ -804,7 +997,7 @@ class GameMap:
                   f"{Warna.MERAH}B{Warna.RESET}=Boss "
                   f"{Warna.HIJAU}>{Warna.RESET}=Pintu")
 
-        # ── output: side-by-side ≥110 cols, stacked kalau lebih kecil ─────
+
         if SIDE_BY_SIDE:
             map_col_w    = 50
             tracker_w    = tw - map_col_w - 3
@@ -835,6 +1028,54 @@ class GameMap:
             print(f"  {legend}")
             print(f"{Warna.ABU_GELAP}{'─' * (tw - 1)}{Warna.RESET}")
 
+def validate_access(target_location, gs):
+    """Check if player can enter target_location based on chapter and key items.
+    Returns (allowed: bool, reason: str).
+    """
+    try:
+        from characters import can_access_location, CHAPTER_REQUIREMENTS, CHAPTER_LOCATIONS
+    except ImportError:
+        return True, "OK"
+
+    chapter = int(gs.story_flags.get('current_chapter', 1))
+    char_id = gs.player_character
+    inv = set(gs.inventory) | set(gs.quest_items)
+
+    # Basic chapter gatekeeping
+    if not can_access_location(char_id, target_location, chapter):
+        # Find which chapter unlocks this area
+        for ch in range(1, 7):
+            ch_data = CHAPTER_LOCATIONS.get(ch, {})
+            all_locs = ch_data.get('all', ch_data.get(char_id, []))
+            if target_location in all_locs:
+                if ch > chapter:
+                    return False, f"Selesaikan Chapter {ch - 1} dulu untuk membuka area ini"
+                break
+        return False, f"Area '{target_location}' belum terbuka di Chapter {chapter}"
+
+    # Specific item gates for high-security areas
+    area_gates = {
+        'command_center': {
+            'chapter': 2,
+            'reason': "Pusat Kontrol terbuka setelah Chapter 2 dimulai",
+        },
+        'laboratory': {
+            'chapter': 4,
+            'reason': "Butuh minimal 2 sidequest selesai dan akses Ch.4",
+        },
+        'mansion_east': {
+            'chapter': 5,
+            'reason': "Butuh USB Evidence Drive untuk masuk mansion timur",
+        },
+    }
+    if target_location in area_gates:
+        gate = area_gates[target_location]
+        if chapter < gate['chapter']:
+            return False, gate['reason']
+
+    return True, "OK"
+
+
 def create_game_map(map_id, gs=None):
     """Buat map berdasarkan ID."""
     current_char = gs.player_character if gs else None
@@ -848,14 +1089,18 @@ def create_game_map(map_id, gs=None):
         gm.generate_mansion()
     elif map_id == "dock":
         gm.generate_dock()
-    elif map_id == "safe_zone":
-        gm.generate_safe_zone()
+    elif map_id in ("safe_zone", "command_center"):
+        gm.generate_command_center()
     elif map_id == "theater":
         gm.generate_theater()
     elif map_id == "beach":
         gm.generate_beach()
     elif map_id == "basement":
         gm.generate_basement()
+    elif map_id == "laboratory":
+        gm.generate_laboratory()
+    elif map_id in ("mansion_east", "mansion_west"):
+        gm.generate_mansion_east()
     else:
         gm.generate_island()
 
@@ -957,7 +1202,7 @@ def loop_eksplorasi(gs, gm):
             slot_label = f"Slot {gs.current_slot + 1}"
             cp_hint = (f" {Warna.HIJAU}[✓ Checkpoint Saved]{Warna.RESET}"
                        if time.time() - _checkpoint_flash < 3 else "")
-            print(f"\n{Warna.ABU_GELAP}W/A/S/D=Gerak | I=Barang | Q=NPC | B=Toko | "
+            print(f"\n{Warna.ABU_GELAP}W/A/S/D=Gerak | I=Barang | Q=Quest NPC | B=Bran Radio | "
                   f"X=Simpan({slot_label}) | E=Keluar{Warna.RESET}{cp_hint}")
 
             flush_input()
@@ -1024,10 +1269,11 @@ def loop_eksplorasi(gs, gm):
 def _init_location_quests(gs, gm_map_id):
     # Core: Init quests for current map/chapter — add_quest() deduplicates internally
     try:
-        from characters import CHARACTER_MAIN_QUESTS, NPC_QUESTS
+        from characters import CHARACTER_MAIN_QUESTS, NPC_QUESTS, CHAPTER_QUEST_TEMPLATES
     except ImportError:
         CHARACTER_MAIN_QUESTS = {}
         NPC_QUESTS = {}
+        CHAPTER_QUEST_TEMPLATES = {}
 
     chapter = gs.story_flags.get("current_chapter", 1)
     try:
@@ -1036,32 +1282,39 @@ def _init_location_quests(gs, gm_map_id):
         chapter = 1
 
     char_id = gs.player_character
-    char_quests = CHARACTER_MAIN_QUESTS.get(char_id, {})
-    if quest_data := char_quests.get(chapter):
-        steps = quest_data.get("steps", [quest_data["objective"]])
-        gs.add_quest(
-            quest_data["id"],
-            quest_data["title"],
-            quest_data["objective"],
-            targets=steps,
-            location=gm_map_id,
-            quest_type="main",
-        )
+
+    if chapter == 1:
+        # Ch1: karakter-spesifik — gunakan CHARACTER_MAIN_QUESTS
+        char_quests = CHARACTER_MAIN_QUESTS.get(char_id, {})
+        quest_data = char_quests.get(1)
+        if quest_data:
+            steps = quest_data.get("steps", [quest_data["objective"]])
+            gs.add_quest(
+                quest_data["id"], quest_data["title"], quest_data["objective"],
+                targets=steps, location=gm_map_id, quest_type="main",
+            )
     else:
-        # Fallback jika karakter tidak ada di dict
-        gs.add_quest(
-            f"ch{chapter}_escape",
-            f"Chapter {chapter}: Bertahan dan maju",
-            "Kalahkan boss di chapter ini untuk lanjut",
-            targets=["boss"],
-            location=gm_map_id,
-            quest_type="main",
-        )
+        # Ch2+: gunakan CHAPTER_QUEST_TEMPLATES (shared untuk semua karakter)
+        quest_data = CHAPTER_QUEST_TEMPLATES.get(chapter)
+        if quest_data:
+            steps = quest_data.get("steps", [quest_data["objective"]])
+            gs.add_quest(
+                quest_data["id"], quest_data["title"], quest_data["objective"],
+                targets=steps, location=gm_map_id, quest_type="main",
+            )
+        else:
+            gs.add_quest(
+                f"ch{chapter}_main",
+                f"Chapter {chapter}: Lanjutkan perjalanan",
+                "Selesaikan objektif chapter ini untuk lanjut",
+                targets=["Selesaikan chapter ini"],
+                location=gm_map_id, quest_type="main",
+            )
 
     # Sync HUD progress untuk Ch1 agar akurat bahkan setelah load game
     if chapter == 1:
         try:
-            from character_routes import sync_ch1_quest_hud
+            from characters import sync_ch1_quest_hud
             sync_ch1_quest_hud(gs)
         except Exception:
             pass
@@ -1081,7 +1334,7 @@ def _add_recruit_quest_on_meet(gs, npc_id):
     char_id = gs.player_character
     if npc_id == char_id:
         return
-    if npc_id in gs.party_members:
+    if npc_id in gs.npcs_recruited:
         return
     if any(q.get("id") == f"recruit_{npc_id}" for q in gs.active_quests):
         return
@@ -1117,7 +1370,7 @@ def handle_hasil(hasil, gs, gm):
             from combat import run_combat
             from characters import get_character_name, get_character_data
 
-            # ── ENCOUNTER DIALOG sebelum combat ─────────────────────────────
+
             try:
                 from npc_interactions import show_enemy_encounter_dialog
                 enemy_id = hasil['enemy'].get('id', '')
@@ -1152,28 +1405,7 @@ def handle_hasil(hasil, gs, gm):
                 }
             }
 
-            # FIX: konversi party_members (list ID string) → list dict yang dibutuhkan combat
-            party_dicts = []
-            for mid in gs.party_members:
-                if mid in gs.party_data:
-                    pd = gs.party_data[mid]
-                    party_dicts.append({
-                        'name':    pd.get('name', mid),
-                        'hp':      pd.get('hp', pd.get('max_hp', 100)),
-                        'max_hp':  pd.get('max_hp', 100),
-                        'attack':  pd.get('attack', 10),
-                        'defense': pd.get('defense', 10),
-                        'speed':   pd.get('speed', 10),
-                        'skills':  pd.get('skills', {}),
-                        'stats': {
-                            'hp':      pd.get('max_hp', 100),
-                            'attack':  pd.get('attack', 10),
-                            'defense': pd.get('defense', 10),
-                        },
-                        '_id': mid,
-                    })
-
-            ret = run_combat(player_stats, hasil['enemy'], gs.inventory, party_dicts)
+            ret = run_combat(player_stats, hasil['enemy'], gs.inventory)
 
             # HP dan energy di-sync balik setelah combat
             gs.hp = max(0, player_stats.get('hp', gs.hp))
@@ -1182,6 +1414,38 @@ def handle_hasil(hasil, gs, gm):
 
             if ret == 'victory':
                 gs.battles_won += 1
+
+                QUEST_DROP_MAP = {
+                    ('prison_north', 'guard_veteran'):   ('Buku Catatan Haikaru', None),
+                    ('prison_south', 'guard_veteran'):   ('Buku Catatan Haikaru', None),
+                    ('beach',        'guard_veteran'):   ('Kompas Nonno Arganta', 'defeat_harbor_patrol'),
+                    ('beach',        'mercenary_thug'):  ('Kompas Nonno Arganta', 'defeat_harbor_patrol'),
+                    ('laboratory',   'scientist'):        ('USB Security Drive',   'defeat_lab_scientist'),
+                    ('mansion',      'guard_elite'):      ('Kapasitor Besar',      None),
+                    ('command_center','tech_guard'):      ('Relay Switch',         None),
+                    ('theater',      'mansion_guard'):    ('Copper Coil',          None),
+                    ('theater',      'mercenary_thug'):   ('Copper Coil',          None),
+                }
+                enemy_id_drop = hasil['enemy'].get('id', '')
+                drop_key = (gm.map_id, enemy_id_drop)
+                if drop_key in QUEST_DROP_MAP:
+                    drop_item, drop_flag = QUEST_DROP_MAP[drop_key]
+                    if drop_item not in gs.quest_items and drop_item not in gs.inventory:
+                        gs.add_quest_item(drop_item)
+                        print(f"\n  {Warna.KUNING}★ Quest Drop: {drop_item} didapat!{Warna.RESET}")
+                        time.sleep(0.8)
+                        if drop_flag:
+                            gs.story_flags[drop_flag] = True
+                EMP_PARTS = {'Kapasitor Besar', 'Relay Switch', 'Copper Coil'}
+                has_all_emp = all(
+                    p in gs.quest_items or p in gs.inventory
+                    for p in EMP_PARTS
+                )
+                if has_all_emp and 'EMP Prototype' not in gs.quest_items and 'EMP Prototype' not in gs.inventory:
+                    gs.add_quest_item('EMP Prototype')
+                    print(f"\n  {Warna.KUNING + Warna.TERANG}★ EMP Prototype berhasil dirakit dari komponen!{Warna.RESET}")
+                    time.sleep(1.2)
+
                 # Hapus enemy yang sudah kalah dari peta supaya tidak bisa fight lagi
                 px, py = gm.player_x, gm.player_y
                 gm.enemies = [
@@ -1209,7 +1473,7 @@ def handle_hasil(hasil, gs, gm):
                 # Ch1 combat objective tracking
                 if int(gs.story_flags.get('current_chapter', 1)) == 1:
                     try:
-                        from character_routes import (
+                        from characters import (
                             get_ch1_quest, update_ch1_objective,
                             check_ch1_objective_progress, display_ch1_completion,
                             sync_ch1_quest_hud,
@@ -1251,7 +1515,7 @@ def handle_hasil(hasil, gs, gm):
                                                     print(f"  {Warna.HIJAU}{line}{Warna.RESET}")
                                                 time.sleep(1.5)
 
-                                            from character_routes import check_ch1_complete
+                                            from characters import check_ch1_complete
                                             if check_ch1_complete(gs):
                                                 display_ch1_completion(gs)
                                             else:
@@ -1311,7 +1575,7 @@ def handle_hasil(hasil, gs, gm):
                 return 'checkpoint'
 
             try:
-                from character_routes import check_candala_encounter
+                from characters import check_candala_encounter
                 check_candala_encounter(gs)
             except Exception:
                 pass
@@ -1329,10 +1593,18 @@ def handle_hasil(hasil, gs, gm):
             print(f"\n{Warna.HIJAU}✓ Dapat: {item_name}!{Warna.RESET}")
             time.sleep(0.5)
 
+            # Cek sidequest chapter advance jika USB Evidence Drive didapat
+            if item_name == 'USB Evidence Drive':
+                try:
+                    from npc_interactions import _check_sidequest_chapter_advance
+                    _check_sidequest_chapter_advance(gs)
+                except Exception:
+                    pass
+
             # Ch1: cek apakah item ini trigger objective progress
             if int(gs.story_flags.get('current_chapter', 1)) == 1:
                 try:
-                    from character_routes import (
+                    from characters import (
                         get_ch1_item_objective, update_ch1_objective,
                         check_ch1_objective_progress, get_ch1_quest,
                         display_ch1_completion, sync_ch1_quest_hud,
@@ -1405,29 +1677,15 @@ def handle_hasil(hasil, gs, gm):
                 time.sleep(1)
             else:
                 dest = hasil['destination']
-                # Cek akses berdasarkan chapter
-                from character_routes import can_access_location
-                chapter = int(gs.story_flags.get('current_chapter', 1))
-                if not can_access_location(gs.player_character, dest, chapter):
-                    # Tentukan chapter berapa lokasi ini terbuka
-                    from character_routes import get_chapter_locations
-                    unlock_ch = None
-                    for ch in (1, 2, 3):
-                        locs = get_chapter_locations(ch)
-                        all_locs = locs.get('all', locs.get(gs.player_character, []))
-                        if dest in all_locs:
-                            unlock_ch = ch
-                            break
-                    if unlock_ch:
-                        print(f"\n{Warna.MERAH}✗ Akses terkunci!{Warna.RESET}")
-                        print(f"  {Warna.KUNING}Selesaikan Chapter {unlock_ch - 1} dulu untuk membuka lokasi ini.{Warna.RESET}")
-                    else:
-                        print(f"\n{Warna.MERAH}✗ Lokasi '{dest}' belum terbuka.{Warna.RESET}")
+                allowed, reason = validate_access(dest, gs)
+                if not allowed:
+                    print(f"\n{Warna.MERAH}✗ Akses terkunci!{Warna.RESET}")
+                    print(f"  {Warna.KUNING}{reason}{Warna.RESET}")
                     time.sleep(2)
                 else:
                     gs.current_location = dest
                     gs.visited_locations.add(dest)
-                    # ── MAP ENTRY DIALOG (pertama kali masuk lokasi) ─────────
+
                     try:
                         from npc_interactions import show_map_entry_dialog
                         show_map_entry_dialog(dest, gs.player_character, gs)
@@ -1435,6 +1693,15 @@ def handle_hasil(hasil, gs, gm):
                         pass
                     if gs.update_quest_progress("escape_start"):
                         gs.complete_quest("escape_start")
+
+                    # Saat masuk safe_zone, cek sidequest chapter advance
+                    if dest in ('safe_zone', 'command_center'):
+                        try:
+                            from npc_interactions import _check_sidequest_chapter_advance
+                            _check_sidequest_chapter_advance(gs)
+                        except Exception:
+                            pass
+
                     return 'map_change'
 
         elif hasil['type'] == 'boss':
@@ -1456,7 +1723,7 @@ def handle_hasil(hasil, gs, gm):
                         boss['name'] = f"[Memory] {boss.get('name', boss_id_key)}"
                         boss['_memory'] = True   # Flag: no story progression on kill
 
-                    # ── ENCOUNTER DIALOG singkat sebelum boss cinematic ──────
+
                     try:
                         from npc_interactions import show_enemy_encounter_dialog
                         show_enemy_encounter_dialog(boss_id_key, gs.player_character,
@@ -1466,7 +1733,7 @@ def handle_hasil(hasil, gs, gm):
                         pass
                     if chapter == 1 and not gs.story_flags.get(preboss_flag):
                         try:
-                            from character_routes import get_ch1_pre_boss_dialog
+                            from characters import get_ch1_pre_boss_dialog
                             from utils import clear_screen
                             pre_lines = get_ch1_pre_boss_dialog(gs.player_character, boss_id_key)
                             if pre_lines:
@@ -1533,32 +1800,10 @@ def handle_hasil(hasil, gs, gm):
                         }
                     }
 
-                    # FIX: konversi party_members (list ID) → list dict untuk combat
-                    boss_party_dicts = []
-                    for mid in gs.party_members:
-                        if mid in gs.party_data:
-                            pd = gs.party_data[mid]
-                            boss_party_dicts.append({
-                                'name':    pd.get('name', mid),
-                                'hp':      pd.get('hp', pd.get('max_hp', 100)),
-                                'max_hp':  pd.get('max_hp', 100),
-                                'attack':  pd.get('attack', 10),
-                                'defense': pd.get('defense', 10),
-                                'speed':   pd.get('speed', 10),
-                                'skills':  pd.get('skills', {}),
-                                'stats': {
-                                    'hp':      pd.get('max_hp', 100),
-                                    'attack':  pd.get('attack', 10),
-                                    'defense': pd.get('defense', 10),
-                                },
-                                '_id': mid,
-                            })
-
-                    # ── Simpan checkpoint SEBELUM boss fight ──────────────────────
                     if hasattr(gs, 'save_checkpoint'):
                         gs.save_checkpoint(location=gs.current_location)
 
-                    ret = run_combat(player_stats, boss, gs.inventory, boss_party_dicts)
+                    ret = run_combat(player_stats, boss, gs.inventory)
 
                     # HP dan energy di-sync setelah boss combat
                     gs.hp = max(1, player_stats.get('hp', gs.hp))
@@ -1617,27 +1862,41 @@ def handle_hasil(hasil, gs, gm):
                         char_id = gs.player_character
                         chapter = int(gs.story_flags.get('current_chapter', 1))
 
-                        # Bug Fix: Ch1 boss kill credits remaining combat objectives
-                        # then uses dedicated ch1 system instead of generic quest tracker.
+                        # Bug Fix: Ch1 boss kill → update boss-type objective by boss_id match
                         if chapter == 1:
                             try:
-                                from character_routes import (
+                                from characters import (
                                     get_ch1_quest, update_ch1_objective,
                                     check_ch1_objective_progress, check_ch1_complete,
-                                    display_ch1_completion,
+                                    display_ch1_completion, sync_ch1_quest_hud,
+                                    get_ch1_objective_complete_dialog,
                                 )
                                 q_data = get_ch1_quest(char_id)
                                 if q_data:
-                                    for obj in q_data['objectives']:
-                                        if obj.get('type') == 'combat':
-                                            cur, tot = check_ch1_objective_progress(gs, obj['id'])
-                                            if cur < tot:
-                                                update_ch1_objective(gs, obj['id'], tot - cur)
+                                    # Map boss_id → objective id (boss-type objectives)
+                                    CH1_BOSS_OBJ_MAP = {
+                                        'maxwell_enforcer': 'defeat_maxwell_enforcer',
+                                        'warden_elite':     'defeat_warden_elite',
+                                        'theater_master':   'defeat_theater_master',
+                                        'harbor_captain':   'defeat_harbor_captain',
+                                        'security_bot':     'defeat_security_bot',
+                                    }
+                                    obj_id = CH1_BOSS_OBJ_MAP.get(boss_id)
+                                    if obj_id:
+                                        cur, tot = check_ch1_objective_progress(gs, obj_id)
+                                        if cur < tot:
+                                            update_ch1_objective(gs, obj_id, 1)
+                                            sync_ch1_quest_hud(gs)
+                                            comp_dlg = get_ch1_objective_complete_dialog(char_id, obj_id)
+                                            if comp_dlg:
+                                                print()
+                                                for line in comp_dlg:
+                                                    print(f"  {Warna.HIJAU}{line}{Warna.RESET}")
+                                                time.sleep(1.5)
+
                                     if check_ch1_complete(gs):
-                                        # Reward XP/dollars before completion screen
                                         xp_gain = boss.get('xp', 50)
-                                        if leveled := gs.gain_xp(xp_gain):
-                                            gains = getattr(gs, 'level_up_gains', {})
+                                        if gs.gain_xp(xp_gain):
                                             print(f"\n{Warna.KUNING}  ⭐ LEVEL UP! Level {gs.level}{Warna.RESET}")
                                         dol = boss.get('dollars', 0)
                                         if dol > 0:
@@ -1656,7 +1915,6 @@ def handle_hasil(hasil, gs, gm):
                             print(f"  {Warna.HIJAU}Chapter 2 dimulai — Eksplorasi Pulau!{Warna.RESET}")
                             print(f"{Warna.KUNING}{'═'*60}{Warna.RESET}")
                             time.sleep(3)
-
                             xp_gain = boss.get('xp', 50)
                             gs.gain_xp(xp_gain)
                             dol = boss.get('dollars', 0)
@@ -1671,13 +1929,25 @@ def handle_hasil(hasil, gs, gm):
                         except Exception:
                             quest_data = None
 
-                        # Update progress main quest character
                         quest_id = (quest_data["id"]
                                     if quest_data
                                     else f"defeat_{char_id}_boss")
-                        # Cek progress sebelum update, untuk dialog step completion
                         _prog_before = next((q.get('progress',0) for q in gs.active_quests if q.get('id')==quest_id), 0)
-                        quest_done = gs.update_quest_progress(quest_id)
+
+                        # Gate bosses: set flags dan force quest selesai
+                        _GATE_BOSS_FLAGS = {
+                            'kepala_penjaga': 'boss_ch2_defeated',
+                            'agen_maxwell':   'boss_ch4_defeated',
+                        }
+                        if boss_id in _GATE_BOSS_FLAGS:
+                            gs.story_flags[_GATE_BOSS_FLAGS[boss_id]] = True
+                            for _q in gs.active_quests:
+                                if _q.get('id') == quest_id:
+                                    _q['progress'] = _q.get('total', 1)
+                                    break
+                            quest_done = True
+                        else:
+                            quest_done = gs.update_quest_progress(quest_id)
                         _prog_after = next((q.get('progress',0) for q in gs.active_quests if q.get('id')==quest_id), _prog_before+1)
                         # Dialog objektif selesai
                         if quest_data and _prog_after > _prog_before:
@@ -1699,7 +1969,7 @@ def handle_hasil(hasil, gs, gm):
                                 next_msg = quest_data.get("next_chapter_msg", "")
 
                             # Naikan chapter — sistem 6 chapter
-                            from character_routes import advance_chapter, check_chapter_unlock
+                            from characters import advance_chapter, check_chapter_unlock
                             next_ch = chapter + 1
                             can_advance, reason = check_chapter_unlock(gs, next_ch)
 
@@ -1717,19 +1987,19 @@ def handle_hasil(hasil, gs, gm):
 
                             elif chapter == 2:
                                 gs.story_flags['current_chapter'] = 3
+                                gs.story_flags['final_bosses_available'] = True
                                 gs.active_quests = [q for q in gs.active_quests if q.get("quest_type") == "side"]
                                 print(f"\n{Warna.KUNING}{'═'*60}{Warna.RESET}")
                                 print(f"  {Warna.KUNING + Warna.TERANG}★  CHAPTER 2 SELESAI!  ★{Warna.RESET}")
-                                if quest_data:
-                                    print(f"  {quest_data.get('next_chapter_msg','')}")
-                                print(f"  {Warna.CYAN}Chapter 3 — Selidiki mansion & temui NPC!{Warna.RESET}")
+                                print(f"  {Warna.KUNING}Kepala Penjaga dikalahkan! Pulau sepenuhnya terbuka.{Warna.RESET}")
+                                print(f"  {Warna.CYAN}Chapter 3 — Temui NPC, selesaikan 2 sidequest untuk lanjut!{Warna.RESET}")
+                                print(f"  {Warna.ABU_GELAP}Cari NPC di: Penjara Utara, Teater, Dermaga, Pantai, Basement{Warna.RESET}")
                                 print(f"{Warna.KUNING}{'═'*60}{Warna.RESET}")
-                                time.sleep(3)
+                                time.sleep(4)
 
                             elif chapter == 3:
                                 # Ch3→4 butuh 2 sidequest
-                                sq_done = sum(1 for nid in ['haikaru','aolinh','arganta','ignatius','vio']
-                                              if gs.story_flags.get(f'sidequest_{nid}_complete'))
+                                sq_done = gs.get_sidequest_progress()
                                 if sq_done >= 2:
                                     gs.story_flags['current_chapter'] = 4
                                     gs.active_quests = [q for q in gs.active_quests if q.get("quest_type") == "side"]
@@ -1748,15 +2018,17 @@ def handle_hasil(hasil, gs, gm):
                                 gs.active_quests = [q for q in gs.active_quests if q.get("quest_type") == "side"]
                                 print(f"\n{Warna.MERAH}{'═'*60}{Warna.RESET}")
                                 print(f"  {Warna.MERAH + Warna.TERANG}★  CHAPTER 4 SELESAI!  ★{Warna.RESET}")
-                                print(f"  {Warna.CYAN}Chapter 5 — Kumpulkan semua bukti!{Warna.RESET}")
+                                print(f"  {Warna.KUNING}Maxwell's Agent dikalahkan! Satu langkah lagi.{Warna.RESET}")
+                                print(f"  {Warna.CYAN}Chapter 5 — Selesaikan 4 sidequest + dapatkan USB Evidence Drive!{Warna.RESET}")
+                                print(f"  {Warna.ABU_GELAP}USB Evidence Drive bisa didapat dari sidequest Vio di Mansion{Warna.RESET}")
                                 print(f"{Warna.MERAH}{'═'*60}{Warna.RESET}")
-                                time.sleep(3)
+                                time.sleep(4)
 
                             elif chapter == 5:
                                 # Ch5→6 butuh 4 sidequest + USB
-                                sq_done = sum(1 for nid in ['haikaru','aolinh','arganta','ignatius','vio']
-                                              if gs.story_flags.get(f'sidequest_{nid}_complete'))
-                                has_usb = 'USB Evidence Drive' in gs.inventory
+                                sq_done = gs.get_sidequest_progress()
+                                has_usb = ('USB Evidence Drive' in gs.inventory
+                                           or 'USB Evidence Drive' in gs.quest_items)
                                 if sq_done >= 4 and has_usb:
                                     gs.story_flags['current_chapter'] = 6
                                     gs.active_quests = [q for q in gs.active_quests if q.get("quest_type") == "side"]
@@ -2055,9 +2327,12 @@ def interaksi_npc(npc_id, gs, gm):
         sq_started      = gs.story_flags.get(sq_started_flag, False)
 
         if not sq_started:
-            # Tampilkan briefing quest — hanya ditampilkan sekali
             display_npc_quest_briefing(npc_id, gs)
             gs.story_flags[sq_started_flag] = True
+            _add_recruit_quest_on_meet(gs, npc_id)
+            if any(q.get('id') == f'recruit_{npc_id}' for q in gs.active_quests):
+                print(f"\n  {Warna.KUNING}★ Quest ditambahkan ke HUD!{Warna.RESET}")
+                time.sleep(0.8)
             # Jika pemain sudah memiliki item yang dibutuhkan sebelum menerima quest,
             # langsung selesaikan sidequest agar tidak butuh pickup ulang.
             try:
@@ -2065,6 +2340,7 @@ def interaksi_npc(npc_id, gs, gm):
                 if is_sidequest_complete(npc_id, gs):
                     gs.story_flags[sq_flag] = True
                     gs.complete_quest(f"recruit_{npc_id}")
+                    gs.npcs_recruited.add(npc_id)
                     display_npc_completion(npc_id, gs)
                     time.sleep(1.2)
                     return
@@ -2077,6 +2353,7 @@ def interaksi_npc(npc_id, gs, gm):
                 # Selesai! Reward dari npc_interactions (lebih lengkap)
                 gs.story_flags[sq_flag] = True
                 gs.complete_quest(f"recruit_{npc_id}")
+                gs.npcs_recruited.add(npc_id)
                 display_npc_completion(npc_id, gs)
                 time.sleep(2)
             else:

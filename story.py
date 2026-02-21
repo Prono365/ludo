@@ -10,9 +10,7 @@ def _tw():
     return max(40, shutil.get_terminal_size(fallback=(80, 24)).columns)
 
 def _get_character_gender_descriptor(player_character=''):
-    # Mengambil descriptor gender untuk karakter pemain
-    #  Get gender descriptor - avoids circular import
-    """Get gender descriptor for player character."""
+    """Get gender descriptor for player character — avoids circular import."""
     if not player_character:
         return 'gadis biasa'  # Default fallback
     
@@ -31,9 +29,7 @@ def _get_character_gender_descriptor(player_character=''):
     return 'orang biasa'  # Safe fallback
 
 def _interpolate_player_info(text, game_state=None):
-    # Mengganti variabel template cerita dengan data pemain
-    #  Replace story template variables with player data
-    """Interpolate player information into story text."""
+    """Ganti variabel template cerita dengan data pemain."""
     if not game_state:
         return text
     

@@ -14,8 +14,6 @@ from constants import (
     LEVEL_UP_SPEED_GAIN,
     LEVEL_UP_ENERGY_GAIN,
     XP_SCALE_FACTOR,
-    MAX_PARTY_SIZE,
-    DEFAULT_PARTY_MEMBER_HP,
     GAME_VERSION,
     QUEST_ITEM_NAMES,
 )
@@ -58,17 +56,13 @@ class GameState:
             'energy': LEVEL_UP_ENERGY_GAIN,
         }
 
-        # #codebase Energy system - used for skills
         self.energy = 30
         self.max_energy = 30
         self.energy_regen_rate = 5
 
-        self.party_members = []
-        self.party_data = {}
-
         self.inventory = []
         self.key_items = []
-        self.quest_items = []  # Fix: Quest item unik — dedup via add_quest_item()
+        self.quest_items = []
 
         self.current_location = "island"
         self.visited_locations = set()
@@ -76,7 +70,6 @@ class GameState:
         self.bosses_defeated = 0
         self.npcs_recruited = set()
 
-        # #codebase Story progression tracking - prevents KeyError
         self.story_flags = {
             'current_chapter': 1,
             'prologue_complete': False,
@@ -123,40 +116,8 @@ class GameState:
             'show_tutorial': True
         }
 
-        # ── CHECKPOINT SYSTEM ──────────────────────────────────────────────
-        # Checkpoint di-set otomatis sebelum boss fight (dipanggil dari exploration.py)
-        # load_checkpoint() mengembalikan pemain ke state sebelum boss
-        self.checkpoint_data = {}     # snapshot state sebelum boss
-        self.boss_retry_count = 0     # jumlah retry boss saat ini (tracking per-boss)
-
-    def add_party_member(self, character_id, character_data):
-        if character_id not in self.party_members and len(self.party_members) < MAX_PARTY_SIZE:
-            self.party_members.append(character_id)
-            stats = character_data.get("stats", {})
-            hp = stats.get("hp", DEFAULT_PARTY_MEMBER_HP)
-            self.party_data[character_id] = {
-                "name": character_data.get("name", character_id),
-                "hp": hp,
-                "max_hp": hp,
-                "attack": stats.get("attack", 10),
-                "defense": stats.get("defense", 10),
-                "speed": stats.get("speed", 10),
-                "level": 1,
-                "xp": 0,
-                "skills": character_data.get("skills", {}),
-            }
-            self.npcs_recruited.add(character_id)
-            return True
-        return False
-
-    def _validate_party_data(self):
-        valid = []
-        for mid in self.party_members:
-            data = self.party_data.get(mid)
-            if data and data.get("max_hp", 0) > 0:
-                data["hp"] = max(1, data.get("hp", data["max_hp"]))
-                valid.append(mid)
-        self.party_members = valid
+        self.checkpoint_data = {}
+        self.boss_retry_count = 0
 
     def gain_xp(self, amount):
         self.xp += amount
@@ -290,23 +251,105 @@ class GameState:
         except (ValueError, TypeError):
             chapter = 1
 
-        # Coba ambil dari CHARACTER_MAIN_QUESTS
         try:
-            from characters import CHARACTER_MAIN_QUESTS
+            from characters import CHARACTER_MAIN_QUESTS, CHAPTER_QUEST_TEMPLATES
             char_quests = CHARACTER_MAIN_QUESTS.get(self.player_character, {})
             quest_data  = char_quests.get(chapter)
             if quest_data:
-                return quest_data['title']   # FIX: no "Ch.X —" prefix — tracker adds it
+                return quest_data['title']
+            template = CHAPTER_QUEST_TEMPLATES.get(chapter)
+            if template:
+                return template['title']
         except Exception:
             pass
 
-        # Fallback generic (tanpa prefix Ch.X — agar tidak double di tracker)
+        try:
+            from characters import CHAPTER_OBJECTIVES_BY_CHAR, CHAPTER_OBJECTIVES
+            char_obj = CHAPTER_OBJECTIVES_BY_CHAR.get(self.player_character, {})
+            if chapter in char_obj:
+                return char_obj[chapter]
+            return CHAPTER_OBJECTIVES.get(chapter, "Survive di Cursed Island!")
+        except Exception:
+            pass
+
         generic = {
-            1: "Kabur dari lokasi awal!",
-            2: "Cari sekutu dan hancurkan boss ch.2",
-            3: "Final battle — kalahkan Epstein!",
+            1: "Kabur dari area starting!",
+            2: "Bersihkan pulau — kalahkan Kepala Penjaga",
+            3: "Bangun aliansi — selesaikan 2 sidequest NPC",
+            4: "Infiltrasi lab — kalahkan Maxwell's Agent",
+            5: "Kumpulkan semua bukti",
+            6: "Konfrontasi final — kalahkan Epstein",
         }
         return generic.get(chapter, "Survive di Cursed Island!")
+
+    def get_sidequest_progress(self):
+        """Kembalikan jumlah sidequest NPC yang sudah selesai dan reward sudah diterima."""
+        npc_ids = ['haikaru', 'aolinh', 'arganta', 'ignatius', 'vio']
+        reward_flags = {
+            'haikaru':  'haikaru_sidequest_done',
+            'aolinh':   'aolinh_sidequest_done',
+            'arganta':  'arganta_sidequest_done',
+            'ignatius': 'ignatius_sidequest_done',
+            'vio':      'vio_sidequest_done',
+        }
+        count = 0
+        for npc_id in npc_ids:
+            flag = reward_flags.get(npc_id, f"{npc_id}_sidequest_done")
+            if self.story_flags.get(flag):
+                count += 1
+            elif self.story_flags.get(f"sidequest_{npc_id}_complete"):
+                count += 1
+        return count
+
+    def get_sidequest_ready_count(self):
+        """Kembalikan jumlah sidequest yang syaratnya sudah terpenuhi tapi reward belum diambil."""
+        npc_ids = ['haikaru', 'aolinh', 'arganta', 'ignatius', 'vio']
+        reward_flags = {
+            'haikaru':  'haikaru_sidequest_done',
+            'aolinh':   'aolinh_sidequest_done',
+            'arganta':  'arganta_sidequest_done',
+            'ignatius': 'ignatius_sidequest_done',
+            'vio':      'vio_sidequest_done',
+        }
+        count = 0
+        try:
+            from npc_interactions import is_sidequest_complete
+            for npc_id in npc_ids:
+                reward_flag = reward_flags.get(npc_id, f"{npc_id}_sidequest_done")
+                already_rewarded = self.story_flags.get(reward_flag, False)
+                if not already_rewarded and is_sidequest_complete(npc_id, self):
+                    count += 1
+        except Exception:
+            pass
+        return count
+
+    @property
+    def main_quest_status(self):
+        """Property — kembalikan string status quest utama untuk HUD tracker."""
+        chapter = self.story_flags.get('current_chapter', 1)
+        try:
+            chapter = int(chapter)
+        except (ValueError, TypeError):
+            chapter = 1
+        obj = self.get_chapter_objective()
+        return f"Ch.{chapter} — {obj}"
+
+    def reconcile_state(self):
+        """Sinkronkan state game: pastikan data konsisten setiap render frame."""
+        self.hp = max(0, min(self.hp, self.max_hp))
+        self.energy = max(0, min(self.energy, self.max_energy))
+        if not isinstance(self.story_flags, dict):
+            self.story_flags = {"current_chapter": 1}
+        if "current_chapter" not in self.story_flags:
+            self.story_flags["current_chapter"] = 1
+        if not isinstance(self.inventory, list):
+            self.inventory = []
+        if not isinstance(self.quest_items, list):
+            self.quest_items = []
+        if not isinstance(self.visited_locations, set):
+            self.visited_locations = set(self.visited_locations) if self.visited_locations else set()
+        if not isinstance(self.npcs_recruited, set):
+            self.npcs_recruited = set(self.npcs_recruited) if self.npcs_recruited else set()
 
     def update_playtime(self):
         try:
@@ -629,7 +672,6 @@ class GameState:
                 "character":  data.get('player_character', '?'),
                 "level":      data.get('level', 1),
                 "location":   data.get('current_location', '?'),
-                "party_size": len(data.get('party_members', [])),
                 "bosses":     data.get('bosses_defeated', 0),
             }
 

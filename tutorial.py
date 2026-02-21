@@ -163,7 +163,7 @@ def tutorial_skills():
     print(f"  {Warna.ABU_GELAP}(Ketik 'skip' untuk melewati bagian ini){Warna.RESET}")
     print()
 
-    # ── Skill System ─────────────────────────────────────────────────────────
+    # Skill System
     print(f"  {Warna.KUNING}Sistem Skill:{Warna.RESET}")
     print(f"  Kartu = sumber damage utama. Skill = pendukung strategis.")
     print(f"  Skill TIDAK dirancang untuk spam — pakai di saat yang tepat!")
@@ -207,7 +207,7 @@ def tutorial_skills():
     separator()
     print()
 
-    # ── NPC Sidequest System ─────────────────────────────────────────────────
+    # NPC Sidequest System
     print(f"  {Warna.KUNING}Sistem NPC & Sidequest:{Warna.RESET}")
     print(f"  Ada {Warna.CYAN}5 NPC{Warna.RESET} yang bisa kamu temui selama petualangan.")
     print(f"  Mereka punya masalah masing-masing — dan bisa membantumu jika dibantu!")

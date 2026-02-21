@@ -22,15 +22,15 @@ NPC_SIDEQUEST_DATA = {
         'available_chapter': 2,
         'location':          'prison_north',
         'sidequest_id':      'sq_haikaru',
-        'sidequest_title':   'Catatan yang Tersita',
+        'sidequest_title':   'Kode yang Terlupakan',
         'required_item':     'Buku Catatan Haikaru',
         'required_action':   None,
         'reward_item':       'Catatan Sandi Haikaru',
         'reward_flag':       'haikaru_sidequest_done',
-        'main_quest_impact': 'Diperlukan untuk decode dokumen rahasia mansion (Ch3→Ch4)',
+        'main_quest_impact': 'Decode dokumen rahasia mansion — kunci untuk maju ke Ch.4',
         'chapter_unlock':    4,
 
-        # ── Dialog pertama kali ketemu ──────────────────────────────────────
+        # Dialog pertama kali ketemu
         'intro_dialog': [
             ("Haikaru", "..."),
             ("Haikaru", "Kamu... bukan penjaga."),
@@ -42,18 +42,17 @@ NPC_SIDEQUEST_DATA = {
             ("Haikaru", "Kamu butuh bantuanku. Dan aku butuh sesuatu dari kamu."),
         ],
 
-        # ── Dialog saat assign sidequest ────────────────────────────────────
         'quest_dialog': [
-            ("Haikaru", "Penjaga Selatan menyita buku catatanku. 312 halaman analisis enkripsi."),
-            ("Haikaru", "Di dalamnya ada pola akses sistem keamanan mansion. Pola yang... tidak seharusnya ada."),
-            ("Haikaru", "Temukan buku itu. Ruang penjaga di locker nomor 7. Kombinasi: tanggal lahir kepala penjaga."),
-            ("Haikaru", "Aku sudah hitung — dia lahir 3 Maret 1972. Jadi: 03-03-72."),
-            (None,      "Haikaru menyerahkan sketsa kasar denah ruang penjaga."),
-            ("Haikaru", "Kembalikan bukuku dan aku akan terjemahkan semua dokumen mansion yang tidak bisa kalian baca."),
-            ("Haikaru", "Dokumen itu... aku yakin isinya adalah daftar 'tamu'. Nama-nama besar. Bukti nyata."),
+            ("Haikaru", "Guard veteran di Wing-B menyita buku catatanku. 312 halaman. Analisis enkripsi dan peta blind spot."),
+            ("Haikaru", "Mereka pikir kalau buku itu diambil, aku berhenti berpikir. Salah kalkulasi besar."),
+            ("Haikaru", "Penjaga itu patroli area koridor timur laut penjara ini. Bukan target sulit kalau tahu polanya."),
+            (None,      "Haikaru menyerahkan diagram rute patroli yang digambar dari ingatan."),
+            ("Haikaru", "Kalahkan guard veteran itu. Buku itu pasti ada di sakunya — dia tidak akan menaruh di loker."),
+            ("Haikaru", "Kembalikan buku itu padaku. Aku akan decode semua dokumen mansion yang tidak bisa kalian baca."),
+            ("Haikaru", "Data di buku itu... bukan sekadar catatan. Itu kunci sistem enkripsi seluruh jaringan Epstein."),
         ],
 
-        # ── Dialog saat quest selesai ────────────────────────────────────────
+        # Dialog saat quest selesai
         'complete_dialog': [
             ("Haikaru", "Kamu berhasil. 94% lebih cepat dari estimasiku. Kecepatanmu mengejutkan."),
             (None,      "Haikaru segera membuka buku catatan, tangannya bergerak cepat membalik halaman."),
@@ -64,7 +63,7 @@ NPC_SIDEQUEST_DATA = {
             ("Haikaru", "Jangan sampai jatuh ke tangan penjaga. Kalau itu terjadi, semua orang di pulau ini dalam bahaya."),
         ],
 
-        # ── Dialog setelah quest selesai — muncul SEKALI saat kembali mengobrol ──
+        # Dialog setelah quest selesai — muncul SEKALI saat kembali mengobrol
         'after_complete_dialog': [
             ("Haikaru", "...Aku masih menganalisa fragmentasi data di catatan itu. Ada anomali di halaman 89."),
             ("Haikaru", "Pola enkripsi berubah tiap tiga bulan. Artinya ada orang dalam yang update sistemnya."),
@@ -80,7 +79,7 @@ NPC_SIDEQUEST_DATA = {
         'available_chapter': 2,
         'location':          'theater',
         'sidequest_id':      'sq_aolinh',
-        'sidequest_title':   'Melodi di Tengah Kegelapan',
+        'sidequest_title':   'Suara yang Terkubur',
         'required_item':     None,
         'required_action':   'defeat_theater_guard',
         'reward_item':       'Rekaman Distraksi Aolinh',
@@ -88,7 +87,7 @@ NPC_SIDEQUEST_DATA = {
         'main_quest_impact': 'Rekaman musik mengalihkan penjaga dock (Ch4 — akses kapal)',
         'chapter_unlock':    4,
 
-        # ── Dialog pertama kali ketemu ──────────────────────────────────────
+        # Dialog pertama kali ketemu
         'intro_dialog': [
             (None,      "Suara biola mengalun pelan dari balik tirai panggung. Melodi yang... terlalu indah untuk tempat seperti ini."),
             ("Aolinh",  "...Siapa di sana?"),
@@ -100,18 +99,17 @@ NPC_SIDEQUEST_DATA = {
             ("Aolinh",  "Kamu mau cari cara keluar? Aku mau bantu. Tapi aku butuh sesuatu darimu dulu."),
         ],
 
-        # ── Dialog saat assign sidequest ────────────────────────────────────
         'quest_dialog': [
-            ("Aolinh",  "Di ruang backstage ada guard yang selalu berjaga. Dia yang mengambil HP-ku — satu-satunya koneksi ke Jiejie."),
-            ("Aolinh",  "Kalahkan dia. Ambil kembali HP-ku."),
-            (None,      "Aolinh mengencangkan genggaman pada biolanya."),
-            ("Aolinh",  "Setelah itu... aku punya ide. Rekaman music performance-ku masih ada di HP itu."),
-            ("Aolinh",  "Penjaga di dermaga selalu ngantuk shift malam. Tapi kalau ada musik... mereka pasti terdistraksi."),
-            ("Aolinh",  "Kita bisa manfaatkan itu. Satu rekaman, satu kesempatan untuk kalian lewat."),
-            ("Aolinh",  "♪ Tapi pertama — tolong ambil HP-ku itu. Please? ♪"),
+            ("Aolinh",  "Theater Commander di area backstage ini — dia yang mengurung aku. Dia juga yang ambil HP-ku."),
+            (None,      "Aolinh memandang ke arah pintu besi di balik panggung. Matanya berkilat tapi suaranya tenang."),
+            ("Aolinh",  "Kalahkan Theater Commander itu. Bebaskan backstage. Ambil HP-ku kembali."),
+            ("Aolinh",  "Di HP itu ada rekaman performance terakhirku sebelum ditangkap. Masih ada di sana — aku yakin."),
+            ("Aolinh",  "Rekaman itu bisa jadi senjata. Penjaga dermaga punya titik lemah: mereka berhenti fokus kalau ada musik."),
+            ("Aolinh",  "Satu rekaman loop yang tepat, dan jalur dermaga terbuka 10 menit. Cukup untuk lewat tanpa konflik."),
+            ("Aolinh",  "♪ Kalahkan Theater Commander. Ambil HP-ku. Dan kita semua bisa pulang. ♪"),
         ],
 
-        # ── Dialog saat quest selesai ────────────────────────────────────────
+        # Dialog saat quest selesai
         'complete_dialog': [
             ("Aolinh",  "Kamu berhasil! Oh, Dewa — terimakasih, terimakasih banyak!"),
             (None,      "Aolinh memeluk HP-nya erat-erat, kemudian segera memutar sesuatu."),
@@ -122,7 +120,7 @@ NPC_SIDEQUEST_DATA = {
             ("Aolinh",  "Dan... kalau kalian menemukan Jiejie-ku di suatu tempat — tolong beritahu aku. ♪"),
         ],
 
-        # ── Dialog setelah quest selesai — muncul SEKALI saat kembali mengobrol ──
+        # Dialog setelah quest selesai — muncul SEKALI saat kembali mengobrol
         'after_complete_dialog': [
             (None,      "Aolinh sedang memainkan melodi pelan di atas panggung. Senyumnya lebih tenang dari sebelumnya."),
             ("Aolinh",  "Oh, kamu lagi. Duduk, kalau mau. ♪"),
@@ -139,7 +137,7 @@ NPC_SIDEQUEST_DATA = {
         'available_chapter': 2,
         'location':          'beach',
         'sidequest_id':      'sq_arganta',
-        'sidequest_title':   "Rute Nonno",
+        'sidequest_title':   'Warisan yang Direbut',
         'required_item':     'Kompas Nonno Arganta',
         'required_action':   None,
         'reward_item':       'Peta Jalur Rahasia',
@@ -147,7 +145,7 @@ NPC_SIDEQUEST_DATA = {
         'main_quest_impact': 'Reveal jalur alternatif ke laboratorium bawah tanah (Ch4/Ch5)',
         'chapter_unlock':    4,
 
-        # ── Dialog pertama kali ketemu ──────────────────────────────────────
+        # Dialog pertama kali ketemu
         'intro_dialog': [
             (None,      "Seseorang bersembunyi di balik batu karang pantai. Pisau lipat siap di tangan."),
             ("Arganta", "Fermo! Diam dulu — siapa kamu?!"),
@@ -159,18 +157,17 @@ NPC_SIDEQUEST_DATA = {
             ("Arganta", "Aku tidak kabur dari sini tanpa bukti. Per famiglia. Kamu mau bantu?"),
         ],
 
-        # ── Dialog saat assign sidequest ────────────────────────────────────
         'quest_dialog': [
-            ("Arganta", "Nonno-ku meninggalkan kompas ini untukku. Kompas antik, tapi spesial."),
-            ("Arganta", "Di dalamnya ada peta tersembunyi — diukir di bagian dalam tutupnya. Sangat kecil, perlu kaca pembesar."),
-            ("Arganta", "Penjaga pantai mengambilnya waktu aku ditangkap. Mereka taruh di pos pantai, loker kecil."),
-            (None,      "Arganta menunjuk arah dengan percaya diri."),
-            ("Arganta", "Kalau bisa ambil kembali — aku bisa tunjukkan jalur yang tidak ada di peta resmi pulau ini."),
-            ("Arganta", "Terowongan lama. Nonno pernah survei pulau ini sebelum Epstein beli. Dia catat semua."),
-            ("Arganta", "Itu akses ke laboratorium bawah tanah yang tidak ada di denah resmi. Capisci?"),
+            ("Arganta", "Kompas Nonno-ku. Penjaga pantai mengambilnya waktu penangkapan — tapi aku lihat ke mana perginya."),
+            ("Arganta", "Guard veteran di pantai barat. Dia yang mengambilnya. Aku hampir bisa merasakannya di sakunya."),
+            (None,      "Arganta mengepalkan tangan. Amarah yang tertahan."),
+            ("Arganta", "Di dalam kompas itu ada peta yang diukir Nonno. Jalur yang tidak ada di blueprint resmi pulau ini."),
+            ("Arganta", "Kalahkan guard veteran itu. Ambil kompas dari sakunya. Ini bukan pilihan — ini keharusan."),
+            ("Arganta", "Terowongan yang Nonno catat itu tembus ke laboratorium bawah tanah. Akses tersembunyi."),
+            ("Arganta", "Per famiglia. Kompas itu satu-satunya warisan yang tersisa."),
         ],
 
-        # ── Dialog saat quest selesai ────────────────────────────────────────
+        # Dialog saat quest selesai
         'complete_dialog': [
             ("Arganta", "Il compasso! Grazie mille — mille grazie!"),
             (None,      "Arganta membuka kompas dengan hati-hati, mengeluarkan lensa kecil dari sakunya."),
@@ -181,7 +178,7 @@ NPC_SIDEQUEST_DATA = {
             ("Arganta", "Kalau kalian butuh masuk ke lab tanpa ketahuan — ini jalannya. Per Nonno."),
         ],
 
-        # ── Dialog setelah quest selesai — muncul SEKALI saat kembali mengobrol ──
+        # Dialog setelah quest selesai — muncul SEKALI saat kembali mengobrol
         'after_complete_dialog': [
             (None,      "Arganta sedang mengukir sesuatu di tanah pasir dengan ranting. Peta improvisasi."),
             ("Arganta", "Ah, kamu. Duduk — aku baru ingat sesuatu dari catatan Nonno."),
@@ -198,7 +195,7 @@ NPC_SIDEQUEST_DATA = {
         'available_chapter': 3,
         'location':          'basement',
         'sidequest_id':      'sq_ignatius',
-        'sidequest_title':   'Proyek EMP',
+        'sidequest_title':   'Komponen EMP yang Disita',
         'required_items':    ['Kapasitor Besar', 'Relay Switch', 'Copper Coil'],
         'required_item':     None,
         'required_action':   None,
@@ -207,7 +204,7 @@ NPC_SIDEQUEST_DATA = {
         'main_quest_impact': 'Menonaktifkan sistem keamanan elektronik (wajib untuk boss Ch4)',
         'chapter_unlock':    4,
 
-        # ── Dialog pertama kali ketemu ──────────────────────────────────────
+        # Dialog pertama kali ketemu
         'intro_dialog': [
             (None,      "Ruang basement penuh kabel dan komponen elektronik berserakan. Di tengahnya, seorang anak berumur 12 tahun bekerja tanpa henti."),
             ("Ignatius", "Oh! Ada tamu. Tunggu — jangan sentuh apapun. Serius."),
@@ -219,20 +216,18 @@ NPC_SIDEQUEST_DATA = {
             ("Ignatius", "Mereka menaruhku di sebelah seluruh infrastruktur listrik pulau ini. Waktunya bekerja!"),
         ],
 
-        # ── Dialog saat assign sidequest ────────────────────────────────────
         'quest_dialog': [
-            ("Ignatius", "Aku mau membangun perangkat EMP yang bisa melumpuhkan semua sistem keamanan elektronik."),
-            ("Ignatius", "Semua kunci magnetis, semua alarm, semua kamera — mati sekaligus. Selama 5 menit."),
-            ("Ignatius", "Tapi aku butuh komponen yang tidak ada di basement ini."),
-            (None,      "Ignatius menyerahkan daftar yang ditulis dengan cepat namun rapi."),
-            ("Ignatius", "Satu: Kapasitor Besar — ada di ruang penyimpanan mansion lantai 2."),
-            ("Ignatius", "Dua: Relay Switch — cek ruang generator di ujung selatan basement."),
-            ("Ignatius", "Tiga: Copper Coil — ada di peralatan radio lama di backstage teater."),
-            ("Ignatius", "Bawa ketiga komponen itu ke sini, dan dalam 20 menit aku selesaikan perangkat EMP-nya."),
-            ("Ignatius", "Dengan itu, kalian bisa melumpuhkan boss berikutnya sebelum dia sempat memanggil bantuan. Logis!"),
+            ("Ignatius", "EMP Device grade industrial. Bisa matikan semua sistem keamanan elektronik — kunci magnetis, alarm, kamera."),
+            ("Ignatius", "Tapi tiga komponen kuncinya tidak ada di basement ini. Mereka sudah diambil penjaga."),
+            (None,      "Ignatius menyerahkan daftar komponen dengan diagram teknis yang detail."),
+            ("Ignatius", "Pertama: Kapasitor Besar. Guard elite di mansion ambil dari gudang supply-ku waktu penangkapan."),
+            ("Ignatius", "Kedua: Relay Switch. Tech guard di Pusat Kontrol menyitanya. Dia pikir itu alat komunikasi biasa."),
+            ("Ignatius", "Ketiga: Copper Coil. Ada di mansion guard atau mercenary yang patroli area teater — sisa instalasi lama."),
+            ("Ignatius", "Kalahkan mereka, ambil komponen-komponen itu, bawa ke sini. Aku rakit dalam 20 menit."),
+            ("Ignatius", "EMP ini wajib sebelum konfrontasi Maxwell's Agent. Tanpa ini, kita masuk perangkap. Logis!"),
         ],
 
-        # ── Dialog saat quest selesai ────────────────────────────────────────
+        # Dialog saat quest selesai
         'complete_dialog': [
             ("Ignatius", "Sempurna! Semua komponen lengkap. Mundur dulu — ini butuh konsentrasi penuh."),
             (None,      "Ignatius bekerja dengan kecepatan luar biasa. Tangannya bergerak seperti sudah hafal setiap langkah."),
@@ -243,7 +238,7 @@ NPC_SIDEQUEST_DATA = {
             ("Ignatius", "Gunakan tepat sebelum konfrontasi dengan Agen Maxwell. Waktu adalah segalanya!"),
         ],
 
-        # ── Dialog setelah quest selesai — muncul SEKALI saat kembali mengobrol ──
+        # Dialog setelah quest selesai — muncul SEKALI saat kembali mengobrol
         'after_complete_dialog': [
             (None,      "Ignatius sedang membongkar panel listrik lain, tampaknya sedang mengerjakan sesuatu yang baru."),
             ("Ignatius", "Oh! Pas banget. Aku bikin peningkatan kecil untuk EMP itu."),
@@ -258,17 +253,17 @@ NPC_SIDEQUEST_DATA = {
         'name':             'Vio',
         'title':            'Peretas & Pakar Enkripsi',
         'available_chapter': 3,
-        'location':          'mansion',
+        'location':          'laboratory',
         'sidequest_id':      'sq_vio',
         'sidequest_title':   'USB Kebenaran',
         'required_item':     'USB Security Drive',
         'required_action':   None,
         'reward_item':       'USB Evidence Drive',
         'reward_flag':       'vio_sidequest_done',
-        'main_quest_impact': 'Bukti inti untuk konfrontasi final Ch6 — WAJIB untuk ending',
+        'main_quest_impact': 'USB Evidence Drive — bukti inti untuk konfrontasi final Ch.6 (WAJIB)',
         'chapter_unlock':    6,
 
-        # ── Dialog pertama kali ketemu ──────────────────────────────────────
+        # Dialog pertama kali ketemu
         'intro_dialog': [
             (None,      "Di ruang server mansion, layar komputer masih menyala. Seseorang sedang mengetik cepat."),
             ("Vio",     "Eh, tunggu — kamu bukan penjaga."),
@@ -281,19 +276,17 @@ NPC_SIDEQUEST_DATA = {
             ("Vio",     "Beri aku perangkat keras yang tepat dan aku bisa ekstrak semua yang ada di server ini."),
         ],
 
-        # ── Dialog saat assign sidequest ────────────────────────────────────
         'quest_dialog': [
-            ("Vio",     "Aku butuh USB Security Drive — tipe spesifik dengan chip enkripsi hardware."),
-            ("Vio",     "Kepala penjaga punya satu di sakunya. Dia pikir aman karena ada kata sandi 16 karakter."),
-            ("Vio",     "...Aku bisa bajak kata sandi 16 karakter dalam 3 menit. Itu bukan kesombongan. Itu fakta."),
-            (None,      "Vio kembali mengetik tanpa melihat keyboard."),
-            ("Vio",     "Ambil USB itu dari kepala penjaga. Cara apapun — aku tidak tanya."),
-            ("Vio",     "Dengan perangkat itu aku bisa tembus enkripsi server dan unduh: daftar tamu, catatan pembayaran, rekaman."),
-            ("Vio",     "Itu bukan sekadar bukti. Itu senjata nuklir informasi. Kalau ini keluar... banyak orang berkuasa yang hancur."),
-            ("Vio",     "Dan itulah alasan kita membutuhkannya."),
+            ("Vio",     "Aku butuh USB Security Drive — chip enkripsi hardware spesifik. Tidak bisa diganti."),
+            ("Vio",     "Ilmuwan di laboratorium Maxwell punya satu. Dia pakai buat transfer data riset terenkripsi."),
+            (None,      "Vio mengetuk jari ke meja, suaranya datar tapi matanya fokus."),
+            ("Vio",     "Scientist yang patroli area barat lab. Kalahkan dia, ambil USB dari sakunya."),
+            ("Vio",     "...Aku bisa bajak kata sandi 16 karakter dalam 3 menit. Bukan masalah. Yang masalah: dapat USB-nya."),
+            ("Vio",     "Dengan itu aku bisa tembus enkripsi server utama — daftar tamu, catatan transfer, rekaman pengawasan."),
+            ("Vio",     "Itu bukan sekadar bukti. Itu senjata nuklir informasi. Kalau bocor ke publik... banyak orang berkuasa hancur."),
         ],
 
-        # ── Dialog saat quest selesai ────────────────────────────────────────
+        # Dialog saat quest selesai
         'complete_dialog': [
             ("Vio",     "USB-nya ada. Oke, mulai bekerja."),
             (None,      "Vio mencolokkan USB ke port server, jarinya bergerak cepat menavigasi sistem."),
@@ -307,7 +300,7 @@ NPC_SIDEQUEST_DATA = {
             (None,      "Kamu menerima [USB Evidence Drive] — senjata paling berbahaya di pulau ini."),
         ],
 
-        # ── Dialog setelah quest selesai — muncul SEKALI saat kembali mengobrol ──
+        # Dialog setelah quest selesai — muncul SEKALI saat kembali mengobrol
         'after_complete_dialog': [
             (None,      "Vio sedang membaca data di layar, tapi ekspresinya jauh lebih serius dari biasanya."),
             ("Vio",     "Oh. Kamu. Aku... baru menemukan sesuatu di folder yang aku unduh tadi."),
@@ -440,6 +433,52 @@ def display_npc_quest_briefing(npc_id, game_state=None):
         game_state.story_flags[briefing_flag] = True   # Tandai sudah tampil — tidak akan muncul lagi
     return True
 
+def _check_sidequest_chapter_advance(game_state):
+    """Cek dan trigger chapter advance untuk chapter sidequest-only (Ch3→4, Ch5→6).
+    Dipanggil setelah setiap sidequest selesai dari display_npc_completion."""
+    import time as _time
+    try:
+        chapter = int(game_state.story_flags.get('current_chapter', 1))
+        sq_done = game_state.get_sidequest_progress()
+
+        if chapter == 3 and sq_done >= 2:
+            if not game_state.story_flags.get('ch3_sidequests_done'):
+                game_state.story_flags['ch3_sidequests_done'] = True
+                game_state.story_flags['current_chapter'] = 4
+                game_state.active_quests = [
+                    q for q in game_state.active_quests if q.get('quest_type') == 'side'
+                ]
+                print()
+                separator()
+                print(f"\n  {Warna.KUNING + Warna.TERANG}★  CHAPTER 3 SELESAI!  ★{Warna.RESET}")
+                print(f"  {Warna.KUNING}2 sidequest selesai — aliansi terbentuk!{Warna.RESET}")
+                print(f"  {Warna.CYAN}Chapter 4 terbuka — Infiltrasi Laboratorium!{Warna.RESET}")
+                print(f"  {Warna.ABU_GELAP}Cari exit 'Laboratorium' di sudut kanan atas island.{Warna.RESET}")
+                separator()
+                _time.sleep(4)
+                return
+
+        if chapter == 5 and sq_done >= 4:
+            has_usb = ('USB Evidence Drive' in game_state.inventory
+                       or 'USB Evidence Drive' in game_state.quest_items)
+            if has_usb and not game_state.story_flags.get('ch5_evidence_done'):
+                game_state.story_flags['ch5_evidence_done'] = True
+                game_state.story_flags['current_chapter'] = 6
+                game_state.active_quests = [
+                    q for q in game_state.active_quests if q.get('quest_type') == 'side'
+                ]
+                print()
+                separator()
+                print(f"\n  {Warna.MERAH + Warna.TERANG}★  CHAPTER 5 SELESAI!  ★{Warna.RESET}")
+                print(f"  {Warna.KUNING}Semua bukti terkumpul! USB Evidence Drive siap!{Warna.RESET}")
+                print(f"  {Warna.MERAH}CHAPTER 6 TERBUKA — EPSTEIN MENUNGGU! FINAL BOSS!{Warna.RESET}")
+                print(f"  {Warna.ABU_GELAP}Cari exit 'Mansion Timur' di sudut kanan bawah island.{Warna.RESET}")
+                separator()
+                _time.sleep(4)
+    except Exception:
+        pass
+
+
 def display_npc_completion(npc_id, game_state=None):
     """Tampilkan dialog completion NPC dan berikan reward item."""
     npc_data = NPC_SIDEQUEST_DATA.get(npc_id)
@@ -452,7 +491,7 @@ def display_npc_completion(npc_id, game_state=None):
     if game_state and game_state.story_flags.get(reward_flag):
         return False, None  # Idempoten — sudah pernah selesai
 
-    # ── STEP 1: Commit state ke game_state SEBELUM dialog ───────────────────
+    # STEP 1: Commit state ke game_state SEBELUM dialog
     # Jika pemain Ctrl+C di tengah dialog, item sudah masuk dan flag sudah set.
     # Saat load ulang, guard `reward_flag` di atas akan skip fungsi ini → tidak duplikat.
     if game_state:
@@ -473,7 +512,12 @@ def display_npc_completion(npc_id, game_state=None):
         for item in req_items:
             game_state.remove_item(item)
 
-    # ── STEP 2: Tampilkan dialog completion (state sudah aman) ──────────────
+
+        # Ch.3 dan Ch.5 adalah sidequest-only chapters (tanpa boss).
+        # Advance trigger ada di sini — dipanggil setiap kali sidequest selesai.
+        _check_sidequest_chapter_advance(game_state)
+
+    # STEP 2: Tampilkan dialog completion (state sudah aman)
     clear_screen()
     _display_npc_header(npc_data, "SIDEQUEST SELESAI \u2713")
 
@@ -501,7 +545,7 @@ def display_npc_repeat_talk(npc_id, game_state=None):
     name = npc_data.get('name', npc_id.capitalize())
     after_flag = f"{npc_id}_after_complete_shown"
 
-    # ── State 1: after_complete_dialog (sekali) ─────────────────────────────
+    # State 1: after_complete_dialog (sekali)
     if game_state and not game_state.story_flags.get(after_flag):
         after_dialog = npc_data.get('after_complete_dialog', [])
         if after_dialog:
@@ -515,7 +559,7 @@ def display_npc_repeat_talk(npc_id, game_state=None):
             game_state.story_flags[after_flag] = True
             return
 
-    # ── State 2: brief done line (setiap kunjungan setelahnya) ──────────────
+    # State 2: brief done line (setiap kunjungan setelahnya)
     brief_done_lines = {
         'haikaru': "Cari polanya. Setiap sistem punya celah. Temukan saja.",
         'aolinh':  "♪ Kita akan pulang. Aku percaya itu. ♪",
@@ -605,7 +649,7 @@ def get_sidequest_summary(game_state):
 
 import random as _random
 
-# ── Dialog musuh saat encounter ─────────────────────────────────────────────
+# Dialog musuh saat encounter
 _ENEMY_ENCOUNTER_LINES = {
     "guard_novice": [
         "Hei! Berhenti di situ, tahanan!",
@@ -684,7 +728,7 @@ _ENEMY_ENCOUNTER_LINES = {
     ],
 }
 
-# ── Reaksi player saat encounter musuh ───────────────────────────────────────
+# Reaksi player saat encounter musuh
 _PLAYER_REACTIONS = {
     "vio": [
         "...Ini kayak random encounter di game. Annoying tapi manageable.",
@@ -723,7 +767,7 @@ _PLAYER_REACTIONS = {
     ],
 }
 
-# ── Dialog masuk lokasi baru (pertama kali) ──────────────────────────────────
+# Dialog masuk lokasi baru (pertama kali)
 _MAP_ENTRY_DIALOGS = {
     "island": {
         "vio":      [(None, "Pulau utama terbuka lebar."),
@@ -820,7 +864,7 @@ _MAP_ENTRY_DIALOGS = {
     },
 }
 
-# ── Fungsi publik ────────────────────────────────────────────────────────────
+# Fungsi publik
 
 def show_enemy_encounter_dialog(enemy_id, player_char_id, enemy_name=None, is_boss=False):
     

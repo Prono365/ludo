@@ -30,7 +30,7 @@ class Warna:
     DIM = '\033[2m'
 
 
-# ── Unicode Support Detection ────────────────────────────────────────────────
+# Unicode Support Detection
 import sys as _sys
 import os as _os
 

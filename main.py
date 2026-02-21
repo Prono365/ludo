@@ -21,7 +21,7 @@ try:
     from story import (display_chapter, display_backstory, get_prologue_chapters,
                        play_route_ending, get_chapter_1, get_chapter_2, get_chapter_3)
     from tutorial import tutorial_lengkap
-    from character_routes import (display_route_intro, apply_route_bonuses,
+    from characters import (display_route_intro, apply_route_bonuses,
                                   check_chapter_complete, advance_chapter)
     from utils import (clear_screen as clear, wait_input as wait, separator, header,
                        check_terminal_compatibility, print_slow, flush_input, get_term_width)
@@ -369,10 +369,8 @@ def menu_utama():
     # Menampilkan dan mengelola menu utama permainan
     """Menu utama"""
     clear()
-    
-    # Print title art with dialog speed scaling
     print(f"{TITLE_ART}")
-    
+    wait(prompt="[ENTER untuk mulai] ")
     clear()
     print(f"\n{get_title_simple(VERSI)}")
     
