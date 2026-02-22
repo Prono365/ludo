@@ -215,6 +215,7 @@ class GameMap:
                     self.tiles[y][x] = MapTile(0, True, "Floor")
 
         self.place_exit(12, 1, "island", "Keluar")
+        self.place_exit(12, 16, "basement", "Turun ke Basement")
         # Boss akan di-spawn setelah main quest chapter selesai (bukan saat map generate)
 
         self.add_enemy_patrol(8,  10, "guard_elite",      [(8,10),  (16,10)])
