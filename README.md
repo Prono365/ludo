@@ -4,7 +4,7 @@
 
 <img width="3780" height="1890" alt="CURSED(1)" src="https://github.com/user-attachments/assets/a6bd0ded-f651-48ea-a334-554426b8d1f0" />
 
-<strong>RPG Adventure Game dengan Sistem Pertarungan Kartu (Big Two) Berbasis Command Line Interface (CLI)</strong>
+<strong>Sebuah Adventure RPG dengan Sistem Pertarungan Kartu (Big Two) Berbasis Command-Line Interface (CLI)</strong>
 
 ![Python](https://img.shields.io/badge/Python-3.6%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-blue)
@@ -14,7 +14,7 @@
 
 <h2>Deskripsi Singkat</h2>
 
-Cursed Island adalah sebuah permainan petualangan RPG berbasis Command Line Interface (CLI) yang dibangun menggunakan bahasa pemrograman Python. Pemain berperan sebagai salah satu dari lima karakter unik yang terjebak di sebuah pulau misterius.
+Cursed Island adalah sebuah permainan petualangan RPG berbasis Command-Line Interface (CLI) yang dibangun menggunakan bahasa pemrograman Python. Pemain berperan sebagai salah satu dari lima karakter unik yang terjebak di sebuah pulau misterius.
 
 Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara mengumpulkan anggota tim, mencari item kunci, memecahkan misteri, dan mengalahkan musuh menggunakan strategi kombinasi kartu poker. Proyek ini merupakan tugas akhir dari kelas X RPL 1 SMKN 2 JAKARTA dan kegabutan para contributornya.
 
@@ -45,7 +45,7 @@ Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara me
 1.  **Clone Repository**
     Unduh atau clone repository ini ke komputer lokal Anda.
     ```bash
-    git clone https://github.com/Prono365/ludo.git
+    git clone https://github.com/Prono365/ludo
     cd ludo
     ```
     *(Jika menggunakan file ZIP, ekstrak file tersebut dan buka foldernya).*
