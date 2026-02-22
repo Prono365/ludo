@@ -10,7 +10,7 @@
 ![License](https://img.shields.io/badge/license-MIT-blue)
 </div>
 
----
+#
 
 ## Deskripsi Singkat
 
@@ -18,7 +18,7 @@ Cursed Island adalah sebuah permainan petualangan RPG berbasis Command Line Inte
 
 Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara mengumpulkan anggota tim, mencari item kunci, memecahkan misteri, dan mengalahkan musuh menggunakan strategi kombinasi kartu poker. Proyek ini merupakan tugas akhir dari kelas X RPL 1 SMKN 2 JAKARTA dan kegabutan para contributornya.
 
----
+#
 
 ## Fitur Utama
 
@@ -32,7 +32,7 @@ Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara me
 - **Layanan Walkie-Talkie:** Akses menu toko dan interaksi NPC khusus (Bran Edwards) secara praktis melalui tombol pintas **[B]** tanpa harus kembali ke lokasi tertentu.
 - **Progresi Chapter:** Alur cerita mendalam yang terbagi dalam 6 Chapter, di mana setiap Chapter memiliki objektif unik dan syarat penyelesaian *sidequest* tertentu.
 
----
+#
 
 ## Cara Menjalankan Program
 
@@ -64,7 +64,7 @@ Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara me
 4.  **Mulai Bermain**
     Game akan membersihkan layar terminal dan memulai dengan menu utama. Ikuti petunjuk pada layar untuk memilih karakter dan memulai petualangan.
 
----
+#
 
 ## Struktur Folder/File
 
@@ -89,7 +89,7 @@ Berikut adalah penjelasan singkat mengenai struktur utama proyek ini:
 └── README.md              # Dokumentasi proyek (file ini).
 ```
 
----
+#
 
 ## Anggota Kelompok
 
@@ -101,7 +101,7 @@ Proyek ini dikembangkan oleh siswa **SMKN 2 JAKARTA Kelas X RPL 1**:
 4.  **Ignatius Nino Jumantoro**
 5.  **Evan Arganta**
 
----
+#
 
 ## Cara Bermain (Singkat)
 
@@ -111,13 +111,13 @@ Proyek ini dikembangkan oleh siswa **SMKN 2 JAKARTA Kelas X RPL 1**:
 - **Skill:** Tekan `S` saat bertarung untuk menggunakan kemampuan khusus karakter.
 - **Tujuan:** Selesaikan quest utama setiap chapter, rekrut teman, dan kalahkan boss untuk melarikan diri.
 
----
+#
 
 ## Lisensi
 
 Proyek ini dibuat sebagai tugas sekolah dan dirilis di bawah ![License](https://img.shields.io/badge/license-MIT-blue).
 
----
+#
 
 <p align="center">
 <strong>Justice for the Victims</strong>
