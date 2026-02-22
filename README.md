@@ -5,7 +5,7 @@
 **RPG Adventure Game dengan Sistem Pertarungan Kartu (Big Two) Berbasis Command Line Interface (CLI)**
 
 ![Python](https://img.shields.io/badge/Python-3.6%2B-blue)
-![License](https://img.shields.io/badge/License-Educational-green)
+![License](https://img.shields.io/badge/license-MIT-blue)
 
 ---
 
@@ -112,6 +112,10 @@ Proyek ini dikembangkan oleh siswa **SMKN 2 JAKARTA Kelas X RPL 1**:
 
 ## Lisensi
 
-Proyek ini dibuat sebagai tugas sekolah (Edukasi).
+Proyek ini dibuat sebagai tugas sekolah dan dirilis di bawah ![License](https://img.shields.io/badge/license-MIT-blue).
 
-# Justice For Victims
+---
+
+<p align="center">
+### Justice for the Victims
+</p>
