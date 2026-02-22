@@ -174,17 +174,14 @@ class GameState:
         return False
 
     def add_quest_item(self, item_name):
-        # Fix: Ao Linh Drop — dedup guard untuk quest item unik
         if item_name not in self.quest_items:
             self.quest_items.append(item_name)
-        # Juga pastikan tidak ada duplikat di inventory biasa
         while self.inventory.count(item_name) > 1:
             self.inventory.remove(item_name)
         if item_name in self.inventory:
             self.inventory.remove(item_name)
 
     def add_item(self, item_name):
-        # Fix: Auto-route quest items ke add_quest_item agar tidak duplikat
         if item_name in QUEST_ITEM_NAMES:
             self.add_quest_item(item_name)
         else:
@@ -273,12 +270,12 @@ class GameState:
             pass
 
         generic = {
-            1: "Kabur dari area starting!",
-            2: "Bersihkan pulau — kalahkan Kepala Penjaga",
-            3: "Bangun aliansi — selesaikan 2 sidequest NPC",
-            4: "Infiltrasi lab — kalahkan Maxwell's Agent",
-            5: "Kumpulkan semua bukti",
-            6: "Konfrontasi final — kalahkan Epstein",
+            1: "Selesaikan misi awal — kalahkan boss di area startingmu!",
+            2: "Pergi ke Penjara Utara (PRISON NORTH) dan kalahkan Kepala Penjaga",
+            3: "Rekrut sekutu — selesaikan minimal 2 sidequest NPC di pulau",
+            4: "Masuk Laboratorium (Ch.4+) dan kalahkan Maxwell's Agent",
+            5: "Selesaikan 4 sidequest NPC, dapatkan USB Evidence Drive dari Vio",
+            6: "Pergi ke Mansion Timur, kalahkan Jeffrey Epstein, upload USB Evidence Drive",
         }
         return generic.get(chapter, "Survive di Cursed Island!")
 
@@ -296,8 +293,6 @@ class GameState:
         for npc_id in npc_ids:
             flag = reward_flags.get(npc_id, f"{npc_id}_sidequest_done")
             if self.story_flags.get(flag):
-                count += 1
-            elif self.story_flags.get(f"sidequest_{npc_id}_complete"):
                 count += 1
         return count
 
@@ -375,7 +370,7 @@ class GameState:
             'max_energy':   self.max_energy,
             'inventory':    list(self.inventory),
             'key_items':    list(self.key_items),
-            'quest_items':  list(self.quest_items),  # Fix: Boss Memory — save quest items
+            'quest_items':  list(self.quest_items),
             'story_flags':  copy.deepcopy(self.story_flags),
             'dollars':      self.dollars,
             'xp':           self.xp,
@@ -398,7 +393,7 @@ class GameState:
         self.max_energy        = data.get('max_energy', self.max_energy)
         self.inventory         = list(data.get('inventory', self.inventory))
         self.key_items         = list(data.get('key_items', self.key_items))
-        self.quest_items       = list(data.get('quest_items', self.quest_items))  # Fix: restore quest items
+        self.quest_items       = list(data.get('quest_items', self.quest_items))
         self.story_flags       = copy.deepcopy(data.get('story_flags', self.story_flags))
         self.dollars           = data.get('dollars', self.dollars)
         self.xp                = data.get('xp', self.xp)
@@ -606,6 +601,10 @@ class GameState:
                             pass
 
                 self.last_save = datetime.now()
+
+                self.checkpoint_data = {}
+                self.boss_retry_count = 0
+
                 return True, "Game loaded successfully"
 
             except (json.JSONDecodeError, base64.binascii.Error, UnicodeDecodeError, ValueError) as json_err:

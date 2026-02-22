@@ -528,79 +528,80 @@ CHARACTER_MAIN_QUESTS = {
     "vio": {
         1: {
             "id":     "vio_ch1_main",
-            "title":  "Hack & Escape: Ruang Server Mansion",
-            "objective": "Tembus 2 terminal server, kalahkan Maxwell Enforcer",
+            "title":  "Hack & Escape: Bobol Sistem Mansion",
+            "objective": "Curi Keycard dari loker mansion, hack 2 terminal server, dan kalahkan Maxwell Enforcer",
             "boss_id":   "maxwell_enforcer",
             "boss_name": "Maxwell Enforcer",
             "steps": [
-                "Tembus 2 terminal server mansion (Keycard/Laptop/Access Card)",
-                "Kalahkan Maxwell Enforcer — kepala keamanan jaringan (Boss Ch.1)",
+                "Temukan Keycard Level 1 di loker mansion (cari ★ di peta)",
+                "Gunakan Keycard untuk hack 2 terminal server di dalam mansion",
+                "Kalahkan Maxwell Enforcer — kepala keamanan digital jaringan Epstein (Boss Ch.1)",
             ],
             "completion_flag": "vio_ch1_complete",
-            "next_chapter_msg": "Data terenkripsi mulai terbuka! Pulau menunggu.",
+            "next_chapter_msg": "Sistem mansion jebol! Data mulai terbuka. Pulau menantimu.",
         },
         2: {
             "id":     "vio_ch2_main",
-            "title":  "Dominasi Jaringan — Singkirkan Kepala Penjaga",
-            "objective": "Hack 2 terminal pulau, kalahkan Kepala Penjaga di Penjara Utara",
+            "title":  "Dominasi Jaringan — Kuasai Pulau, Singkirkan Kepala Penjaga",
+            "objective": "Temukan Keycard Level 2, kuasai 2 terminal pulau, lalu kalahkan Kepala Penjaga",
             "boss_id":   "kepala_penjaga",
             "boss_name": "Kepala Penjaga",
             "steps": [
-                "Hack 2 terminal jaringan di area pulau (Keycard Level 2)",
-                "Pergi ke Penjara Utara (PRISON NORTH)",
-                "Kalahkan Kepala Penjaga (Boss Ch.2)",
+                "Cari Keycard Level 2 di area pulau atau Command Center",
+                "Gunakan Keycard untuk hack 2 terminal jaringan pulau",
+                "Pergi ke Penjara Utara (PRISON NORTH) dan kalahkan Kepala Penjaga (Boss Ch.2)",
             ],
             "completion_flag": "boss_ch2_defeated",
-            "next_chapter_msg": "Kontrol jaringan pulau diambil alih. Saatnya rekrut sekutu!",
+            "next_chapter_msg": "Kontrol jaringan pulau diambil alih. Saatnya bangun aliansi!",
         },
         3: {
             "id":     "vio_ch3_main",
-            "title":  "Bangun Aliansi Digital — Rekrut Sekutu",
-            "objective": "Selesaikan minimal 2 sidequest NPC untuk akses Chapter 4",
+            "title":  "Bangun Jaringan Sekutu — Rekrut 2 NPC",
+            "objective": "Bantu minimal 2 NPC selesaikan sidequestnya dan kumpulkan key item reward mereka",
             "steps": [
-                "Temui NPC di area pulau (Haikaru, Aolinh, Arganta, Ignatius)",
-                "Selesaikan minimal 2 sidequest — kumpulkan key item sekutu",
-                "Aliansi terbentuk → Chapter 4 terbuka",
+                "Cari NPC yang butuh bantuan: Haikaru (PRISON NORTH), Aolinh (TEATER), Arganta (PANTAI), Ignatius (BASEMENT)",
+                "Selesaikan minimal 2 sidequest — tiap NPC punya tugas dan reward berbeda",
+                "Kumpulkan key item reward dari NPC → jaringan aliansi aktif → Chapter 4 terbuka",
             ],
             "completion_flag": "ch3_sidequests_done",
-            "next_chapter_msg": "Aliansi siap. Saatnya infiltrasi laboratorium Maxwell.",
+            "next_chapter_msg": "Aliansi digital aktif. Saatnya infiltrasi laboratorium Maxwell.",
         },
         4: {
             "id":     "vio_ch4_main",
-            "title":  "Infiltrasi Lab — Jebol Sistem Maxwell",
-            "objective": "Masuk ke laboratorium, decrypt file Maxwell, kalahkan Maxwell's Agent",
+            "title":  "Infiltrasi Lab Maxwell — Jebol Server, Kalahkan Agennya",
+            "objective": "Masuk Laboratorium, aktifkan EMP untuk matikan keamanan, dan kalahkan Maxwell's Agent",
             "boss_id":   "agen_maxwell",
             "boss_name":  "Maxwell's Agent",
             "steps": [
-                "Masuk ke Laboratorium (exit di pulau utama, Ch.4+)",
-                "Gunakan EMP Device dari Ignatius untuk lemahkan sistem keamanan",
-                "Kalahkan Maxwell's Agent — penjaga rahasia lab (Boss Ch.4)",
+                "Masuk ke Laboratorium melalui exit di pulau utama (tersedia Ch.4+)",
+                "Aktifkan EMP Device dari Ignatius untuk melumpuhkan sistem keamanan elektronik lab",
+                "Kalahkan Maxwell's Agent — penjaga server utama yang menyimpan semua rahasia (Boss Ch.4)",
             ],
             "completion_flag": "boss_ch4_defeated",
-            "next_chapter_msg": "Lab dikuasai! Kartu akses vault ada di tanganmu.",
+            "next_chapter_msg": "Lab dikuasai! Akses server vault terbuka. Satu langkah lagi.",
         },
         5: {
             "id":     "vio_ch5_main",
-            "title":  "Deadman Switch — Kumpulkan Semua Bukti",
-            "objective": "Selesaikan 4 sidequest NPC, dapatkan USB Evidence Drive",
+            "title":  "Deadman Switch — Kumpulkan Semua Bukti Digital",
+            "objective": "Selesaikan 4 sidequest NPC, bawa USB Security Drive ke Vio, terima USB Evidence Drive",
             "steps": [
-                "Selesaikan minimal 4 sidequest NPC (dari total 5)",
-                "Berikan USB Security Drive ke Vio → terima USB Evidence Drive",
-                "Aktifkan deadman switch — bukti tersimpan aman di cloud",
+                "Selesaikan minimal 4 dari 5 sidequest NPC yang tersedia di pulau",
+                "Temukan USB Security Drive (drop dari scientist di LAB — Ch.4+)",
+                "Bawa USB Security Drive ke Vio → terima USB Evidence Drive — WAJIB untuk ending Ch.6",
             ],
             "completion_flag": "ch5_evidence_done",
-            "next_chapter_msg": "Deadman switch aktif. Saatnya konfrontasi terakhir.",
+            "next_chapter_msg": "Deadman switch aktif. 47 GB bukti aman di cloud. Siap untuk final.",
         },
         6: {
             "id":     "vio_ch6_main",
-            "title":  "The Final Upload — Expose Epstein ke Dunia",
-            "objective": "Masuk Mansion Timur, kalahkan Epstein, upload semua bukti",
+            "title":  "Final Upload — Expose Jaringan Epstein ke Seluruh Dunia",
+            "objective": "Pergi ke Mansion Timur, kalahkan Jeffrey Epstein, dan upload USB Evidence Drive ke dunia",
             "boss_id":   "epstein_boss",
             "boss_name": "Jeffrey Epstein",
             "steps": [
-                "Pergi ke Mansion Timur (mansion_east) — exit sudut kanan bawah pulau",
-                "Hadapi Jeffrey Epstein — Final Boss Ch.6",
-                "Upload USB Evidence Drive — expose jaringan kejahatan ke dunia",
+                "Pergi ke Mansion Timur (mansion_east) melalui exit kanan bawah pulau",
+                "Konfrontasi Jeffrey Epstein — siapkan semua skill dan item (Final Boss Ch.6)",
+                "Upload USB Evidence Drive segera setelah Epstein dikalahkan — expose jaringan kejahatan ke dunia",
             ],
             "completion_flag": "vio_ch6_complete",
         },
@@ -608,80 +609,80 @@ CHARACTER_MAIN_QUESTS = {
     "haikaru": {
         1: {
             "id":     "haikaru_ch1_main",
-            "title":  "Escape Analysis: Penjara Utara",
-            "objective": "Identifikasi 3 blind spot, ambil Kunci Wing-C, kalahkan Warden Elite",
+            "title":  "Escape Analysis: Peta Buta Penjara Utara",
+            "objective": "Amati 3 blind spot penjaga, raih Kunci Wing-C, dan kalahkan Warden Elite dengan strategi presisi",
             "boss_id":   "warden_elite",
             "boss_name": "Warden Elite",
             "steps": [
-                "Identifikasi 3 blind spot penjaga (ambil item observasi di penjara)",
-                "Ambil Kunci Wing-C dari loker tersembunyi di Wing-C",
-                "Kalahkan Warden Elite yang memblokir pintu utama (Boss Ch.1)",
+                "Observasi 3 lokasi blind spot patroli (ambil item intel/observasi di penjara)",
+                "Temukan Kunci Wing-C di loker tersembunyi Wing-C (cari ★ di peta)",
+                "Kalahkan Warden Elite — eksekusi saat posisi blind spot optimal (Boss Ch.1)",
             ],
             "completion_flag": "haikaru_ch1_complete",
             "next_chapter_msg": "Semua kalkulasi tepat. Penjara teratasi. Target: pulau.",
         },
         2: {
             "id":     "haikaru_ch2_main",
-            "title":  "Taktik Superioritas — Netralkan Kepala Penjaga",
-            "objective": "Petakan 2 posisi baru penjaga, kalahkan Kepala Penjaga",
+            "title":  "Taktik Superioritas — Petakan Pulau, Netralkan Kepala Penjaga",
+            "objective": "Petakan 2 posisi patroli baru di pulau, lalu kalahkan Kepala Penjaga dengan kalkulasi sempurna",
             "boss_id":   "kepala_penjaga",
             "boss_name": "Kepala Penjaga",
             "steps": [
-                "Petakan 2 posisi penjaga baru di pulau (item intel/peta)",
+                "Jelajahi area pulau dan ambil 2 item intel/peta (posisi patroli baru)",
                 "Pergi ke Penjara Utara (PRISON NORTH)",
-                "Kalahkan Kepala Penjaga dengan strategi optimal (Boss Ch.2)",
+                "Kalahkan Kepala Penjaga — eksekusi sesuai prediksi, probabilitas kemenangan 99.9% (Boss Ch.2)",
             ],
             "completion_flag": "boss_ch2_defeated",
-            "next_chapter_msg": "Pulau terkendali. Fase rekrutmen dimulai.",
+            "next_chapter_msg": "Pulau terkendali. Fase rekrutmen dan analisis aliansi dimulai.",
         },
         3: {
             "id":     "haikaru_ch3_main",
-            "title":  "Kalkulasi Aliansi — Rekrut Sekutu Strategis",
-            "objective": "Selesaikan minimal 2 sidequest NPC untuk akses Chapter 4",
+            "title":  "Kalkulasi Aliansi — Rekrut 2 Sekutu Paling Efisien",
+            "objective": "Analisis kebutuhan NPC, selesaikan 2 sidequest paling efisien, dan buka akses Chapter 4",
             "steps": [
-                "Temui NPC di area pulau — prioritas berdasarkan probabilitas manfaat",
-                "Selesaikan minimal 2 sidequest — kumpulkan key item sekutu",
-                "Aliansi terkonfirmasi → Chapter 4 terbuka",
+                "Temui NPC di area pulau — evaluasi manfaat taktis tiap aliansi berdasarkan kebutuhan misi",
+                "Selesaikan minimal 2 sidequest — kumpulkan key item yang paling relevan untuk kelanjutan misi",
+                "Konfirmasi aliansi taktis terbentuk → Chapter 4 terbuka",
             ],
             "completion_flag": "ch3_sidequests_done",
-            "next_chapter_msg": "Aliansi siap. Checkmate Maxwell's Agent berikutnya.",
+            "next_chapter_msg": "Aliansi terkonfirmasi. Saatnya checkmate Maxwell's Agent.",
         },
         4: {
             "id":     "haikaru_ch4_main",
-            "title":  "Checkmate Maxwell's Agent — Probabilitas 99.9%",
-            "objective": "Analisis kelemahan Maxwell's Agent, kalahkan dengan strategi presisi",
+            "title":  "Checkmate Maxwell's Agent — Eksekusi Skenario 47 Langkah",
+            "objective": "Masuk lab, gunakan data intel EMP Ignatius, dan eksekusi checkmate Maxwell's Agent",
             "boss_id":   "agen_maxwell",
             "boss_name":  "Maxwell's Agent",
             "steps": [
-                "Masuk ke Laboratorium (exit di pulau utama, Ch.4+)",
-                "Analisis kelemahan Maxwell's Agent via intel EMP Ignatius",
-                "Kalahkan Maxwell's Agent — eksekusi skenario terbaik (Boss Ch.4)",
+                "Masuk ke Laboratorium melalui exit di pulau utama (tersedia Ch.4+)",
+                "Manfaatkan EMP Device dari Ignatius — lemahkan seluruh sistem pertahanan elektronik lab",
+                "Kalahkan Maxwell's Agent — eksekusi rencana checkmate sesuai kalkulasi (Boss Ch.4)",
             ],
             "completion_flag": "boss_ch4_defeated",
-            "next_chapter_msg": "Checkmate! Lab dikuasai. Satu langkah lagi ke Epstein.",
+            "next_chapter_msg": "Checkmate! Lab dikuasai. Langkah terakhir menuju Epstein.",
         },
         5: {
             "id":     "haikaru_ch5_main",
-            "title":  "Kumpulkan Variabel Bukti — Persiapkan Strategi Final",
-            "objective": "Selesaikan 4 sidequest NPC, dapatkan USB Evidence Drive",
+            "title":  "Kumpulkan Variabel Bukti — Konfirmasi Semua Data",
+            "objective": "Selesaikan 4 sidequest, kumpulkan USB Evidence Drive, dan konfirmasi semua variabel bukti",
             "steps": [
-                "Selesaikan minimal 4 sidequest NPC (dari total 5)",
-                "Berikan USB Security Drive ke Vio → terima USB Evidence Drive",
-                "Semua variabel terkumpul — siap konfrontasi Epstein",
+                "Selesaikan minimal 4 dari 5 sidequest NPC — prioritaskan berdasarkan efisiensi rute",
+                "Dapatkan USB Security Drive dan bawa ke Vio → terima USB Evidence Drive",
+                "Semua variabel terkonfirmasi — checkmate Epstein sudah dalam jangkauan kalkulasi",
             ],
             "completion_flag": "ch5_evidence_done",
-            "next_chapter_msg": "Semua kalkulasi lengkap. Langkah ke-61: checkmate Epstein.",
+            "next_chapter_msg": "Semua data terkumpul. Langkah ke-61: checkmate permanen Epstein.",
         },
         6: {
             "id":     "haikaru_ch6_main",
-            "title":  "Checkmate — Akhiri Jaringan Epstein",
-            "objective": "Masuk Mansion Timur, eksekusi rencana final, kalahkan Epstein",
+            "title":  "Checkmate Final — Akhiri Jaringan Epstein Selamanya",
+            "objective": "Masuk Mansion Timur, eksekusi rencana 61 langkah, dan checkmate Jeffrey Epstein selamanya",
             "boss_id":   "epstein_boss",
             "boss_name": "Jeffrey Epstein",
             "steps": [
-                "Pergi ke Mansion Timur (mansion_east) — exit sudut kanan bawah pulau",
-                "Hadapi Jeffrey Epstein — eksekusi rencana akhir (Final Boss Ch.6)",
-                "Upload USB Evidence Drive — checkmate permanen",
+                "Pergi ke Mansion Timur (mansion_east) melalui exit kanan bawah pulau",
+                "Konfrontasi Jeffrey Epstein — eksekusi skenario terbaik yang sudah dikalkulasi (Final Boss Ch.6)",
+                "Upload USB Evidence Drive — checkmate permanen, jaringan Epstein hancur selamanya",
             ],
             "completion_flag": "haikaru_ch6_complete",
         },
@@ -689,79 +690,79 @@ CHARACTER_MAIN_QUESTS = {
     "aolinh": {
         1: {
             "id":     "aolinh_ch1_main",
-            "title":  "Melodi Kebebasan: Cari Jejak Jiejie",
-            "objective": "Temukan 2 jejak Jiejie, kalahkan Theater Master",
+            "title":  "Melodi Kebebasan: Temukan Jejak Jiejie di Teater",
+            "objective": "Temukan 2 petunjuk keberadaan Jiejie di teater dan kalahkan Theater Master",
             "boss_id":   "theater_master",
             "boss_name": "Theater Master",
             "steps": [
-                "Temukan 2 jejak Jiejie di area theater (item clue di panggung)",
-                "Kalahkan Theater Master yang mengurung Jiejie (Boss Ch.1)",
+                "Cari dan ambil 2 item clue yang ditinggalkan Jiejie di area teater (★ di peta)",
+                "Kalahkan Theater Master yang mengurung Jiejie di backstage (Boss Ch.1)",
             ],
             "completion_flag": "aolinh_ch1_complete",
-            "next_chapter_msg": "Jiejie bebas! 我们一起！ Musik memberi kekuatan untuk maju.",
+            "next_chapter_msg": "Jiejie bebas! 我们一起！ Musik memberi kekuatan — terus maju!",
         },
         2: {
             "id":     "aolinh_ch2_main",
-            "title":  "Simfoni Kebebasan — Singkirkan Kepala Penjaga",
-            "objective": "Cari lokasi Jiejie di pulau, kalahkan Kepala Penjaga",
+            "title":  "Simfoni Kebebasan — Lacak Jiejie, Singkirkan Kepala Penjaga",
+            "objective": "Temukan 2 clue lokasi Jiejie di pulau dan kalahkan Kepala Penjaga dengan semangat musikmu",
             "boss_id":   "kepala_penjaga",
             "boss_name": "Kepala Penjaga",
             "steps": [
-                "Cari 2 clue lokasi Jiejie di area pulau",
+                "Jelajahi area pulau dan temukan 2 clue baru tentang keberadaan Jiejie",
                 "Pergi ke Penjara Utara (PRISON NORTH)",
-                "Kalahkan Kepala Penjaga dengan melodi harapan (Boss Ch.2)",
+                "Kalahkan Kepala Penjaga — mainkan melodi harapan dalam hatimu (Boss Ch.2)",
             ],
             "completion_flag": "boss_ch2_defeated",
-            "next_chapter_msg": "Jalan terbuka! Kini saatnya membangun tim.",
+            "next_chapter_msg": "Jalan terbuka! Kini saatnya membangun tim untuk Jiejie.",
         },
         3: {
             "id":     "aolinh_ch3_main",
-            "title":  "Nyanyikan Harapan — Rekrut Sekutu",
-            "objective": "Selesaikan minimal 2 sidequest NPC untuk akses Chapter 4",
+            "title":  "Satukan Suara — Rekrut 2 Sekutu dengan Ketulusanmu",
+            "objective": "Bangun harmoni tim — temui NPC, selesaikan 2 sidequest, dan buka Chapter 4 bersama",
             "steps": [
-                "Temui NPC di area pulau — sapa dengan melodimu",
-                "Selesaikan minimal 2 sidequest — kumpulkan key item sekutu",
-                "Tim bersatu → Chapter 4 terbuka",
+                "Cari NPC yang butuh bantuan di area pulau — sapa dengan ketulusan hatimu",
+                "Selesaikan minimal 2 sidequest — tiap orang yang dibantu menambah kekuatan tim",
+                "Harmoni tim terbentuk → Chapter 4 terbuka",
             ],
             "completion_flag": "ch3_sidequests_done",
-            "next_chapter_msg": "Musik menyatukan kita. Saatnya tantang Maxwell.",
+            "next_chapter_msg": "Musik menyatukan kita semua. Saatnya tantang Maxwell bersama.",
         },
         4: {
             "id":     "aolinh_ch4_main",
-            "title":  "Melodi Perlawanan — Jebol Lab Maxwell",
-            "objective": "Gunakan distraksi musik, kalahkan Maxwell's Agent bersama tim",
+            "title":  "Melodi Perlawanan — Distraksi Musik, Jebol Lab Maxwell",
+            "objective": "Masuk lab, aktifkan rekaman distraksi, dan kalahkan Maxwell's Agent selagi penjaga terdistraksi",
             "boss_id":   "agen_maxwell",
             "boss_name":  "Maxwell's Agent",
             "steps": [
-                "Masuk ke Laboratorium (exit di pulau utama, Ch.4+)",
-                "Gunakan Rekaman Distraksi Aolinh untuk buka celah keamanan",
-                "Kalahkan Maxwell's Agent — lawan bersama tim (Boss Ch.4)",
+                "Masuk ke Laboratorium melalui exit di pulau utama (tersedia Ch.4+)",
+                "Putar Rekaman Distraksi Aolinh di sistem speaker lab — buat celah 10 menit untuk bergerak",
+                "Kalahkan Maxwell's Agent selagi semua penjaga terpaku oleh musik (Boss Ch.4)",
             ],
             "completion_flag": "boss_ch4_defeated",
-            "next_chapter_msg": "Lab ditaklukkan! Satu langkah lagi menuju kebebasan.",
+            "next_chapter_msg": "Lab ditaklukkan! Satu langkah lagi menuju kebebasan dan Jiejie.",
         },
         5: {
             "id":     "aolinh_ch5_main",
-            "title":  "Kumpulkan Bukti untuk Jiejie — Akhiri Penderitaan Ini",
-            "objective": "Selesaikan 4 sidequest NPC, dapatkan USB Evidence Drive",
+            "title":  "Kumpulkan Bukti untuk Jiejie — Suarakan Penderitaan Semua Anak",
+            "objective": "Selesaikan 4 sidequest, dapatkan USB Evidence Drive, dan siapkan suara semua korban",
             "steps": [
-                "Selesaikan minimal 4 sidequest NPC (dari total 5)",
-                "Berikan USB Security Drive ke Vio → terima USB Evidence Drive",
-                "Semua bukti tersimpan — siap untuk konfrontasi Epstein",
+                "Selesaikan minimal 4 dari 5 sidequest NPC — tiap orang punya cerita yang layak didengar",
+                "Bawa USB Security Drive ke Vio → terima USB Evidence Drive berisi semua bukti",
+                "Kebenaran siap disuarakan ke dunia — music is power, keadilan akan menang",
             ],
             "completion_flag": "ch5_evidence_done",
-            "next_chapter_msg": "Bukti untuk Jiejie sudah aman. Musik akan berakhir dengan kemenangan.",
+            "next_chapter_msg": "Bukti untuk Jiejie dan semua anak sudah aman. Final crescendo menanti.",
         },
         6: {
             "id":     "aolinh_ch6_main",
-            "title":  "Final Crescendo — Kalahkan Epstein untuk Semua Anak",
-            "objective": "Masuk Mansion Timur, kalahkan Epstein, nyanyikan lagu kebebasan",
+            "title":  "Final Crescendo — Kalahkan Epstein, Bebaskan Semua Anak",
+            "objective": "Pergi ke Mansion Timur, mainkan simfoni terakhirmu, dan kalahkan Epstein untuk semua anak",
             "boss_id":   "epstein_boss",
             "boss_name": "Jeffrey Epstein",
             "steps": [
-                "Pergi ke Mansion Timur (mansion_east) — exit sudut kanan bawah pulau",
-                "Hadapi Jeffrey Epstein — nyanyikan simfoni terakhirmu (Final Boss Ch.6)",
-                "Upload USB Evidence Drive — suara korban akhirnya terdengar dunia",
+                "Pergi ke Mansion Timur (mansion_east) melalui exit kanan bawah pulau",
+                "Konfrontasi Jeffrey Epstein — nyanyikan simfoni terakhirmu untuk Jiejie dan semua korban (Final Boss Ch.6)",
+                "Upload USB Evidence Drive — suara semua anak yang menderita akhirnya didengar dunia",
             ],
             "completion_flag": "aolinh_ch6_complete",
         },
@@ -769,79 +770,79 @@ CHARACTER_MAIN_QUESTS = {
     "arganta": {
         1: {
             "id":     "arganta_ch1_main",
-            "title":  "Survival Route: Pantai Karibia",
-            "objective": "Kumpulkan 2 perlengkapan survival, kalahkan Harbor Captain",
+            "title":  "Survival Route: Kuasai Dermaga Karibia",
+            "objective": "Kumpulkan 2 item survival di pantai dan kalahkan Harbor Captain untuk kuasai dermaga",
             "boss_id":   "harbor_captain",
             "boss_name": "Harbor Captain",
             "steps": [
-                "Kumpulkan 2 perlengkapan survival (item di area pantai)",
-                "Kalahkan Harbor Captain yang menjaga dermaga (Boss Ch.1)",
+                "Jelajahi area pantai dan kumpulkan 2 perlengkapan survival (cari ★ di peta)",
+                "Kalahkan Harbor Captain yang memblokir satu-satunya jalur kabur dari pulau (Boss Ch.1)",
             ],
             "completion_flag": "arganta_ch1_complete",
             "next_chapter_msg": "Dermaga dikuasai. La via è sempre avanti, Nonno.",
         },
         2: {
             "id":     "arganta_ch2_main",
-            "title":  "Navigator Memimpin — Singkirkan Kepala Penjaga",
-            "objective": "Scout 2 jalur baru di pulau, kalahkan Kepala Penjaga",
+            "title":  "Navigator Memimpin — Petakan Jalur Baru, Singkirkan Kepala Penjaga",
+            "objective": "Petakan 2 jalur pelarian baru di pulau, lalu kalahkan Kepala Penjaga",
             "boss_id":   "kepala_penjaga",
             "boss_name": "Kepala Penjaga",
             "steps": [
-                "Scout 2 jalur pelarian baru di pulau (peta atau item navigasi)",
+                "Scout dan ambil 2 item navigasi/peta jalur baru di area pulau",
                 "Pergi ke Penjara Utara (PRISON NORTH)",
-                "Kalahkan Kepala Penjaga lewat jalur yang kamu petakan (Boss Ch.2)",
+                "Kalahkan Kepala Penjaga — la via è sempre avanti (Boss Ch.2)",
             ],
             "completion_flag": "boss_ch2_defeated",
             "next_chapter_msg": "Pulau terpetakan. Saatnya membangun aliansi untuk keadilan.",
         },
         3: {
             "id":     "arganta_ch3_main",
-            "title":  "Per Famiglia — Rekrut Sekutu untuk Keadilan",
-            "objective": "Selesaikan minimal 2 sidequest NPC untuk akses Chapter 4",
+            "title":  "Per Famiglia — Bangun Aliansi untuk Keadilan",
+            "objective": "Bangun aliansi untuk keadilan — selesaikan 2 sidequest dan kumpulkan key item sekutu",
             "steps": [
-                "Temui NPC di area pulau — tawarkan bantuan sebagai navigator",
-                "Selesaikan minimal 2 sidequest — kumpulkan key item sekutu",
-                "Aliansi terbentuk → Chapter 4 terbuka",
+                "Temui NPC di area pulau — tawarkan kemampuan navigasi dan survivalmu",
+                "Selesaikan minimal 2 sidequest — setiap sekutu memperkuat misi keadilan",
+                "Aliansi per famiglia terbentuk → Chapter 4 terbuka",
             ],
             "completion_flag": "ch3_sidequests_done",
-            "next_chapter_msg": "Tim siap. La via è sempre avanti — menuju lab Maxwell.",
+            "next_chapter_msg": "Tim siap. La via è sempre avanti — menuju laboratorium Maxwell.",
         },
         4: {
             "id":     "arganta_ch4_main",
-            "title":  "Tembus Lab Maxwell — Per Nonno",
-            "objective": "Gunakan jalur tersembunyi, kalahkan Maxwell's Agent",
+            "title":  "Jalur Rahasia Nonno — Tembus Lab Maxwell, Per Famiglia",
+            "objective": "Gunakan jalur rahasia Nonno, masuk laboratorium, dan kalahkan Maxwell's Agent",
             "boss_id":   "agen_maxwell",
             "boss_name":  "Maxwell's Agent",
             "steps": [
-                "Masuk ke Laboratorium lewat jalur rahasia (exit di pulau Ch.4+)",
-                "Gunakan Peta Jalur Rahasia untuk bypass keamanan lab",
-                "Kalahkan Maxwell's Agent — per famiglia (Boss Ch.4)",
+                "Masuk ke Laboratorium menggunakan Peta Jalur Rahasia untuk bypass semua pos keamanan",
+                "Konfrontasi Maxwell's Agent di jantung laboratorium Maxwell",
+                "Kalahkan Maxwell's Agent — per famiglia, untuk keadilan keluargamu (Boss Ch.4)",
             ],
             "completion_flag": "boss_ch4_defeated",
-            "next_chapter_msg": "Niente è reale. Langkah terakhir: Epstein.",
+            "next_chapter_msg": "Niente è reale. Lab dikuasai. Langkah terakhir: Epstein.",
         },
         5: {
             "id":     "arganta_ch5_main",
-            "title":  "Requiescat in Pace — Kumpulkan Semua Bukti",
-            "objective": "Selesaikan 4 sidequest NPC, dapatkan USB Evidence Drive",
+            "title":  "Requiescat in Pace — Kumpulkan Bukti untuk Keluargamu",
+            "objective": "Selesaikan 4 sidequest, kumpulkan bukti, dan siapkan requiescat in pace untuk Nonno",
             "steps": [
-                "Selesaikan minimal 4 sidequest NPC (dari total 5)",
-                "Berikan USB Security Drive ke Vio → terima USB Evidence Drive",
-                "Semua bukti untuk keadilan keluarga tersimpan aman",
+                "Selesaikan minimal 4 dari 5 sidequest NPC yang tersedia di pulau",
+                "Bawa USB Security Drive ke Vio → terima USB Evidence Drive",
+                "Semua bukti untuk keluarga Arganta tersimpan aman — siap mengakhiri semuanya",
             ],
             "completion_flag": "ch5_evidence_done",
             "next_chapter_msg": "Nonno... ini untukmu. Saatnya mengakhiri semuanya.",
         },
         6: {
             "id":     "arganta_ch6_main",
-            "title":  "Vendetta Finale — Kalahkan Epstein untuk Keluargamu",
-            "objective": "Masuk Mansion Timur, kalahkan Epstein, tegakkan keadilan",
+            "title":  "Vendetta Finale — Kalahkan Epstein, Tegakkan Keadilan Keluargamu",
+            "objective": "Tembus Mansion Timur dan kalahkan Jeffrey Epstein sebagai vendetta finale untuk keluargamu",
             "boss_id":   "epstein_boss",
             "boss_name": "Jeffrey Epstein",
             "steps": [
-                "Pergi ke Mansion Timur (mansion_east) — exit sudut kanan bawah pulau",
-                "Hadapi Jeffrey Epstein — per Nonno, per Papà, per Mamma (Final Boss Ch.6)",
-                "Upload USB Evidence Drive — keadilan untuk seluruh keluarga Arganta",
+                "Pergi ke Mansion Timur (mansion_east) melalui exit kanan bawah pulau",
+                "Konfrontasi Jeffrey Epstein — per Nonno, per Papà, per Mamma (Final Boss Ch.6)",
+                "Upload USB Evidence Drive — keadilan untuk keluarga Arganta dan semua korban",
             ],
             "completion_flag": "arganta_ch6_complete",
         },
@@ -849,39 +850,39 @@ CHARACTER_MAIN_QUESTS = {
     "ignatius": {
         1: {
             "id":     "ignatius_ch1_main",
-            "title":  "Engineering Breakout: Basement Listrik",
-            "objective": "Kumpulkan 3 komponen EMP, sabotase panel alarm, kalahkan AmBOTukam Mk II",
+            "title":  "Engineering Breakout: Rakit EMP, Jebol Basement",
+            "objective": "Kumpulkan 3 komponen EMP, sabotase panel alarm basement, dan kalahkan AmBOTukam Mk II",
             "boss_id":   "security_bot",
             "boss_name": "AmBOTukam Mk II",
             "steps": [
-                "Kumpulkan 3 komponen EMP: Kapasitor Besar, Relay Switch, Copper Coil",
-                "Sabotase panel alarm utama basement (gunakan Blueprint/EMP Prototype)",
-                "Kalahkan AmBOTukam Mk II dengan EMP prototype (Boss Ch.1)",
+                "Cari dan ambil 3 komponen EMP: Kapasitor Besar, Relay Switch, Copper Coil (★ di peta)",
+                "Gunakan komponen EMP untuk sabotase panel alarm utama basement",
+                "Kalahkan AmBOTukam Mk II — robot penjaga sistem keamanan basement (Boss Ch.1)",
             ],
             "completion_flag": "ignatius_ch1_complete",
-            "next_chapter_msg": "SISTEM DIRETAS! Generator down. Engineering DONE.",
+            "next_chapter_msg": "SISTEM DIRETAS! Generator down. Engineering DONE. Saatnya ke pulau!",
         },
         2: {
             "id":     "ignatius_ch2_main",
-            "title":  "Engineering Bergerak — Kepala Penjaga Harus Disingkirkan",
-            "objective": "Lokasi 2 node grid listrik di pulau, kalahkan Kepala Penjaga",
+            "title":  "Peta Jaringan Listrik — Sabotase Pulau, Singkirkan Kepala Penjaga",
+            "objective": "Temukan dan petakan 2 node jaringan listrik di pulau, lalu kalahkan Kepala Penjaga",
             "boss_id":   "kepala_penjaga",
             "boss_name": "Kepala Penjaga",
             "steps": [
-                "Lokasi 2 node jaringan listrik di area pulau (panel/generator)",
+                "Jelajahi area pulau dan temukan 2 panel/generator listrik (node jaringan)",
                 "Pergi ke Penjara Utara (PRISON NORTH)",
-                "Kalahkan Kepala Penjaga dengan teknik sabotase (Boss Ch.2)",
+                "Kalahkan Kepala Penjaga menggunakan strategi sabotase listrik (Boss Ch.2)",
             ],
             "completion_flag": "boss_ch2_defeated",
-            "next_chapter_msg": "Grid pulau dipetakan. Saatnya rekrut tim engineer.",
+            "next_chapter_msg": "Grid pulau dipetakan sepenuhnya. Saatnya rekrut tim teknis.",
         },
         3: {
             "id":     "ignatius_ch3_main",
-            "title":  "Tim Engineer — Rekrut Sekutu dengan Keahlian Teknis",
-            "objective": "Selesaikan minimal 2 sidequest NPC untuk akses Chapter 4",
+            "title":  "Rekrut Tim Teknis — Bangun Aliansi Multi-Keahlian",
+            "objective": "Rekrut tim dengan keahlian teknis — selesaikan 2 sidequest NPC dan kumpulkan key item mereka",
             "steps": [
-                "Temui NPC di area pulau — tawarkan keahlian teknis",
-                "Selesaikan minimal 2 sidequest — kumpulkan key item sekutu",
+                "Temui NPC di area pulau — tawarkan keahlian rekayasa dan teknikmu",
+                "Selesaikan minimal 2 sidequest — bangun tim multi-keahlian yang solid",
                 "Tim teknis terbentuk → Chapter 4 terbuka",
             ],
             "completion_flag": "ch3_sidequests_done",
@@ -889,40 +890,40 @@ CHARACTER_MAIN_QUESTS = {
         },
         4: {
             "id":     "ignatius_ch4_main",
-            "title":  "EMP Total — Matikan Lab Maxwell dengan Teknologimu",
-            "objective": "Gunakan EMP Device di lab, kalahkan Maxwell's Agent",
+            "title":  "EMP Total — Matikan Sistem Lab Maxwell Sepenuhnya",
+            "objective": "Masuk lab, aktifkan EMP Device untuk matikan keamanan, dan kalahkan Maxwell's Agent",
             "boss_id":   "agen_maxwell",
             "boss_name":  "Maxwell's Agent",
             "steps": [
-                "Masuk ke Laboratorium (exit di pulau utama, Ch.4+)",
-                "Gunakan EMP Device untuk matikan sistem keamanan lab",
-                "Kalahkan Maxwell's Agent — teknologi beats tyranny (Boss Ch.4)",
+                "Masuk ke Laboratorium melalui exit di pulau utama (tersedia Ch.4+)",
+                "Tekan tombol EMP Device di dalam lab — matikan semua sistem elektronik dalam radius 40m",
+                "Kalahkan Maxwell's Agent saat sistemnya down — teknologi beats tyranny (Boss Ch.4)",
             ],
             "completion_flag": "boss_ch4_defeated",
-            "next_chapter_msg": "Lab offline. Satu sistem terakhir yang harus dimatikan.",
+            "next_chapter_msg": "Lab offline total. Satu sistem terakhir yang harus dimatikan: Epstein.",
         },
         5: {
             "id":     "ignatius_ch5_main",
-            "title":  "Blueprint Keadilan — Kumpulkan Semua Bukti Elektronik",
-            "objective": "Selesaikan 4 sidequest NPC, dapatkan USB Evidence Drive",
+            "title":  "Blueprint Keadilan — Dokumentasikan Semua Bukti Elektronik",
+            "objective": "Selesaikan 4 sidequest, dokumentasikan bukti elektronik, dan siapkan blueprint keadilan",
             "steps": [
-                "Selesaikan minimal 4 sidequest NPC (dari total 5)",
-                "Berikan USB Security Drive ke Vio → terima USB Evidence Drive",
-                "Semua bukti elektronik terdokumentasi — blueprint keadilan lengkap",
+                "Selesaikan minimal 4 dari 5 sidequest NPC yang tersedia di pulau",
+                "Bawa USB Security Drive ke Vio → terima USB Evidence Drive yang berisi 47 GB bukti",
+                "Blueprint keadilan lengkap — saatnya blackout total sistem Epstein",
             ],
             "completion_flag": "ch5_evidence_done",
-            "next_chapter_msg": "Blueprint selesai. Saatnya blackout total: Epstein.",
+            "next_chapter_msg": "Blueprint selesai. Saatnya eksekusi blackout total: Epstein.",
         },
         6: {
             "id":     "ignatius_ch6_main",
-            "title":  "Blackout Epstein — Matikan Sistem Terakhirnya Selamanya",
-            "objective": "Masuk Mansion Timur, kalahkan Epstein, hancurkan infrastrukturnya",
+            "title":  "Blackout Total — Hancurkan Infrastruktur Epstein Selamanya",
+            "objective": "Tembus Mansion Timur, kalahkan Epstein, dan hancurkan infrastruktur jaringan kejahatan selamanya",
             "boss_id":   "epstein_boss",
             "boss_name": "Jeffrey Epstein",
             "steps": [
-                "Pergi ke Mansion Timur (mansion_east) — exit sudut kanan bawah pulau",
-                "Hadapi Jeffrey Epstein — engineering vs kejahatan (Final Boss Ch.6)",
-                "Upload USB Evidence Drive — blackout total jaringan Epstein",
+                "Pergi ke Mansion Timur (mansion_east) melalui exit kanan bawah pulau",
+                "Konfrontasi Jeffrey Epstein — engineering vs kejahatan, blackout total (Final Boss Ch.6)",
+                "Upload USB Evidence Drive — blackout permanen jaringan Epstein, selamatkan masa depan",
             ],
             "completion_flag": "ignatius_ch6_complete",
         },
@@ -933,34 +934,34 @@ CHARACTER_MAIN_QUESTS = {
 CHAPTER_QUEST_TEMPLATES = {
     2: {
         "id":        "ch2_main_kepala_penjaga",
-        "title":     "Bersihkan Jalan — Kalahkan Kepala Penjaga",
-        "objective": "Temukan dan kalahkan Kepala Penjaga di Penjara Utara",
+        "title":     "Penjara Utara — Singkirkan Kepala Penjaga",
+        "objective": "Pergi ke Penjara Utara dan kalahkan Kepala Penjaga untuk buka akses penuh pulau",
         "steps": [
-            "Pergi ke Penjara Utara (PRISON NORTH)",
-            "Kalahkan Kepala Penjaga (Boss Ch.2)",
+            "Pergi ke Penjara Utara (PRISON NORTH) — exit pojok kiri atas pulau",
+            "Kalahkan Kepala Penjaga — Boss Ch.2, akses pulau penuh terbuka setelah menang",
         ],
         "completion_flag": "boss_ch2_defeated",
-        "next_chapter_msg": "Kepala Penjaga dikalahkan! Akses penuh ke pulau terbuka.",
+        "next_chapter_msg": "Kepala Penjaga dikalahkan! Akses penuh ke seluruh pulau terbuka.",
     },
     3: {
         "id":        "ch3_main_sidequest",
-        "title":     "Bangun Aliansi — Rekrut Sekutu NPC",
-        "objective": "Bantu 2 NPC selesaikan sidequest untuk maju ke Ch.4",
+        "title":     "Bangun Aliansi — Rekrut Minimal 2 Sekutu NPC",
+        "objective": "Temui dan bantu NPC di pulau — selesaikan 2 sidequest untuk buka Chapter 4",
         "steps": [
-            "Temui NPC di pulau — Haikaru, Aolinh, Arganta, Ignatius, atau Vio",
-            "Selesaikan minimal 2 sidequest NPC (kumpulkan key item mereka)",
-            "Aliansi terbentuk → Chapter 4 terbuka",
+            "Temui NPC yang tersedia: Haikaru (PRISON NORTH), Aolinh (TEATER), Arganta (PANTAI), Ignatius (BASEMENT), Vio (LAB Ch.4+)",
+            "Selesaikan minimal 2 sidequest — kumpulkan key item reward dari tiap NPC",
+            "Dua aliansi terbentuk → Chapter 4 terbuka",
         ],
         "completion_flag": "ch3_sidequests_done",
-        "next_chapter_msg": "Aliansi terbentuk! Saatnya infiltrasi laboratorium.",
+        "next_chapter_msg": "Aliansi terbentuk! Saatnya infiltrasi laboratorium Maxwell.",
     },
     4: {
         "id":        "ch4_main_agen_maxwell",
         "title":     "Infiltrasi Laboratorium — Kalahkan Maxwell's Agent",
-        "objective": "Masuk ke laboratorium dan kalahkan Maxwell's Agent",
+        "objective": "Masuk laboratorium Maxwell dan kalahkan Agennya untuk singkap semua rahasia lab",
         "steps": [
-            "Masuk ke Laboratorium (exit di pulau utama, Ch.4+)",
-            "Gunakan EMP Device dari Ignatius untuk melemahkan Maxwell's Agent",
+            "Masuk ke Laboratorium via exit di pulau (tersedia Ch.4+, minimal 2 sidequest selesai)",
+            "Gunakan EMP Device dari Ignatius untuk matikan sistem keamanan elektronik lab",
             "Kalahkan Maxwell's Agent — Boss Ch.4",
         ],
         "completion_flag": "boss_ch4_defeated",
@@ -968,46 +969,45 @@ CHAPTER_QUEST_TEMPLATES = {
     },
     5: {
         "id":        "ch5_main_evidence",
-        "title":     "Kumpulkan Bukti — Persiapan Konfrontasi Final",
-        "objective": "Selesaikan 4 sidequest NPC dan dapatkan USB Evidence Drive",
+        "title":     "Kumpulkan Bukti — Persiapkan Konfrontasi Final",
+        "objective": "Selesaikan 4 sidequest NPC, dapatkan USB Evidence Drive, dan siap hadapi Epstein",
         "steps": [
-            "Selesaikan minimal 4 sidequest NPC (dari total 5)",
-            "Berikan USB Security Drive ke Vio → terima USB Evidence Drive",
-            "Semua bukti terkumpul — siap konfrontasi Epstein",
+            "Selesaikan minimal 4 dari 5 sidequest NPC yang tersedia di pulau",
+            "Bawa USB Security Drive ke Vio di LABORATORIUM → terima USB Evidence Drive",
+            "Semua bukti tersimpan aman — Mansion Timur terbuka, Epstein menunggu",
         ],
         "completion_flag": "ch5_evidence_done",
         "next_chapter_msg": "Semua bukti terkumpul. Saatnya mengakhiri ini — selamanya.",
     },
     6: {
         "id":        "ch6_main_epstein",
-        "title":     "Konfrontasi Final — Hentikan Jeffrey Epstein",
-        "objective": "Masuk ke Mansion Timur dan kalahkan Jeffrey Epstein",
+        "title":     "Konfrontasi Final — Jeffrey Epstein Harus Dihentikan",
+        "objective": "Masuk Mansion Timur, kalahkan Jeffrey Epstein, dan upload semua bukti ke dunia",
         "steps": [
-            "Pergi ke Mansion Timur (mansion_east) — exit sudut kanan bawah pulau",
-            "Hadapi Jeffrey Epstein — Final Boss Ch.6",
-            "Upload USB Evidence Drive — akhiri jaringan kejahatan ini",
+            "Pergi ke Mansion Timur (mansion_east) melalui exit kanan bawah pulau (minimal 4 SQ selesai)",
+            "Konfrontasi Jeffrey Epstein — gunakan semua skill dan item yang dikumpulkan (Final Boss Ch.6)",
+            "Upload USB Evidence Drive segera — jaringan kejahatan Epstein terungkap ke dunia selamanya",
         ],
         "completion_flag": "boss_ch6_defeated",
-        "next_chapter_msg": "EPSTEIN DIKALAHKAN. Kebenaran terungkap ke dunia.",
+        "next_chapter_msg": "EPSTEIN DIKALAHKAN. Kebenaran terungkap ke seluruh dunia.",
     },
 }
 def get_main_quest(char_id, chapter):
     """Kembalikan data quest utama karakter untuk chapter tertentu."""
     return CHARACTER_MAIN_QUESTS.get(char_id, {}).get(chapter)
 
-# Quest rekrutmen NPC
 NPC_QUESTS = {
     "haikaru": {
         "chapter": 2,
-        "name": "Buku Catatan yang Disita",
-        "desc": "Buku catatan Haikaru berisi 312 halaman analisis enkripsi dan peta blind spot. "
-                "Disita penjaga dan disimpan di Guard Station Wing-B penjara utara.",
-        "objective": "Kalahkan guard veteran di penjara utara — item drop: Buku Catatan Haikaru",
+        "name": "Kode yang Terlupakan",
+        "desc": "Buku catatan Haikaru — 312 halaman analisis enkripsi dan peta blind spot — "
+                "disita guard veteran yang berpatroli di Penjara Utara (PRISON NORTH). "
+                "Kalahkan guard veteran, ambil buku, kembalikan ke Haikaru.",
+        "objective": "Kalahkan guard veteran di PRISON NORTH → dapatkan Buku Catatan Haikaru → serahkan ke Haikaru → terima Catatan Sandi",
         "steps": [
-            "Pergi ke Penjara Utara (PRISON NORTH)",
-            "Temukan guard veteran yang berpatroli di koridor timur laut",
-            "Kalahkan guard veteran — Buku Catatan Haikaru akan di-drop",
-            "Kembalikan buku ke Haikaru — terima kunci info blind spot",
+            "Pergi ke PRISON NORTH (tersedia Ch.2+)",
+            "Kalahkan guard veteran yang berpatroli di koridor — drop: Buku Catatan Haikaru",
+            "Temui Haikaru di PRISON NORTH → serahkan buku → terima Catatan Sandi Haikaru",
         ],
         "required_item": "Buku Catatan Haikaru",
         "required_action": None,
@@ -1015,22 +1015,22 @@ NPC_QUESTS = {
         "location": "prison_north",
         "reward_item": "Catatan Sandi Haikaru",
         "reward_dialog": [
-            "Fumika: '...Kamu mengambilnya? Hmph. Efisien.'",
-            "Fumika: 'Semua data observasiku ada di sini. 17 posisi guard, 8 blind spot, 3 jalur keluar.'",
-            "Fumika: 'Aku bergabung dengan timmu. Ikuti rencanaku. Deviasi tidak diperbolehkan.'"
+            "Haikaru: '...Kamu mengambilnya? Hmph. Efisien.'",
+            "Haikaru: 'Semua data observasiku ada di sini. 17 posisi guard, 8 blind spot, 3 jalur keluar.'",
+            "Haikaru: 'Ini Catatan Sandi — kunci decode sistem enkripsi seluruh mansion. Jaga baik-baik.'"
         ]
     },
     "aolinh": {
         "chapter": 2,
-        "name": "Biola di Balik Panggung",
-        "desc": "Ao Lin dikurung di ruang ganti teater oleh penjaga teater yang keras. "
-                "Kalahkan penjaga tersebut untuk membebaskan Ao Lin dan biolanya.",
-        "objective": "Kalahkan penjaga teater (backstage) untuk bebaskan Ao Lin",
+        "name": "Suara yang Terkubur",
+        "desc": "Ao Lin dikurung di backstage TEATER oleh Theater Commander. "
+                "Kalahkan Theater Commander, bebaskan Ao Lin — dia akan memberikan Rekaman Distraksi "
+                "yang bisa dipakai untuk mengalihkan penjaga dermaga selama 10 menit.",
+        "objective": "Pergi ke TEATER → kalahkan Theater Commander di backstage → Ao Lin bebas → terima Rekaman Distraksi",
         "steps": [
-            "Pergi ke Teater (THEATER)",
-            "Temukan area backstage di balik panggung utama",
-            "Kalahkan penjaga teater yang mengurung Ao Lin",
-            "Bebaskan Ao Lin — terima Rekaman Distraksi sebagai reward",
+            "Pergi ke TEATER (tersedia Ch.2+)",
+            "Cari dan kalahkan Theater Commander di area backstage (belakang panggung)",
+            "Ao Lin bebas → terima Rekaman Distraksi Aolinh — berguna untuk bypass penjaga dermaga",
         ],
         "required_item": None,
         "required_action": "defeat_theater_guard",
@@ -1038,22 +1038,22 @@ NPC_QUESTS = {
         "location": "theater",
         "reward_item": "Rekaman Distraksi Aolinh",
         "reward_dialog": [
-            "Ao Lin: '*memeluk biola-nya* 谢谢！ Xiè xie! Makasih banget!'",
-            "Ao Lin: 'Aku harus cari Jiejie-ku — kakakku. Tapi sendirian aku tidak berani.'",
-            "Ao Lin: 'Aku ikut sama kamu ya? 我们一起！ Kita bersama! Let's stay positive! ♪'"
+            "Aolinh: 'Kamu berhasil! Oh, Dewa — terimakasih, terimakasih banyak!'",
+            "Aolinh: 'Ambil ini — rekaman performanceku. Loop-kan di speaker dermaga dan penjaga akan terpaku 10 menit.'",
+            "Aolinh: 'Kalau ketemu Jiejie-ku... tolong beritahu aku. 我们一起！ ♪'"
         ]
     },
     "arganta": {
         "chapter": 2,
-        "name": "Kompas yang Hilang",
-        "desc": "Amerigo Arganta terjebak di pantai tanpa kompas warisan kakeknya. "
-                "Kompas diambil penjaga dermaga dan tersimpan di sudut barat pantai.",
-        "objective": "Kalahkan guard veteran di pantai — item drop: Kompas Nonno Arganta",
+        "name": "Warisan yang Direbut",
+        "desc": "Kompas warisan Nonno milik Amerigo Arganta diambil guard veteran di PANTAI (BEACH). "
+                "Di dalam kompas ada peta jalur rahasia ke laboratorium bawah tanah. "
+                "Kalahkan guard veteran di pantai, ambil kompas, kembalikan ke Arganta.",
+        "objective": "Kalahkan guard veteran di PANTAI → dapatkan Kompas Nonno Arganta → serahkan ke Arganta → terima Peta Jalur Rahasia",
         "steps": [
-            "Pergi ke Pantai (BEACH)",
-            "Temukan guard veteran atau mercenary thug yang patroli di pantai",
-            "Kalahkan mereka — Kompas Nonno Arganta akan di-drop",
-            "Kembalikan kompas ke Arganta — terima Peta Jalur Rahasia",
+            "Pergi ke PANTAI / BEACH (tersedia Ch.2+)",
+            "Kalahkan guard veteran atau mercenary thug yang berpatroli — drop: Kompas Nonno Arganta",
+            "Temui Arganta di PANTAI → serahkan kompas → terima Peta Jalur Rahasia ke basement laboratorium",
         ],
         "required_item": "Kompas Nonno Arganta",
         "required_action": None,
@@ -1061,23 +1061,23 @@ NPC_QUESTS = {
         "location": "beach",
         "reward_item": "Peta Jalur Rahasia",
         "reward_dialog": [
-            "Amerigo: 'Il mio compasso! Kamu menemukannya!'",
-            "Amerigo: 'Kompas ini... Nonno-ku memberikannya sebelum mereka membunuhnya di laut.'",
-            "Amerigo: 'Aku berutang padamu. Sekarang aku ikut. Bersama kita akan keluar dari pulau terkutuk ini.'"
+            "Arganta: 'Il compasso! Grazie mille — ini warisan terakhir Nonno-ku.'",
+            "Arganta: 'Di dalam ada peta yang Nonno ukir sendiri. Terowongan ke basement laboratorium.'",
+            "Arganta: 'Ambil Peta Jalur Rahasia ini. Per Nonno — ini jalan alternatif untuk tembus lab Maxwell.'"
         ]
     },
     "ignatius": {
-        "chapter": 3,
-        "name": "Komponen EMP Ignatius",
-        "desc": "Ignatius butuh 3 komponen untuk menyelesaikan alat EMP-nya. "
-                "Komponen tersebar di basement dan mansion.",
-        "objective": "Kalahkan guard elite (mansion), tech guard (pusat kontrol), mansion guard (teater) untuk drop komponen",
+        "chapter": 2,
+        "name": "Komponen EMP yang Disita",
+        "desc": "Ignatius butuh 3 komponen untuk merakit EMP Device — alat wajib untuk melemahkan "
+                "Maxwell's Agent di Ch.4. Komponen disita penjaga di berbagai area pulau: "
+                "Kapasitor Besar (MANSION), Relay Switch (PUSAT KONTROL), Copper Coil (MANSION/TEATER).",
+        "objective": "Kumpulkan 3 komponen: Kapasitor Besar (MANSION) + Relay Switch (COMMAND CENTER) + Copper Coil (MANSION/TEATER) → serahkan ke Ignatius",
         "steps": [
-            "Pergi ke Basement atau Mansion",
-            "Ambil [Kapasitor Besar] di gudang supply lantai 1 mansion",
-            "Ambil [Relay Switch] di ruang komunikasi lantai 2",
-            "Ambil [Copper Coil] di ruang generator timur basement",
-            "Kumpulkan ke Ignatius — terima EMP Device yang sudah jadi",
+            "Pergi ke MANSION → kalahkan guard elite/mansion guard → drop: Kapasitor Besar",
+            "Pergi ke COMMAND CENTER → kalahkan tech guard → drop: Relay Switch",
+            "Pergi ke MANSION atau TEATER → kalahkan mansion guard/guard novice → drop: Copper Coil",
+            "Kembali ke BASEMENT → temui Ignatius → serahkan 3 komponen → terima EMP Device",
         ],
         "required_items": ["Kapasitor Besar", "Relay Switch", "Copper Coil"],
         "required_item": None,
@@ -1086,22 +1086,22 @@ NPC_QUESTS = {
         "location": "basement",
         "reward_item": "EMP Device",
         "reward_dialog": [
-            "Ignatius: 'YES! Semua komponen lengkap! Ini yang aku butuhkan!'",
-            "Ignatius: 'Dengan ini aku bisa buat EMP pulse yang matiin semua sistem keamanan pulau.'",
-            "Ignatius: 'Aku gabung sama tim kamu. Engineering time! Let's blow this joint!'"
+            "Ignatius: 'YES! Semua komponen lengkap! Rakit dalam 20 menit!'",
+            "Ignatius: 'EMP Device ini akan matikan semua sistem elektronik Maxwell dalam radius 40 meter.'",
+            "Ignatius: 'Gunakan tepat sebelum lawan Maxwell Agent di lab. WAJIB. Tanpa ini kita masuk perangkap!'"
         ]
     },
     "vio": {
-        "chapter": 3,
-        "name": "USB Drive Terenkripsi",
-        "desc": "Vio butuh USB Security Drive dengan chip enkripsi hardware untuk crack file utama. "
-                "Item ini ada di security room laboratorium.",
-        "objective": "Kalahkan scientist di laboratorium — item drop: USB Security Drive",
+        "chapter": 4,
+        "name": "USB Kebenaran",
+        "desc": "Vio butuh USB Security Drive dari laboratorium Maxwell untuk crack server utama. "
+                "USB ini dibawa oleh scientist di LABORATORIUM (tersedia Ch.4+). "
+                "Kalahkan scientist, serahkan USB ke Vio, terima USB Evidence Drive berisi semua bukti.",
+        "objective": "Pergi ke LABORATORIUM (Ch.4+) → kalahkan scientist → dapatkan USB Security Drive → serahkan ke Vio → terima USB Evidence Drive",
         "steps": [
-            "Pergi ke Laboratorium (tersedia Ch.4+)",
-            "Temukan scientist yang berpatroli di area barat laboratorium",
-            "Kalahkan scientist — USB Security Drive akan di-drop",
-            "Serahkan ke Vio — terima USB Evidence Drive yang sudah di-decrypt",
+            "Pastikan sudah Ch.4 → pergi ke LABORATORIUM via exit di pulau utama",
+            "Kalahkan scientist yang berpatroli di area barat lab — drop: USB Security Drive",
+            "Temui Vio di LABORATORIUM → serahkan USB → terima USB Evidence Drive — WAJIB untuk ending Ch.6",
         ],
         "required_item": "USB Security Drive",
         "required_action": None,
@@ -1109,11 +1109,11 @@ NPC_QUESTS = {
         "location": "laboratory",
         "reward_item": "USB Evidence Drive",
         "reward_dialog": [
-            "Vio: '...Nice. Edinburgh hackers appreciate good teamwork.'",
-            "Vio: 'USB ini punya semua guest list dan flight log Epstein. Aku udah crack semua enkripsinya.'",
-            "Vio: 'Aku ikut tim kamu. Gacha bisa nunggu, tapi data ini tidak bisa diabaikan.'"
+            "Vio: '47 GB data. Daftar tamu, catatan transfer, rekaman pengawasan — semua ada.'",
+            "Vio: 'Ada folder berlabel INSURANCE. Isinya lebih dari yang aku bayangkan.'",
+            "Vio: 'Jaga USB Evidence Drive ini seperti nyawamu. Ini yang akan menyelamatkan semua orang.'"
         ]
-    }
+    },
 }
 # Intro cerita tiap karakter
 CHARACTER_INTROS = {
@@ -1276,19 +1276,6 @@ def safe_get_card_dialog(char_id, hand_key):
 
     return None
 
-def check_candala_encounter(game_state):
-    """Check if Candala appears"""
-    return hasattr(game_state, 'bosses_defeated') and game_state.bosses_defeated > 0 and random.random() < SPECIAL_NPC["candala"]["encounter_chance"]
-
-def check_balatro_encounter(hand_type, hand_score):
-    """Check if Balatro Joker appears on good hands"""
-    good_hands = ["Flush", "Full House", "Four of a Kind", "Straight Flush"]
-    return hand_type in good_hands and random.random() < SPECIAL_NPC["balatro_joker"]["encounter_chance"]
-
-def check_prabowo_phone_encounter(game_state, location):
-    """Check if player finds the secret phone call"""
-    return location == "mansion" and "secret_evidence" not in game_state.discovered_secrets and random.random() < SPECIAL_NPC["prabowo_phone"]["encounter_chance"]
-
 import time
 from contextlib import suppress
 
@@ -1304,54 +1291,54 @@ from constants import (
 )
 
 CHAPTER_OBJECTIVES = {
-    1: "Kabur dari area starting — selesaikan semua objektif Chapter 1",
-    2: "Bersihkan pulau, kalahkan Kepala Penjaga di Penjara Utara",
-    3: "Bangun aliansi — selesaikan minimal 2 sidequest NPC",
-    4: "Infiltrasi laboratorium — kalahkan Maxwell's Agent",
-    5: "Kumpulkan semua bukti — selesaikan 4 sidequest NPC",
-    6: "Konfrontasi final — hentikan Jeffrey Epstein di Mansion Timur",
+    1: "Selesaikan misi area starting — kabur dari lokasi awal",
+    2: "Pergi ke PRISON NORTH → kalahkan Kepala Penjaga (Boss Ch.2)",
+    3: "Temui NPC di pulau → selesaikan 2 sidequest → Chapter 4 terbuka",
+    4: "Pergi ke LABORATORIUM → kalahkan Maxwell's Agent (Boss Ch.4)",
+    5: "Selesaikan 4 sidequest NPC + dapat USB Evidence Drive dari Vio di LABORATORIUM",
+    6: "Pergi ke MANSION EAST (sudut kanan bawah ISLAND) → kalahkan Epstein (Final Boss)",
 }
 
 CHAPTER_OBJECTIVES_BY_CHAR = {
     "vio": {
-        1: "Hack server mansion, jebol sistem keamanan, kabur dari ruang server",
-        2: "Dominasi jaringan pulau, singkirkan Kepala Penjaga",
-        3: "Rekrut sekutu — kumpulkan item kunci dari NPC",
-        4: "Tembus lab Maxwell, ambil data intel, kalahkan Maxwell's Agent",
-        5: "Upload deadman switch — kumpulkan semua bukti digital",
-        6: "Server final — expose Epstein ke dunia",
+        1: "MANSION: Hack 2 terminal server → kalahkan Maxwell Enforcer (Boss Ch.1) → keluar ke ISLAND",
+        2: "PRISON NORTH: Kalahkan Kepala Penjaga (Boss Ch.2) → Chapter 3 terbuka",
+        3: "Temui NPC di ISLAND → selesaikan 2 sidequest → Chapter 4 terbuka",
+        4: "LABORATORIUM: Gunakan EMP Device → kalahkan Maxwell's Agent (Boss Ch.4)",
+        5: "Selesaikan 4 sidequest + terima USB Evidence Drive dari Vio (LABORATORIUM)",
+        6: "MANSION EAST: Kalahkan Epstein → upload bukti → selesai",
     },
     "haikaru": {
-        1: "Eksekusi rencana 47 langkah — kabur dari sel penjara",
-        2: "Taktik superioritas — netralkan Kepala Penjaga",
-        3: "Kalkulasi aliansi — rekrut sekutu strategis",
-        4: "Checkmate Maxwell's Agent — probabilitas menang 99.9%",
-        5: "Kumpulkan semua variabel bukti — persiapkan strategi final",
-        6: "Checkmate Epstein — eksekusi rencana akhir",
+        1: "PRISON NORTH: Identifikasi 3 blind spot → ambil Kunci Wing-C → kalahkan Warden Elite (Boss Ch.1)",
+        2: "PRISON NORTH: Kalahkan Kepala Penjaga (Boss Ch.2) → Chapter 3 terbuka",
+        3: "Temui NPC di ISLAND → selesaikan 2 sidequest → Chapter 4 terbuka",
+        4: "LABORATORIUM: Kalahkan Maxwell's Agent dengan strategi presisi (Boss Ch.4)",
+        5: "Selesaikan 4 sidequest + terima USB Evidence Drive dari Vio (LABORATORIUM)",
+        6: "MANSION EAST: Checkmate Epstein → eksekusi rencana akhir",
     },
     "aolinh": {
-        1: "Cari jejak Jiejie di theater, kalahkan penjaga yang mengurungnya",
-        2: "Simfoni kebebasan — singkirkan Kepala Penjaga",
-        3: "Nyanyikan harapan — rekrut sekutu dengan melodimu",
-        4: "Melodi perlawanan — jebol lab Maxwell bersama tim",
-        5: "Kumpulkan bukti untuk Jiejie — akhiri penderitaan ini",
-        6: "Final crescendo — kalahkan Epstein untuk semua anak yang terjebak",
+        1: "TEATER: Cari 2 jejak Jiejie → kalahkan Theater Master (Boss Ch.1) → keluar ke ISLAND",
+        2: "PRISON NORTH: Kalahkan Kepala Penjaga (Boss Ch.2) → Chapter 3 terbuka",
+        3: "Temui NPC di ISLAND → selesaikan 2 sidequest → Chapter 4 terbuka",
+        4: "LABORATORIUM: Gunakan Rekaman Distraksi → kalahkan Maxwell's Agent (Boss Ch.4)",
+        5: "Selesaikan 4 sidequest + terima USB Evidence Drive dari Vio (LABORATORIUM)",
+        6: "MANSION EAST: Kalahkan Epstein untuk Jiejie dan semua korban",
     },
     "arganta": {
-        1: "Survival mode — kumpulkan bekal, buka jalur dermaga",
-        2: "Navigator memimpin — singkirkan Kepala Penjaga",
-        3: "Per famiglia — rekrut sekutu untuk keadilan",
-        4: "La via è sempre avanti — tembus lab Maxwell",
-        5: "Requiescat in pace — kumpulkan semua bukti kejahatan",
-        6: "Vendetta finale — kalahkan Epstein untuk keluargamu",
+        1: "PANTAI: Kumpulkan 2 perlengkapan survival → kalahkan Harbor Captain (Boss Ch.1) → keluar ke ISLAND",
+        2: "PRISON NORTH: Kalahkan Kepala Penjaga (Boss Ch.2) → Chapter 3 terbuka",
+        3: "Temui NPC di ISLAND → selesaikan 2 sidequest → Chapter 4 terbuka",
+        4: "LABORATORIUM: Gunakan Peta Jalur Rahasia → kalahkan Maxwell's Agent (Boss Ch.4)",
+        5: "Selesaikan 4 sidequest + terima USB Evidence Drive dari Vio (LABORATORIUM)",
+        6: "MANSION EAST: Vendetta finale — kalahkan Epstein per Nonno",
     },
     "ignatius": {
-        1: "Rekayasa mesin — rakit EMP, sabotase alarm, hancurkan Security Bot",
-        2: "Engineering bergerak — Kepala Penjaga harus disingkirkan",
-        3: "Tim engineer — rekrut sekutu dengan keahlian teknis",
-        4: "EMP total — matikan lab Maxwell dengan teknologimu",
-        5: "Blueprint keadilan — kumpulkan semua bukti elektronik",
-        6: "Blackout Epstein — matikan sistem terakhirnya selamanya",
+        1: "BASEMENT: Kumpulkan 3 komponen EMP → sabotase panel alarm → kalahkan AmBOTukam Mk II (Boss Ch.1)",
+        2: "PRISON NORTH: Kalahkan Kepala Penjaga (Boss Ch.2) → Chapter 3 terbuka",
+        3: "Temui NPC di ISLAND → selesaikan 2 sidequest → Chapter 4 terbuka",
+        4: "LABORATORIUM: EMP Device aktif → kalahkan Maxwell's Agent (Boss Ch.4)",
+        5: "Selesaikan 4 sidequest + terima USB Evidence Drive dari Vio (LABORATORIUM)",
+        6: "MANSION EAST: Blackout Epstein — matikan sistem terakhirnya",
     },
 }
 
@@ -1401,7 +1388,7 @@ BOSS_DATA = {
             "Kartu akses ke vault dokumen kini ada di tanganmu.",
         ],
     },
-    'jeffrey_epstein': {
+    'epstein_boss': {
         'name':       'Jeffrey Epstein',
         'chapter':    6,
         'location':   'mansion_east',
@@ -1455,7 +1442,7 @@ CH1_ITEM_OBJECTIVE_MAP = {
             "Haikaru: *menggenggam kunci* Ini yang aku cari. Loker 7, bukan 12. Asumsi awal salah 3%."),
     },
     'aolinh': {
-        # Fix: Ao Linh Route — Bandage removed as clue; replaced with narrative items
+
         'Health Potion':   ('find_jiejie_clues',
             "Aolinh: *menemukan sesuatu* ...Ini pita rambut Jiejie. Dia pernah di sini!"),
         'Gantungan Kunci Musik': ('find_jiejie_clues',
@@ -1740,29 +1727,29 @@ CHAPTER_REQUIREMENTS = {
         'boss_needed': None,
     },
     3: {
-        'description': 'Kalahkan Kepala Penjaga (Boss Chapter 2)',
+        'description': 'Kalahkan Kepala Penjaga di PRISON NORTH (Boss Chapter 2)',
         'flags':    ['boss_ch2_defeated'],
         'items':    [],
         'sidequests_needed': 0,
         'boss_needed': 'kepala_penjaga',
     },
     4: {
-        'description': 'Selesaikan minimal 2 sidequest NPC (butuh key item mereka)',
-        'flags':    ['boss_ch2_defeated'],
+        'description': 'Selesaikan minimal 2 sidequest NPC di Chapter 3',
+        'flags':    ['boss_ch2_defeated'],   # Sudah pasti ada kalau di ch3, tapi tetap guard
         'items':    [],
         'sidequests_needed': SIDEQUESTS_NEEDED_FOR_CH4,  # 2
         'boss_needed': None,
     },
     5: {
-        'description': "Kalahkan Maxwell's Agent (Boss Chapter 4)",
+        'description': "Kalahkan Maxwell's Agent di Laboratorium (Boss Chapter 4)",
         'flags':    ['boss_ch4_defeated'],
         'items':    [],
         'sidequests_needed': 0,
         'boss_needed': 'agen_maxwell',
     },
     6: {
-        'description': 'Selesaikan minimal 4 sidequest + miliki USB Evidence Drive',
-        'flags':    ['boss_ch4_defeated'],
+        'description': 'Selesaikan minimal 4 sidequest NPC + miliki USB Evidence Drive dari Vio',
+        'flags':    ['boss_ch4_defeated'],   # Guard: harus sudah kalahkan boss ch4
         'items':    ['USB Evidence Drive'],
         'sidequests_needed': SIDEQUESTS_NEEDED_FOR_CH6,  # 4
         'boss_needed': None,
@@ -1998,7 +1985,7 @@ def check_ch1_complete(game_state):
     game_state.story_flags[comp_flag] = True
     game_state.story_flags['chapter_1_complete'] = True
 
-    # Fix: Ao Linh Drop — gunakan add_quest_item agar tidak duplikat
+
     reward = quest_data.get('reward_item')
     reward_flag = quest_data.get('reward_flag')
     if reward and not game_state.story_flags.get(reward_flag):

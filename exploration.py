@@ -28,22 +28,22 @@ def _trunc(text, maxlen, suffix='…'):
 
 # Quest items vs regular items — quest items show [!] in inventory
 QUEST_ITEMS = {
-    # Vio
-    'Keycard Level 1', 'Keycard Level 2', 'Access Card', 'USB Encrypted', 'Akses Level 3',
-    'USB Security Drive',
-    # Haikaru
-    'Buku Catatan', 'Buku Catatan Haikaru', 'Peta Blind Spot Penjara', 'Info Pulau', 'Kunci Wing-C',
-    # Aolinh
-    'Tiket Backstage',
-    # Arganta
+    # Vio route
+    'Keycard Level 1', 'Keycard Level 2', 'Keycard Level 3', 'Access Card',
+    'USB Encrypted', 'Akses Level 3', 'USB Security Drive',
+    # Haikaru route
+    'Buku Catatan', 'Buku Catatan Haikaru', 'Peta Blind Spot Penjara', 'Info Pulau',
+    'Catatan Sandi Haikaru', 'Kunci Wing-C',
+    # Aolinh route
+    'Tiket Backstage', 'Rekaman Distraksi Aolinh', 'Gantungan Kunci Musik',
+    # Arganta route
     'Kompas Nonno Arganta', 'Kompas Aktif', 'Peta Jalur Rahasia',
-    # Ignatius
-    'Kapasitor Besar', 'Relay Switch', 'Copper Coil', 'EMP Prototype', 'Blueprint',
+    # Ignatius route
+    'Kapasitor Besar', 'Relay Switch', 'Copper Coil', 'EMP Prototype',
+    'Blueprint', 'EMP Device',
     # General progression
     'Epstein Phone', 'Rekaman Candala', 'USB Evidence Drive',
-    'Catatan Sandi Haikaru', 'Rekaman Distraksi Aolinh', 'EMP Device',
-    # Fix: Ao Linh Route — quest clue item
-    'Gantungan Kunci Musik',
+    'Kunci Master Penjara', 'Kartu Akses Lab',
 }
 
 def is_quest_item(item_name):
@@ -142,8 +142,7 @@ class GameMap:
         self.create_path(self.width // 2, 3, self.width // 2, self.height - 3)
         self.create_path(3, self.height // 2, self.width - 3, self.height // 2)
 
-        self.place_exit(7,  7,  "prison_north", "Penjara Utara")
-        self.place_exit(18, 7,  "prison_south", "Penjara Selatan")
+        self.place_exit(7,  7,  "prison_north", "Penjara")
         self.place_exit(7,  13, "mansion",       "Mansion")
         self.place_exit(18, 13, "dock",          "Dermaga")
         self.place_exit(12, 5,  "command_center","Pusat Kontrol [Ch.2+]")
@@ -225,9 +224,8 @@ class GameMap:
         self.add_enemy_patrol(12, 7,  "tech_guard",       [(12,7),  (18,7)])
 
         self.place_item(18, 8, "Armor Vest")
-        self.place_item(8,  6, "Keycard Level 1")    # Vio hack_terminal objective
-        self.place_item(18, 12, "Access Card")        # Vio hack_terminal objective (ke-2)
-        self.place_npc(10, 8, "ignatius")
+        self.place_item(8,  6, "Keycard Level 1")
+        self.place_item(18, 12, "Access Card")
 
         self.player_x, self.player_y = self._validate_spawn_point(12, 3)
 
@@ -282,7 +280,6 @@ class GameMap:
         self.place_item(4,  10, "Med Kit")
         self.place_item(18, 8,  "Bandage")
         self.place_item(12, 12, "Keycard Level 2")
-        self.place_npc(5, 9, "arganta")
 
         self.player_x, self.player_y = self._validate_spawn_point(3, self.height // 2)
 
@@ -344,7 +341,7 @@ class GameMap:
         self.place_npc(6, 10, "arganta")
         self.place_item(6,  9,  "Health Potion")
         self.place_item(15, 6,  "Bandage")
-        self.place_item(8,  4,  "Gantungan Kunci Musik")  # Fix: Ao Linh Route — clue item
+        self.place_item(8,  4,  "Gantungan Kunci Musik")
         self.place_item(20, 9,  "Med Kit")
         self.add_enemy_patrol(10, 5,  "guard_novice",   [(10,5),  (18,5), (18,8), (10,8)])
         self.add_enemy_patrol(5,  8,  "mercenary_thug", [(5,8),   (10,8)])
@@ -367,11 +364,7 @@ class GameMap:
         self.create_path(self.width // 2, 1, self.width // 2, self.height - 2)
 
         self.place_exit(12, 1, "mansion", "Naik ke Mansion")
-        # Ignatius ada di basement — NPC bagi karakter non-Ignatius
         self.place_npc(4, 4, "ignatius")
-        self.place_item(4, 7, "Kapasitor Besar")
-        self.place_item(20, 4, "Relay Switch")
-        self.place_item(4, 12, "Copper Coil")
         self.add_enemy_patrol(10, 8,  "guard_novice",  [(10,8),  (14,8)])
         self.add_enemy_patrol(6,  10, "tech_guard",    [(6,10),  (6,14)])
         self.add_enemy_patrol(18, 5,  "scientist",     [(18,5),  (18,10)])
@@ -400,8 +393,8 @@ class GameMap:
         self.place_item(19,  4,  "Med Kit",              respawn_delay=600)
         self.place_item(5,   14, "Health Potion",        respawn_delay=420)
         self.place_item(19,  14, "Encrypted Files")
-        # USB Security Drive — item yang dibutuhkan Vio untuk sidequestnya
-        # Ada di lab security room (lantai 2 mansion / laboratorium)
+        self.place_npc(15, 9, "vio")
+        self.place_item(14, 12, "USB Security Drive")
         self.player_x, self.player_y = self._validate_spawn_point(12, 3)
 
     def generate_mansion_east(self):
@@ -1083,7 +1076,7 @@ def create_game_map(map_id, gs=None):
 
     if map_id == "island":
         gm.generate_island()
-    elif map_id in ("prison_north", "prison_south"):
+    elif map_id in ("prison_north", "prison_south", "prison"):
         gm.generate_prison()
     elif map_id == "mansion":
         gm.generate_mansion()
@@ -1416,15 +1409,30 @@ def handle_hasil(hasil, gs, gm):
                 gs.battles_won += 1
 
                 QUEST_DROP_MAP = {
-                    ('prison_north', 'guard_veteran'):   ('Buku Catatan Haikaru', None),
-                    ('prison_south', 'guard_veteran'):   ('Buku Catatan Haikaru', None),
-                    ('beach',        'guard_veteran'):   ('Kompas Nonno Arganta', 'defeat_harbor_patrol'),
-                    ('beach',        'mercenary_thug'):  ('Kompas Nonno Arganta', 'defeat_harbor_patrol'),
+                    ('prison_north', 'guard_veteran'):    ('Buku Catatan Haikaru', None),
+                    ('prison_north', 'guard_elite'):      ('Buku Catatan Haikaru', None),
+                    ('beach',        'guard_veteran'):    ('Kompas Nonno Arganta', 'defeat_harbor_patrol'),
+                    ('beach',        'mercenary_thug'):   ('Kompas Nonno Arganta', 'defeat_harbor_patrol'),
+                    ('beach',        'guard_elite'):      ('Kompas Nonno Arganta', 'defeat_harbor_patrol'),
+                    ('dock',         'guard_veteran'):    ('Kompas Nonno Arganta', 'defeat_harbor_patrol'),
                     ('laboratory',   'scientist'):        ('USB Security Drive',   'defeat_lab_scientist'),
+                    ('laboratory',   'tech_guard'):       ('USB Security Drive',   'defeat_lab_scientist'),
                     ('mansion',      'guard_elite'):      ('Kapasitor Besar',      None),
+                    ('mansion',      'tech_guard'):       ('Kapasitor Besar',      None),
+                    ('basement',     'tech_guard'):       ('Kapasitor Besar',      None),
+                    ('basement',     'scientist'):        ('Relay Switch',         None),
                     ('command_center','tech_guard'):      ('Relay Switch',         None),
+                    ('command_center','guard_elite'):     ('Relay Switch',         None),
                     ('theater',      'mansion_guard'):    ('Copper Coil',          None),
                     ('theater',      'mercenary_thug'):   ('Copper Coil',          None),
+                    ('theater',      'guard_veteran'):    ('Copper Coil',          None),
+                    ('island',       'guard_veteran'):    ('Copper Coil',          None),
+                    # Copper Coil juga tersedia di mansion/basement agar Ignatius bisa kumpulkan
+                    # tanpa harus pergi ke theater saat Ch.1 (basement is starting area)
+                    ('mansion',      'mansion_guard'):    ('Copper Coil',          None),
+                    ('mansion',      'guard_novice'):     ('Copper Coil',          None),
+                    ('basement',     'mansion_guard'):    ('Copper Coil',          None),
+                    ('basement',     'guard_novice'):     ('Copper Coil',          None),
                 }
                 enemy_id_drop = hasil['enemy'].get('id', '')
                 drop_key = (gm.map_id, enemy_id_drop)
@@ -1445,6 +1453,15 @@ def handle_hasil(hasil, gs, gm):
                     gs.add_quest_item('EMP Prototype')
                     print(f"\n  {Warna.KUNING + Warna.TERANG}★ EMP Prototype berhasil dirakit dari komponen!{Warna.RESET}")
                     time.sleep(1.2)
+                    # Auto-credit sabotage_alarm_panel untuk Ignatius Ch.1
+                    # Blueprint/EMP Prototype pickup trigger tidak cukup — auto-credit saat rakitan jadi
+                    if gs.player_character == 'ignatius' and int(gs.story_flags.get('current_chapter', 1)) == 1:
+                        try:
+                            from characters import update_ch1_objective as _upd_ch1
+                            _upd_ch1(gs, 'sabotage_alarm_panel', 1)
+                            print(f"  {Warna.CYAN}◐ Sabotase panel alarm: SIAP — gunakan EMP Prototype!{Warna.RESET}")
+                        except Exception:
+                            pass
 
                 # Hapus enemy yang sudah kalah dari peta supaya tidak bisa fight lagi
                 px, py = gm.player_x, gm.player_y
@@ -1585,7 +1602,7 @@ def handle_hasil(hasil, gs, gm):
 
         elif hasil['type'] == 'item':
             item_name = hasil['item']
-            # Fix: Ao Linh Drop — quest items pakai add_quest_item (dedup), biasa pakai add_item
+
             if is_quest_item(item_name):
                 gs.add_quest_item(item_name)
             else:
@@ -1849,7 +1866,7 @@ def handle_hasil(hasil, gs, gm):
                             return 'victory'
 
                         # Set special flags based on boss ID for character quests
-                        # Fix: Ao Linh Drop — theater_master drop ke quest_items (dedup guard)
+
                         if boss_id == 'theater_master' or 'theater' in boss_id.lower():
                             gs.story_flags['defeat_theater_guard'] = True
                             if 'Tiket Backstage' not in gs.quest_items:
@@ -1857,7 +1874,8 @@ def handle_hasil(hasil, gs, gm):
                                 print(f"\n  {Warna.KUNING}★ Quest Item: Tiket Backstage didapat!{Warna.RESET}")
 
                         gs.bosses_defeated += 1
-                        gs.save_to_file()  # auto-save after boss kill
+                        # NOTE: save_to_file() dipindah ke SETELAH chapter advance
+                        # supaya save file mencerminkan chapter yang sudah maju (bukan lama)
 
                         char_id = gs.player_character
                         chapter = int(gs.story_flags.get('current_chapter', 1))
@@ -2086,6 +2104,10 @@ def handle_hasil(hasil, gs, gm):
                             except Exception:
                                 pass  # Abaikan error story display, jangan interrupt gameplay
 
+
+                            # mencerminkan chapter terbaru (bukan chapter sebelum boss)
+                            gs.save_to_file()
+
     except Exception as e:
         print(f"{Warna.MERAH}Error: {e}{Warna.RESET}")
         time.sleep(1)
@@ -2159,7 +2181,7 @@ def _buka_toko_bran_remote(gs):
         print(f"  {Warna.KUNING + Warna.TERANG}Bran{Warna.RESET}{Warna.KUNING}: {Warna.RESET}Kamu lagi. Good, berarti masih hidup. Mau beli apa?")
         time.sleep(1)
 
-    # BUG FIX: recursive call removed — shop menu langsung di sini
+
     while True:
         clear_screen()
         print(f"\n{Warna.KUNING + Warna.TERANG}╔══════════════════════════════════════════════════╗{Warna.RESET}")
@@ -2288,7 +2310,7 @@ def interaksi_npc(npc_id, gs, gm):
 
     if use_new_system:
         npc_data = NPC_SIDEQUEST_DATA[npc_id]
-        sq_flag  = f"sidequest_{npc_id}_complete"
+        sq_flag  = npc_data.get('reward_flag', f"{npc_id}_sidequest_done")
         met_flag = f"met_{npc_id}"
 
         # Cek apakah sudah pernah bertemu
@@ -2338,10 +2360,11 @@ def interaksi_npc(npc_id, gs, gm):
             try:
                 from npc_interactions import is_sidequest_complete, display_npc_completion
                 if is_sidequest_complete(npc_id, gs):
-                    gs.story_flags[sq_flag] = True
-                    gs.complete_quest(f"recruit_{npc_id}")
-                    gs.npcs_recruited.add(npc_id)
-                    display_npc_completion(npc_id, gs)
+                    # FIX: jangan set sq_flag dulu — display_npc_completion handle flag + reward + dialog
+                    success, _reward = display_npc_completion(npc_id, gs)
+                    if success:
+                        gs.complete_quest(f"recruit_{npc_id}")
+                        gs.npcs_recruited.add(npc_id)
                     time.sleep(1.2)
                     return
             except Exception:
@@ -2350,11 +2373,11 @@ def interaksi_npc(npc_id, gs, gm):
             # Quest sudah dimulai — cek apakah sudah selesai
             # FIX bug: urutan parameter yang benar — (npc_id, game_state)
             if is_sidequest_complete(npc_id, gs):
-                # Selesai! Reward dari npc_interactions (lebih lengkap)
-                gs.story_flags[sq_flag] = True
-                gs.complete_quest(f"recruit_{npc_id}")
-                gs.npcs_recruited.add(npc_id)
-                display_npc_completion(npc_id, gs)
+                # FIX: jangan set sq_flag dulu — display_npc_completion handle flag + reward + dialog
+                success, _reward = display_npc_completion(npc_id, gs)
+                if success:
+                    gs.complete_quest(f"recruit_{npc_id}")
+                    gs.npcs_recruited.add(npc_id)
                 time.sleep(2)
             else:
                 # Quest belum selesai — tampilkan progress ringkas
@@ -2365,7 +2388,8 @@ def interaksi_npc(npc_id, gs, gm):
                 print(f"  {Warna.ABU_GELAP}Progress:{Warna.RESET}")
                 if req_items:
                     for item in req_items:
-                        have = item in gs.inventory
+
+                        have = (item in gs.inventory or item in gs.quest_items)
                         chk  = f"{Warna.HIJAU}✓{Warna.RESET}" if have else f"{Warna.MERAH}✗{Warna.RESET}"
                         print(f"    {chk} {item}")
                 if req_action:
@@ -2394,7 +2418,7 @@ def tampilkan_inventory(gs):
     print(f"\n{Warna.CYAN + Warna.TERANG}BARANG{Warna.RESET}  ", end='')
     print(f"{Warna.KUNING}★=Quest Item  ·=Barang Biasa{Warna.RESET}\n")
 
-    # Fix: HUD Update — quest_items dari gs.quest_items (terpisah, tidak duplikat)
+
     quest_inv   = list(gs.quest_items)  # sudah dedup via add_quest_item()
     # Juga ambil quest items yang mungkin masih tersimpan di inventory lama (backward compat)
     for it in gs.inventory:
@@ -2429,12 +2453,20 @@ def tampilkan_npc_quests(gs):
         ("haikaru",  "Haikaru Fumika",  2,  "Catatan Sandi Haikaru"),
         ("aolinh",   "Ao Lin",          2,  "Rekaman Distraksi Aolinh"),
         ("arganta",  "Amerigo Arganta", 2,  "Peta Jalur Rahasia"),
-        ("ignatius", "Ignatius",        3,  "EMP Device"),
-        ("vio",      "Vio",             3,  "USB Evidence Drive"),
+        ("ignatius", "Ignatius",        2,  "EMP Device"),       # Ch.2: basement tersedia Ch.2
+        ("vio",      "Vio",             4,  "USB Evidence Drive"),  # Ch.4: lab hanya tersedia Ch.4+
     ]
 
+    REWARD_FLAGS = {
+        'haikaru':  'haikaru_sidequest_done',
+        'aolinh':   'aolinh_sidequest_done',
+        'arganta':  'arganta_sidequest_done',
+        'ignatius': 'ignatius_sidequest_done',
+        'vio':      'vio_sidequest_done',
+    }
+
     for npc_id, npc_name, min_ch, reward in NPC_LIST:
-        sq_flag      = f"sidequest_{npc_id}_complete"
+        sq_flag      = REWARD_FLAGS.get(npc_id, f"{npc_id}_sidequest_done")
         started_flag = f"sidequest_{npc_id}_started"
         met_flag     = f"met_{npc_id}"
 

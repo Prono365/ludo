@@ -192,7 +192,7 @@ NPC_SIDEQUEST_DATA = {
     'ignatius': {
         'name':             'Ignatius Forgers',
         'title':            'Insinyur Jenius',
-        'available_chapter': 3,
+        'available_chapter': 2,
         'location':          'basement',
         'sidequest_id':      'sq_ignatius',
         'sidequest_title':   'Komponen EMP yang Disita',
@@ -252,7 +252,7 @@ NPC_SIDEQUEST_DATA = {
     'vio': {
         'name':             'Vio',
         'title':            'Peretas & Pakar Enkripsi',
-        'available_chapter': 3,
+        'available_chapter': 4,
         'location':          'laboratory',
         'sidequest_id':      'sq_vio',
         'sidequest_title':   'USB Kebenaran',
@@ -442,6 +442,8 @@ def _check_sidequest_chapter_advance(game_state):
         sq_done = game_state.get_sidequest_progress()
 
         if chapter == 3 and sq_done >= 2:
+            if not game_state.story_flags.get('boss_ch2_defeated'):
+                return
             if not game_state.story_flags.get('ch3_sidequests_done'):
                 game_state.story_flags['ch3_sidequests_done'] = True
                 game_state.story_flags['current_chapter'] = 4
@@ -460,7 +462,10 @@ def _check_sidequest_chapter_advance(game_state):
 
         if chapter == 5 and sq_done >= 4:
             has_usb = ('USB Evidence Drive' in game_state.inventory
-                       or 'USB Evidence Drive' in game_state.quest_items)
+                       or 'USB Evidence Drive' in game_state.quest_items
+                       or game_state.story_flags.get('vio_sidequest_done', False))
+            if not game_state.story_flags.get('boss_ch4_defeated'):
+                return
             if has_usb and not game_state.story_flags.get('ch5_evidence_done'):
                 game_state.story_flags['ch5_evidence_done'] = True
                 game_state.story_flags['current_chapter'] = 6
@@ -502,7 +507,7 @@ def display_npc_completion(npc_id, game_state=None):
         game_state.story_flags['sidequests_completed']       = done_count + 1
 
         # Berikan reward item (idempoten — cek dulu sebelum add)
-        if reward_item and reward_item not in game_state.inventory:
+        if reward_item and reward_item not in game_state.inventory and reward_item not in game_state.quest_items:
             game_state.add_item(reward_item)
 
         # Consume required items yang dipakai untuk quest ini
@@ -590,15 +595,22 @@ def can_trigger_sidequest(npc_id, game_state):
     return current_chapter >= npc_data['available_chapter']
 
 def is_sidequest_complete(npc_id, game_state):
-    """Return True jika semua syarat sidequest NPC sudah terpenuhi (siap redeem reward)."""
+    """Return True jika semua syarat sidequest NPC sudah terpenuhi (siap redeem reward).
+    BUG FIX: cek inventory DAN quest_items — quest items disimpan di quest_items via add_quest_item()
+    """
     npc_data = NPC_SIDEQUEST_DATA.get(npc_id)
     if not npc_data:
         return False
+
+    def _has_item(item):
+        """Cek item di inventory MAUPUN quest_items."""
+        return item in game_state.inventory or item in game_state.quest_items
+
     # Cek syarat item
     if npc_data.get('required_items'):
-        return all(item in game_state.inventory for item in npc_data['required_items'])
+        return all(_has_item(item) for item in npc_data['required_items'])
     if npc_data.get('required_item'):
-        return npc_data['required_item'] in game_state.inventory
+        return _has_item(npc_data['required_item'])
     if npc_data.get('required_action'):
         return game_state.story_flags.get(npc_data['required_action'], False)
     return False

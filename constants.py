@@ -59,24 +59,22 @@ SIDEQUESTS_NEEDED_FOR_CH6 = 4   # Min sidequest selesai sebelum Ch6
 # Quest Items — item objektif unik yang tidak boleh duplikat di inventory
 # Dipakai oleh GameState.add_quest_item() untuk dedup guard
 QUEST_ITEM_NAMES = {
-    # Core: Vio route
+    # Vio route
     'Keycard Level 1', 'Keycard Level 2', 'Keycard Level 3', 'Access Card',
     'USB Encrypted', 'Akses Level 3', 'USB Security Drive',
-    # Core: Haikaru route
+    # Haikaru route
     'Buku Catatan', 'Buku Catatan Haikaru', 'Peta Blind Spot Penjara', 'Info Pulau',
     'Catatan Sandi Haikaru', 'Kunci Wing-C',
-    # Core: Aolinh route
-    'Tiket Backstage', 'Rekaman Distraksi Aolinh',
-    # Core: Arganta route
+    # Aolinh route
+    'Tiket Backstage', 'Rekaman Distraksi Aolinh', 'Gantungan Kunci Musik',
+    # Arganta route
     'Kompas Nonno Arganta', 'Kompas Aktif', 'Peta Jalur Rahasia',
-    # Core: Ignatius route
+    # Ignatius route
     'Kapasitor Besar', 'Relay Switch', 'Copper Coil', 'EMP Prototype',
     'Blueprint', 'EMP Device',
     # General progression
     'Epstein Phone', 'Rekaman Candala', 'USB Evidence Drive',
     'Kunci Master Penjara', 'Kartu Akses Lab',
-    # Fix: Ao Linh Route — clue item pengganti Bandage
-    'Gantungan Kunci Musik',
 }
 
 FALLBACK_CARD_DIALOGS = {
