@@ -12,7 +12,13 @@
 
 #
 
-<h2>Deskripsi Singkat</h2>
+<div id="user-content-toc">
+  <ul style="list-style: none;">
+    <summary>
+      <h2>Deskripsi Singkat</h2>
+    </summary>
+  </ul>
+</div>
 
 Cursed Island adalah sebuah permainan petualangan RPG berbasis Command-Line Interface (CLI) yang dibangun menggunakan bahasa pemrograman Python. Pemain berperan sebagai salah satu dari lima karakter unik yang terjebak di sebuah pulau misterius.
 
@@ -20,7 +26,13 @@ Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara me
 
 #
 
-<h2>Fitur Utama</h2>
+<div id="user-content-toc">
+  <ul style="list-style: none;">
+    <summary>
+        <h2>Fitur Utama</h2>
+    </summary>
+  </ul>
+</div>
 
 - **Sistem Karakter Unik:** 5 karakter pilihan (Vio, Haikaru, Ao Lin, Arganta, Ignatius) dengan latar belakang, stats, dan skill spesifik yang memengaruhi strategi permainan.
 - **Mekanisme Combat Kartu:** Sistem pertarungan turn-based menggunakan logika poker (High Card, Pair, Flush, Straight Flush, dll) untuk menentukan kekuatan serangan.
@@ -34,7 +46,13 @@ Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara me
 
 #
 
-<h2>Cara Menjalankan Program</h2>
+<div id="user-content-toc">
+  <ul style="list-style: none;">
+    <summary>
+        <h2>Cara Menjalankan Program</h2>
+    </summary>
+  </ul>
+</div>
 
 ### Prasyarat (Requirements)
 - **Python 3.6 atau versi lebih baru** terinstal di komputer Anda.
@@ -66,7 +84,13 @@ Tujuan utama pemain adalah melarikan diri dari pulau terkutuk ini dengan cara me
 
 #
 
-<h2>Struktur Folder/File</h2>
+<div id="user-content-toc">
+  <ul style="list-style: none;">
+    <summary>
+        <h2>Struktur Folder/File</h2>
+    </summary>
+  </ul>
+</div>
 
 Berikut adalah penjelasan singkat mengenai struktur utama proyek ini:
 
@@ -91,7 +115,13 @@ Berikut adalah penjelasan singkat mengenai struktur utama proyek ini:
 
 #
 
-<h2>Anggota Kelompok</h2>
+<div id="user-content-toc">
+  <ul style="list-style: none;">
+    <summary>
+        <h2>Anggota Kelompok</h2>
+    </summary>
+  </ul>
+</div>
 
 Proyek ini dikembangkan oleh siswa **SMKN 2 JAKARTA Kelas X RPL 1**:
 
@@ -103,7 +133,13 @@ Proyek ini dikembangkan oleh siswa **SMKN 2 JAKARTA Kelas X RPL 1**:
 
 #
 
-<h2>Cara Bermain (Singkat)</h2>
+<div id="user-content-toc">
+  <ul style="list-style: none;">
+    <summary>
+        <h2>Cara Bermain (Singkat)</h2>
+    </summary>
+  </ul>
+</div>
 
 - **Navigasi:** Gunakan tombol `W`, `A`, `S`, `D` untuk bergerak di peta.
 - **Interaksi:** Tekan `I` untuk Inventory,`X` untuk Save.
@@ -113,7 +149,13 @@ Proyek ini dikembangkan oleh siswa **SMKN 2 JAKARTA Kelas X RPL 1**:
 
 #
 
-<h2>Lisensi</h2>
+<div id="user-content-toc">
+  <ul style="list-style: none;">
+    <summary>
+        <h2>Lisensi</h2>
+    </summary>
+  </ul>
+</div>
 
 Proyek ini dibuat sebagai tugas sekolah dan dirilis di bawah ![License](https://img.shields.io/badge/license-MIT-blue).
 
