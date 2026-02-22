@@ -617,20 +617,20 @@ BOSSES = {
     "epstein_boss": {
         "id": "epstein_boss",
         "name": "Jeffrey Epstein",
-        "level": 15,
-        "hp": 400,      # Balance: Final Boss HP
-        "max_hp": 400,
-        "attack": 34,
-        "defense": 25,
-        "speed": 28,
-        "xp": 1000,
+        "level": 69,
+        "hp": 1666,      # Balance: Final Boss HP
+        "max_hp": 666,
+        "attack": 666,
+        "defense": 666,
+        "speed": 666,
+        "xp": 6666,
         "desc": "The predator. The monster. The man who must be stopped.",
         "sprite": "E",
         "boss": True,
         "final_boss": True,
         "ai_style": "final_boss",
         "phases": 3,
-        "loot": ["Master Key to Island", "Complete Black Book", "All Evidence USB", "Offshore Account Access"],
+        "loot": ["Freedom"],
         "skills": {
             "corruption": {
                 "name": "Corrupting Influence",

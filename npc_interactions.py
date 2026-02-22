@@ -738,6 +738,14 @@ _ENEMY_ENCOUNTER_LINES = {
         ">> INITIATING ELIMINATION PROTOCOL",
         ">> TARGET ACQUIRED — STAND BY",
     ],
+    "epstein_boss": [
+        "Jadi... kalian yang menyebabkan semua ini. Anak-anak kecil bodoh.",
+        "Lima anak? Ha! Aku sudah hancurkan ribuan seperti kalian.",
+        "Kalian sama sekali tidak paham kekuatan yang kalian hadapi.",
+        "Presiden takut padaku. Raja takut padaku. Bahkan negara takut padaku.",
+        "Biarkan aku tunjukkan kenapa dunia ini berjalan sesuai keinginanku.",
+        "Kalian pikir ini permainan? Ini adalah akhir dari eksplorasi kalian.",
+    ],
 }
 
 # Reaksi player saat encounter musuh
@@ -776,6 +784,36 @@ _PLAYER_REACTIONS = {
         "Otak insinyur tidak pernah berhenti — bahkan dalam kondisi ini.",
         "*Menyiapkan alat* Saatnya aksi.",
         "Setiap sistem punya kelemahan. Ini juga.",
+    ],
+    "vio_epstein": [
+        "*Mengambil napas dalam* Server pusat ini... adalah kasusnya. Aku tahu. Dan aku tahu caranya.",
+        "Setiap network punya titik kritis. Dan aku akan temukannya pada dirimu.",
+        "Dataku tidak pernah berbohong. Kamu — skema korupsi terbesar di planet ini.",
+        "Hari ini... koneksi terakhirmu akan diputus.",
+    ],
+    "haikaru_epstein": [
+        "*Menghitung dengan permata matanya* Probabilitas: Survival tidak mungkin jika aku ragu.",
+        "Tapi aku tidak akan ragu. Setiap detail dianalisis. Setiap hasil diperhitungkan.",
+        "Kamu adalah puzzle terakhir. Dan aku sudah tahu gambarnya.",
+        "*Tenang tapi tajam* Mari kita selesaikan ini dengan logika murni.",
+    ],
+    "aolinh_epstein": [
+        "*Mata memerah* Jiejie... semua orang di sini... semuanya karena dia!",
+        "Musik tidak bisa mengubah apa yang kamu lakukan. Tapi aksi kami bisa.",
+        "♪ Ini adalah lagu terakhirmu. ♪",
+        "*Membawa biola ke hadapan* Yang menculik kakakku akan lihat apa yang bisa kami lakukan.",
+    ],
+    "arganta_epstein": [
+        "*Pisau berkilau di tangan* Papà. Mamma. Nonno. Mereka semua.",
+        "Kamu pikir orang seperti kami cukup untuk diabaikan. Kesalahan fatal.",
+        "Per setiap nyawa yang kamu renggut — aku akan ambil seribu jawaban darimu.",
+        "La via è sempre avanti — bahkan jika jalur itu diterangi darah.",
+    ],
+    "ignatius_epstein": [
+        "*Melepas kacamata, membersihkannya dengan tenang* Sistem terakhirmu ada di depanku.",
+        "Semua kabel, semua chip, semua data — aku tahu semuanya tentang itu.",
+        "Kamu membangun kuil dari daging manusia. Saatnya meruntuhkannya.",
+        "*Mengenakan kacamata kembali dengan pasti* EMP di ujung — dan kebenaran di akhir.",
     ],
 }
 
@@ -899,7 +937,13 @@ def show_enemy_encounter_dialog(enemy_id, player_char_id, enemy_name=None, is_bo
     disp_enemy = enemy_name or enemy_id.replace('_', ' ').title()
 
     enemy_pool  = _ENEMY_ENCOUNTER_LINES.get(enemy_id, ["Berhenti! Tidak ada yang bisa lewat!"])
-    player_pool = _PLAYER_REACTIONS.get(player_char_id, ["*Bersiap untuk bertarung*"])
+    
+    if enemy_id == 'epstein_boss':
+        epstein_char_key = f"{player_char_id}_epstein"
+        player_pool = _PLAYER_REACTIONS.get(epstein_char_key, _PLAYER_REACTIONS.get(player_char_id, ["*Bersiap untuk bertarung*"]))
+    else:
+        player_pool = _PLAYER_REACTIONS.get(player_char_id, ["*Bersiap untuk bertarung*"])
+    
     enemy_line  = _random.choice(enemy_pool)
     player_line = _random.choice(player_pool)
 

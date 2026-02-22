@@ -1203,7 +1203,7 @@ def loop_eksplorasi(gs, gm):
             cmd = input(f"{Warna.CYAN}> {Warna.RESET}").strip().lower()
             if not cmd:
                 continue
-
+            
             hasil = None
             if cmd == 'w':
                 hasil = gm.attempt_move(0, -1, gs)

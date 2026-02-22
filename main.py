@@ -246,7 +246,7 @@ def tampilkan_kredit():
   - Atari Adventure
   - The Legend of Zelda
   - Balatro
-  - jeffrey Epstein Case and Files #justiceforvictim
+  - The Jeffrey Epstein Case and Files #justiceforvictim
 
 {Warna.CYAN}Engine:{Warna.RESET}
   Python 3.6+ CLI
@@ -523,19 +523,30 @@ def layar_kemenangan(gs):
     print(f"{Warna.HIJAU + Warna.TERANG}{char_name.upper().center(tw)}{Warna.RESET}")
     print(sep_gold)
 
-    # Tunjukkan sidequest yang diselesaikan
-    sq_done = sum(1 for k, v in gs.story_flags.items()
-                  if k.startswith('sidequest_') and k.endswith('_complete') and v)
-    sq_pct  = int((sq_done / 5) * 100)
-    grade   = 'S' if sq_done >= 5 else ('A' if sq_done >= 3 else ('B' if sq_done >= 1 else 'C'))
+    bosses_defeated = getattr(gs, 'bosses_defeated', 0)
+    score = bosses_defeated
+    score += gs.level // 5
+    score += gs.battles_won // 15
+    
+    if hasattr(gs, 'playtime_seconds') and gs.playtime_seconds < 5400:
+        score += 1
+    
+    if score >= 13:
+        grade = 'S'
+    elif score >= 9:
+        grade = 'A'
+    elif score >= 5:
+        grade = 'B'
+    else:
+        grade = 'C'
+    
     print(f"\n  {Warna.CYAN}Statistik Akhir:{Warna.RESET}")
     print(f"  {'─' * 25}")
     print(f"  Level          : {Warna.KUNING}{gs.level}{Warna.RESET}")
     print(f"  Battle Menang  : {Warna.KUNING}{gs.battles_won}{Warna.RESET}")
     print(f"  Boss Dikalahkan: {Warna.KUNING}{getattr(gs, 'bosses_defeated', '?')}/6{Warna.RESET}")
-    print(f"  Sidequest      : {Warna.HIJAU}{sq_done}/5{Warna.RESET} ({sq_pct}%)")
-    print(f"  Grade          : {Warna.KUNING + Warna.TERANG}{grade}{Warna.RESET}")
     print(f"  Waktu          : {gs.get_playtime_string()}")
+    print(f"  Grade          : {Warna.KUNING + Warna.TERANG}{grade}{Warna.RESET}")
     print(f"  {'─' * 25}")
 
     wait(prompt="[ENTER untuk lihat ending karakter] ")
