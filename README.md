@@ -1,9 +1,9 @@
-<p align="center">
 #  CURSED ISLAND ESCAPE
 
 <img width="3780" height="1890" alt="CURSED(1)" src="https://github.com/user-attachments/assets/a6bd0ded-f651-48ea-a334-554426b8d1f0" />
 
-**RPG Adventure Game dengan Sistem Pertarungan Kartu (Big Two) Berbasis Command Line Interface (CLI)**
+<p align="center">
+<strong>RPG Adventure Game dengan Sistem Pertarungan Kartu (Big Two) Berbasis Command Line Interface (CLI)</strong>
 
 ![Python](https://img.shields.io/badge/Python-3.6%2B-blue)
 ![License](https://img.shields.io/badge/license-MIT-blue)
@@ -119,5 +119,5 @@ Proyek ini dibuat sebagai tugas sekolah dan dirilis di bawah ![License](https://
 ---
 
 <p align="center">
-**Justice for the Victims**
+<strong>Justice for the Victims</strong>
 </p>
