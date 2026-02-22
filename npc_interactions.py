@@ -81,7 +81,7 @@ NPC_SIDEQUEST_DATA = {
         'sidequest_id':      'sq_aolinh',
         'sidequest_title':   'Suara yang Terkubur',
         'required_item':     None,
-        'required_action':   'defeat_theater_guard',
+        'required_action':   'defeat_theater_commander',  # Set by combat when theater_master is defeated (Aolinh only)
         'reward_item':       'Rekaman Distraksi Aolinh',
         'reward_flag':       'aolinh_sidequest_done',
         'main_quest_impact': 'Rekaman musik mengalihkan penjaga dock (Ch4 — akses kapal)',
@@ -201,7 +201,7 @@ NPC_SIDEQUEST_DATA = {
         'required_action':   None,
         'reward_item':       'EMP Device',
         'reward_flag':       'ignatius_sidequest_done',
-        'main_quest_impact': 'Menonaktifkan sistem keamanan elektronik (wajib untuk boss Ch4)',
+        'main_quest_impact': 'EMP Device matikan sistem elektronik Ghislaine — wajib untuk Boss Ch.4 di Pusat Kontrol',
         'chapter_unlock':    4,
 
         # Dialog pertama kali ketemu
@@ -224,7 +224,7 @@ NPC_SIDEQUEST_DATA = {
             ("Ignatius", "Kedua: Relay Switch. Tech guard di Pusat Kontrol menyitanya. Dia pikir itu alat komunikasi biasa."),
             ("Ignatius", "Ketiga: Copper Coil. Ada di mansion guard atau mercenary yang patroli area teater — sisa instalasi lama."),
             ("Ignatius", "Kalahkan mereka, ambil komponen-komponen itu, bawa ke sini. Aku rakit dalam 20 menit."),
-            ("Ignatius", "EMP ini wajib sebelum konfrontasi Maxwell's Agent. Tanpa ini, kita masuk perangkap. Logis!"),
+            ("Ignatius", "EMP ini wajib sebelum konfrontasi Ghislaine Maxwell di Pusat Kontrol. Tanpa ini, kita masuk perangkap. Logis!"),
         ],
 
         # Dialog saat quest selesai
@@ -235,7 +235,7 @@ NPC_SIDEQUEST_DATA = {
             (None,      "Sebuah perangkat kecil berwarna abu-abu dengan tombol merah di tengahnya diletakkan di tanganmu."),
             ("Ignatius", "Tekan tombol merah ini dalam radius 50 meter dari target. Jangkauan efektif: 30 meter."),
             ("Ignatius", "Efek: semua sistem elektronik mati selama 4–6 menit. Termasuk senjata listrik penjaga."),
-            ("Ignatius", "Gunakan tepat sebelum konfrontasi dengan Agen Maxwell. Waktu adalah segalanya!"),
+            ("Ignatius", "Gunakan tepat sebelum konfrontasi dengan Ghislaine Maxwell di Pusat Kontrol. Waktu adalah segalanya!"),
         ],
 
         # Dialog setelah quest selesai — muncul SEKALI saat kembali mengobrol
@@ -260,7 +260,7 @@ NPC_SIDEQUEST_DATA = {
         'required_action':   None,
         'reward_item':       'USB Evidence Drive',
         'reward_flag':       'vio_sidequest_done',
-        'main_quest_impact': 'USB Evidence Drive — bukti inti untuk konfrontasi final Ch.6 (WAJIB)',
+        'main_quest_impact': 'USB Evidence Drive — 47 GB bukti kejahatan untuk upload di Ch.6 (WAJIB untuk true ending)',
         'chapter_unlock':    6,
 
         # Dialog pertama kali ketemu
@@ -416,7 +416,7 @@ def display_npc_quest_briefing(npc_id, game_state=None):
         print(f"  {Warna.KUNING}Temukan:{Warna.RESET} {Warna.CYAN}◆ {npc_data['required_item']}{Warna.RESET}")
     elif npc_data.get('required_action'):
         action_labels = {
-            'defeat_theater_guard': 'Kalahkan Penjaga Theater (Backstage)',
+            'defeat_theater_commander': 'Kalahkan Theater Commander di Backstage Teater',
         }
         label = action_labels.get(npc_data['required_action'], npc_data['required_action'])
         print(f"  {Warna.KUNING}Lakukan:{Warna.RESET} {Warna.CYAN}◆ {label}{Warna.RESET}")
@@ -454,8 +454,8 @@ def _check_sidequest_chapter_advance(game_state):
                 separator()
                 print(f"\n  {Warna.KUNING + Warna.TERANG}★  CHAPTER 3 SELESAI!  ★{Warna.RESET}")
                 print(f"  {Warna.KUNING}2 sidequest selesai — aliansi terbentuk!{Warna.RESET}")
-                print(f"  {Warna.CYAN}Chapter 4 terbuka — Infiltrasi Laboratorium!{Warna.RESET}")
-                print(f"  {Warna.ABU_GELAP}Cari exit 'Laboratorium' di sudut kanan atas island.{Warna.RESET}")
+                print(f"  {Warna.CYAN}Chapter 4 terbuka — Infiltrasi Pusat Kontrol, kalahkan Ghislaine Maxwell!{Warna.RESET}")
+                print(f"  {Warna.ABU_GELAP}Cari exit 'Command Center' di pulau — juga Laboratorium tersedia Ch.4+{Warna.RESET}")
                 separator()
                 _time.sleep(4)
                 return
@@ -475,8 +475,8 @@ def _check_sidequest_chapter_advance(game_state):
                 print()
                 separator()
                 print(f"\n  {Warna.MERAH + Warna.TERANG}★  CHAPTER 5 SELESAI!  ★{Warna.RESET}")
-                print(f"  {Warna.KUNING}Semua bukti terkumpul! USB Evidence Drive siap!{Warna.RESET}")
-                print(f"  {Warna.MERAH}CHAPTER 6 TERBUKA — EPSTEIN MENUNGGU! FINAL BOSS!{Warna.RESET}")
+                print(f"  {Warna.KUNING}Semua bukti terkumpul! 47 GB data aman di USB Evidence Drive.{Warna.RESET}")
+                print(f"  {Warna.MERAH}CHAPTER 6 TERBUKA — JEFFREY EPSTEIN MENUNGGU DI MANSION TIMUR! FINAL BOSS!{Warna.RESET}")
                 print(f"  {Warna.ABU_GELAP}Cari exit 'Mansion Timur' di sudut kanan bawah island.{Warna.RESET}")
                 separator()
                 _time.sleep(4)
@@ -717,6 +717,27 @@ _ENEMY_ENCOUNTER_LINES = {
         "Jadi kamu yang menyebabkan semua keributan ini. Menarik.",
         "Maxwell memberi instruksi jelas tentang kamu.",
         "Sudah cukup jauh untuk anak seusia kamu. Tapi berakhir di sini.",
+    ],
+    "maxwell_agent": [
+        "Server room ini tidak boleh ditembus siapapun.",
+        "Maxwell memberi instruksi jelas — tidak ada saksi.",
+        "Anak 13 tahun? ...Maxwell benar-benar tidak mau ambil risiko.",
+    ],
+    "network_overseer": [
+        "Intrusi terdeteksi di jaringan utama. Netralisasi segera.",
+        "256-bit encryption dan kamu masih coba menembus? Percuma.",
+        "Firewall berlapis. AI watchdog. Kamu tidak punya peluang.",
+    ],
+    "mercenary_commander": [
+        "Tidak ada yang lewat dermaga ini tanpa izinku.",
+        "Maxwell bayar bagus. Tapi ini sudah soal profesionalisme.",
+        "Bocah Italy nyasar di dermaga? Keberuntunganmu sudah habis.",
+    ],
+    "ghislaine_maxwell": [
+        "Anak-anak kecil bermain detektif. Menggemaskan.",
+        "Jeffrey akan sangat marah mendengar ini.",
+        "Saya sudah mengelola jaringan ini 30 tahun. Kalian tidak bisa menghentikannya.",
+        "Satu panggilan telepon dan kalian semua akan menghilang.",
     ],
     "warden_elite": [
         "Tidak satu pun yang pernah kabur selama saya bertugas.",

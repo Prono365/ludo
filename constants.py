@@ -43,10 +43,13 @@ BOSS_CHAPTERS = [2, 4, 6]   # Chapter dengan boss battle
 FINAL_CHAPTER = 6
 
 # Boss identifiers per chapter
+# Ch2: setiap karakter punya boss unik di area berbeda
+# Ch4: Ghislaine Maxwell di pusat kendali (command_center)
+# Ch6: Jeffrey Epstein di Mansion Timur (Final Boss)
 CHAPTER_BOSSES = {
-    2: "kepala_penjaga",     # Head Guard — Ch2
-    4: "agen_maxwell",       # Maxwell's Agent / Lieutenant — Ch4
-    6: "epstein_boss",       # Jeffrey Epstein — Ch6 Final (matches enemies.py key)
+    2: "varies_by_char",      # Ch2: boss unik per karakter — lihat exploration.py CH2_BOSSES
+    4: "ghislaine_maxwell",   # Ghislaine Maxwell — Pusat Kendali (Ch4)
+    6: "epstein_boss",        # Jeffrey Epstein — Ch6 Final Boss
 }
 
 # NPC Sidequest System (menggantikan party system)
@@ -75,6 +78,9 @@ QUEST_ITEM_NAMES = {
     # General progression
     'Epstein Phone', 'Rekaman Candala', 'USB Evidence Drive',
     'Kunci Master Penjara', 'Kartu Akses Lab',
+    # New boss drops
+    'Maxwell Agent Badge', 'Server Room Keycard', 'Network Master Key',
+    'Dock Commander Badge', 'Mercenary Contract',
 }
 
 FALLBACK_CARD_DIALOGS = {

@@ -249,7 +249,12 @@ class GameState:
             chapter = 1
 
         try:
-            from characters import CHARACTER_MAIN_QUESTS, CHAPTER_QUEST_TEMPLATES
+            from characters import CHARACTER_MAIN_QUESTS, CHAPTER_QUEST_TEMPLATES, CHAPTER_OBJECTIVES_BY_CHAR
+            # Priority 1: Character-specific short objective for HUD
+            char_obj = CHAPTER_OBJECTIVES_BY_CHAR.get(self.player_character, {})
+            if chapter in char_obj:
+                return char_obj[chapter]
+            # Priority 2: Character-specific quest title
             char_quests = CHARACTER_MAIN_QUESTS.get(self.player_character, {})
             quest_data  = char_quests.get(chapter)
             if quest_data:
@@ -270,12 +275,12 @@ class GameState:
             pass
 
         generic = {
-            1: "Selesaikan misi awal — kalahkan boss di area startingmu!",
-            2: "Pergi ke Penjara Utara (PRISON NORTH) dan kalahkan Kepala Penjaga",
-            3: "Rekrut sekutu — selesaikan minimal 2 sidequest NPC di pulau",
-            4: "Masuk Laboratorium (Ch.4+) dan kalahkan Maxwell's Agent",
-            5: "Selesaikan 4 sidequest NPC, dapatkan USB Evidence Drive dari Vio",
-            6: "Pergi ke Mansion Timur, kalahkan Jeffrey Epstein, upload USB Evidence Drive",
+            1: "Selesaikan misi awal — kabur dari lokasi starting, kalahkan Boss Ch.1!",
+            2: "Pergi ke area boss karaktermu → kalahkan Boss Ch.2 unik (lokasi beda tiap karakter)",
+            3: "Temui NPC di ISLAND → selesaikan 2 sidequest → Chapter 4 terbuka",
+            4: "Pergi ke PUSAT KONTROL (COMMAND CENTER) → kalahkan Ghislaine Maxwell (Boss Ch.4)",
+            5: "Selesaikan 4 sidequest NPC + dapat USB Evidence Drive dari Vio di LABORATORIUM",
+            6: "Pergi ke MANSION EAST (sudut kanan bawah ISLAND) → kalahkan Epstein (Final Boss)",
         }
         return generic.get(chapter, "Survive di Cursed Island!")
 

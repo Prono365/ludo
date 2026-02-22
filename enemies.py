@@ -1,5 +1,3 @@
-# Database musuh dan boss
-
 from sprites import Warna
 import random
 
@@ -9,12 +7,12 @@ ENEMIES = {
         "id": "guard_novice",
         "name": "Security Guard - Novice",
         "level": 1,
-        "hp": 85,       # Balance: Tier 1 enemy
-        "max_hp": 85,
-        "attack": 14,   # buffed dari 12
-        "defense": 9,   # buffed dari 8
-        "speed": 13,    # buffed dari 12
-        "xp": 28,
+        "hp": 130,      # Buffed Tier 1 enemy
+        "max_hp": 130,
+        "attack": 14,
+        "defense": 9,
+        "speed": 13,
+        "xp": 35,
         "dollars": 15,
         "desc": "Nervous rookie guard",
         "sprite": "G",
@@ -30,12 +28,12 @@ ENEMIES = {
         "id": "guard_veteran",
         "name": "Security Guard - Veteran",
         "level": 3,
-        "hp": 110,      # Balance: Tier 2 enemy
-        "max_hp": 110,
-        "attack": 19,   # buffed dari 16
-        "defense": 16,  # buffed dari 14
-        "speed": 17,    # buffed dari 15
-        "xp": 55,
+        "hp": 175,      # Buffed Tier 2 enemy
+        "max_hp": 175,
+        "attack": 19,
+        "defense": 16,
+        "speed": 17,
+        "xp": 65,
         "dollars": 25,
         "desc": "Experienced guard",
         "sprite": "G",
@@ -51,12 +49,12 @@ ENEMIES = {
         "id": "guard_elite",
         "name": "Elite Security Guard",
         "level": 5,
-        "hp": 140,      # Balance: Tier 3 enemy
-        "max_hp": 125,
-        "attack": 23,   # buffed dari 20
-        "defense": 23,  # buffed dari 20
-        "speed": 21,    # buffed dari 18
-        "xp": 80,
+        "hp": 215,
+        "max_hp": 215,
+        "attack": 23,
+        "defense": 23,
+        "speed": 21,
+        "xp": 95,
         "dollars": 40,
         "desc": "Elite military background guard",
         "sprite": "G",
@@ -72,12 +70,12 @@ ENEMIES = {
         "id": "mercenary_thug",
         "name": "Mercenary Thug",
         "level": 2,
-        "hp": 95,       # Balance: Tier 1-2 enemy
-        "max_hp": 95,
-        "attack": 23,   # buffed dari 20
-        "defense": 12,  # buffed dari 10
-        "speed": 18,    # buffed dari 16
-        "xp": 40,
+        "hp": 150,      # Buffed Tier 1-2 enemy
+        "max_hp": 150,
+        "attack": 23,
+        "defense": 12,
+        "speed": 18,
+        "xp": 50,
         "dollars": 30,
         "desc": "Hired muscle",
         "sprite": "M",
@@ -93,12 +91,12 @@ ENEMIES = {
         "id": "mercenary_sniper",
         "name": "Mercenary Sniper",
         "level": 4,
-        "hp": 105,      # Balance: Tier 2 ranged
-        "max_hp": 105,
+        "hp": 165,      # Buffed Tier 2 ranged
+        "max_hp": 165,
         "attack": 21,
         "defense": 12,
         "speed": 20,
-        "xp": 65,
+        "xp": 80,
         "dollars": 40,
         "desc": "Long-range specialist",
         "sprite": "S",
@@ -114,12 +112,12 @@ ENEMIES = {
         "id": "scientist",
         "name": "Corrupted Scientist",
         "level": 3,
-        "hp": 85,       # Balance: Tier 1 non-combatant
-        "max_hp": 85,
+        "hp": 130,      # Buffed Tier 1 non-combatant
+        "max_hp": 130,
         "attack": 17,
         "defense": 15,
         "speed": 14,
-        "xp": 55,
+        "xp": 65,
         "dollars": 30,
         "desc": "Researcher in dark experiments",
         "sprite": "R",
@@ -135,12 +133,12 @@ ENEMIES = {
         "id": "mansion_guard",
         "name": "Mansion Security",
         "level": 2,
-        "hp": 95,       # Balance: Tier 2 enemy
-        "max_hp": 95,
+        "hp": 150,      # Buffed Tier 2 enemy
+        "max_hp": 150,
         "attack": 17,
         "defense": 12,
         "speed": 14,
-        "xp": 40,
+        "xp": 50,
         "dollars": 25,
         "desc": "Regular mansion security patrol",
         "sprite": "G",
@@ -156,12 +154,12 @@ ENEMIES = {
         "id": "tech_guard",
         "name": "Tech Security",
         "level": 3,
-        "hp": 105,      # Balance: Tier 2 enemy
-        "max_hp": 105,
+        "hp": 165,      # Buffed Tier 2 enemy
+        "max_hp": 165,
         "attack": 19,
         "defense": 15,
         "speed": 16,
-        "xp": 55,
+        "xp": 65,
         "dollars": 35,
         "desc": "Guard protecting server room",
         "sprite": "T",
@@ -181,8 +179,8 @@ BOSSES = {
         "id": "maxwell_enforcer",
         "name": "Maxwell - Head of Security",
         "level": 8,
-        "hp": 230,      # Balance: Boss HP ~210-250
-        "max_hp": 230,
+        "hp": 450,      # Min 400 Boss HP
+        "max_hp": 450,
         "attack": 24,
         "defense": 18,
         "speed": 22,
@@ -191,6 +189,8 @@ BOSSES = {
         "desc": "Former military, Epstein's head enforcer",
         "sprite": "M",
         "boss": True,
+        "phases": 2,
+        "phase_thresholds": [0.5],
         "ai_style": "boss_tactical",
         "loot": ["Master Keycard", "Maxwell's Badge", "Encrypted USB"],
         "skills": {
@@ -232,8 +232,8 @@ BOSSES = {
         "id": "doctor_rousseau",
         "name": "Dr. Rousseau - Lead Researcher",
         "level": 9,
-        "hp": 215,      # Balance: Boss HP ~210-250
-        "max_hp": 210,
+        "hp": 420,
+        "max_hp": 420,
         "attack": 20,
         "defense": 15,
         "speed": 25,
@@ -242,6 +242,8 @@ BOSSES = {
         "desc": "Twisted scientist conducting experiments",
         "sprite": "R",
         "boss": True,
+        "phases": 2,
+        "phase_thresholds": [0.5],
         "ai_style": "boss_tricky",
         "loot": ["Experimental Serum", "Lab Master Key", "Research Data"],
         "skills": {
@@ -284,8 +286,8 @@ BOSSES = {
         "id": "ghislaine_maxwell",
         "name": "Ghislaine Maxwell - The Facilitator",
         "level": 10,
-        "hp": 230,      # Balance: Boss HP ~210-250
-        "max_hp": 250,
+        "hp": 480,
+        "max_hp": 480,
         "attack": 23,
         "defense": 20,
         "speed": 26,
@@ -294,6 +296,8 @@ BOSSES = {
         "desc": "Epstein's right hand, recruited countless victims",
         "sprite": "G",
         "boss": True,
+        "phases": 2,
+        "phase_thresholds": [0.5],
         "ai_style": "boss_manipulative",
         "loot": ["Little Black Book", "Private Island Keys", "Incriminating Photos"],
         "skills": {
@@ -316,21 +320,22 @@ BOSSES = {
         },
         "dialog": {
             "encounter": [
-                "Ghislaine: Little children playing hero.",
-                "Ghislaine: I've groomed hundreds like you.",
-                "Ghislaine: You think you're special? You're not.",
-                "Ghislaine: Jeffrey will never let you leave this island."
+                "Ghislaine: *berbalik dari panel monitor* Oh. Tamu tak diundang.",
+                "Ghislaine: Saya sudah mengelola jaringan ini selama 30 tahun.",
+                "Ghislaine: Anak-anak yang lari? Biasanya kami yang menangkap mereka kembali.",
+                "Ghislaine: Tapi kalian berbeda... Kalian sudah terlalu jauh. Sayang sekali."
             ],
             "phase2": [
-                "Ghislaine: *Furious* I've spent decades building this!",
-                "Ghislaine: You can't destroy what we've created!",
-                "Ghislaine: The network is too powerful!"
+                "Ghislaine: *marah* Saya membangun SEMUA ini dari nol!",
+                "Ghislaine: Tidak ada satu pun anak yang pernah lolos!",
+                "Ghislaine: Jaringan ini tidak bisa dihancurkan hanya oleh kalian!"
             ],
             "defeat": [
-                "Ghislaine: No... my immunity deal... my connections...",
-                "Ghislaine: They promised... I'd be protected...",
-                "Ghislaine: *Falls* Jeffrey... you failed me...",
-                "*Her phone contains thousands of contacts.*"
+                "Ghislaine: No... my network... my protection...",
+                "Ghislaine: Jeffrey... where are you... I need—",
+                "Ghislaine: *Jatuh* They promised I'd never be touched...",
+                "*Little Black Book terlepas dari tangannya. Ribuan nama. Ribuan koneksi.*",
+                "*Pintu menuju Epstein kini terbuka.*"
             ]
         }
     },
@@ -339,8 +344,8 @@ BOSSES = {
         "id": "prince_andrew",
         "name": "Prince Andrew - The Royal Predator",
         "level": 10,
-        "hp": 230,      # Balance: Boss HP ~210-250
-        "max_hp": 235,
+        "hp": 450,
+        "max_hp": 450,
         "attack": 25,
         "defense": 18,
         "speed": 24,
@@ -349,6 +354,8 @@ BOSSES = {
         "desc": "Duke of York, frequent island visitor, protected by crown",
         "sprite": "P",
         "boss": True,
+        "phases": 2,
+        "phase_thresholds": [0.5],
         "ai_style": "boss_entitled",
         "loot": ["Royal Seal", "Private Photos", "Incriminating Documents"],
         "skills": {
@@ -393,8 +400,8 @@ BOSSES = {
         "id": "bill_clinton",
         "name": "Bill Clinton - The Former President",
         "level": 11,
-        "hp": 250,      # Balance: Boss HP ~210-250
-        "max_hp": 260,
+        "hp": 500,
+        "max_hp": 500,
         "attack": 27,
         "defense": 19,
         "speed": 24,
@@ -403,6 +410,8 @@ BOSSES = {
         "desc": "Ex-president, frequent flyer on Lolita Express",
         "sprite": "B",
         "boss": True,
+        "phases": 2,
+        "phase_thresholds": [0.5],
         "ai_style": "boss_political",
         "loot": ["Flight Logs", "Secret Service Records", "Burner Phone"],
         "skills": {
@@ -448,8 +457,8 @@ BOSSES = {
         "id": "warden_elite",
         "name": "Warden Elite - Kepala Penjaga",
         "level": 7,
-        "hp": 215,      # Balance: Boss HP ~210-250
-        "max_hp": 215,
+        "hp": 430,      # Min 400 Boss HP
+        "max_hp": 430,
         "attack": 20,
         "defense": 15,
         "speed": 18,
@@ -458,6 +467,8 @@ BOSSES = {
         "desc": "Penjaga kepala yang blokir jalur keluar penjara",
         "sprite": "W",
         "boss": True,
+        "phases": 2,
+        "phase_thresholds": [0.5],
         "loot": ["Master Key Penjara", "Walkie-Talkie Penjaga"],
         "dialog": {
             "encounter": [
@@ -476,8 +487,8 @@ BOSSES = {
         "id": "theater_master",
         "name": "Theater Master - Penguasa Panggung",
         "level": 7,
-        "hp": 215,      # Balance: Boss HP ~210-250
-        "max_hp": 210,
+        "hp": 400,
+        "max_hp": 400,
         "attack": 18,
         "defense": 14,
         "speed": 22,
@@ -486,6 +497,8 @@ BOSSES = {
         "desc": "Pengelola teater yang menjaga Jiejie",
         "sprite": "T",
         "boss": True,
+        "phases": 2,
+        "phase_thresholds": [0.5],
         "loot": ["Kunci Ruang Belakang", "Tiket Backstage"],
         "dialog": {
             "encounter": [
@@ -505,8 +518,8 @@ BOSSES = {
         "id": "harbor_captain",
         "name": "Harbor Captain - Kapten Pelabuhan",
         "level": 7,
-        "hp": 215,      # Balance: Boss HP ~210-250
-        "max_hp": 220,
+        "hp": 420,
+        "max_hp": 420,
         "attack": 21,
         "defense": 16,
         "speed": 16,
@@ -515,6 +528,8 @@ BOSSES = {
         "desc": "Kapten yang jaga jalur keluar dermaga",
         "sprite": "C",
         "boss": True,
+        "phases": 2,
+        "phase_thresholds": [0.5],
         "loot": ["Kunci Dermaga", "Peta Jalur Laut"],
         "dialog": {
             "encounter": [
@@ -533,8 +548,8 @@ BOSSES = {
         "id": "security_bot",
         "name": "AmBOTukam Mk II",
         "level": 8,
-        "hp": 230,      # Balance: Boss HP ~210-250
-        "max_hp": 240,
+        "hp": 460,
+        "max_hp": 460,
         "attack": 22,
         "defense": 20,
         "speed": 14,
@@ -543,6 +558,8 @@ BOSSES = {
         "desc": "Robot keamanan penjaga generator utama basement",
         "sprite": "R",
         "boss": True,
+        "phases": 2,
+        "phase_thresholds": [0.4],
         "loot": ["Generator Key", "Circuit Fragments"],
         "dialog": {
             "encounter": [
@@ -562,8 +579,8 @@ BOSSES = {
         "id": "kepala_penjaga",
         "name": "Kepala Penjaga",
         "level": 10,
-        "hp": 350,
-        "max_hp": 350,
+        "hp": 550,
+        "max_hp": 550,
         "attack": 22,
         "defense": 15,
         "speed": 12,
@@ -572,6 +589,8 @@ BOSSES = {
         "desc": "Kepala Penjaga pulau yang memblokir jalan utama",
         "sprite": "K",
         "boss": True,
+        "phases": 2,
+        "phase_thresholds": [0.5],
         "loot": ["Kunci Master Penjara", "Walkie-Talkie Penjaga"],
         "dialog": {
             "encounter": [
@@ -590,8 +609,8 @@ BOSSES = {
         "id": "agen_maxwell",
         "name": "Maxwell's Agent",
         "level": 13,
-        "hp": 530,
-        "max_hp": 530,
+        "hp": 800,
+        "max_hp": 800,
         "attack": 35,
         "defense": 22,
         "speed": 18,
@@ -600,6 +619,8 @@ BOSSES = {
         "desc": "Agen Maxwell yang menjaga laboratorium dengan instruksi tanpa ampun",
         "sprite": "A",
         "boss": True,
+        "phases": 2,
+        "phase_thresholds": [0.5],
         "loot": ["Kartu Akses Lab", "Encrypted Files"],
         "dialog": {
             "encounter": [
@@ -614,23 +635,136 @@ BOSSES = {
         }
     },
 
+
+    "maxwell_agent": {
+        "id": "maxwell_agent",
+        "name": "Maxwell's Agent — Penjaga Server Room",
+        "level": 7,
+        "hp": 420,
+        "max_hp": 420,
+        "attack": 20,
+        "defense": 14,
+        "speed": 18,
+        "xp": 130,
+        "dollars": 110,
+        "desc": "Agen kepercayaan Maxwell yang menjaga server room mansion — Vio Ch1",
+        "sprite": "A",
+        "boss": True,
+        "phases": 2,
+        "phase_thresholds": [0.5],
+        "loot": ["Server Room Keycard", "Maxwell Agent Badge"],
+        "dialog": {
+            "encounter": [
+                "Agent: Siapa yang berani masuk server room ini?",
+                "Agent: Anak kecil? Ironis. Maxwell kirim saya untuk urusan ini.",
+                "Agent: Instruksinya jelas: tidak ada saksi. Tidak ada data keluar.",
+                "Agent: Kamu salah tempat, salah waktu."
+            ],
+            "phase2": [
+                "Agent: *terengah-engah* Jangan remehkan—",
+                "Agent: Maxwell tidak akan senang dengan ini!",
+                "Agent: *mengaktifkan alarm cadangan* LOCKDOWN SEKARANG!"
+            ],
+            "defeat": [
+                "Agent: Im-impossible... seorang anak...",
+                "*Agent tumbang. Keycard server room terlepas dari sakunya.*",
+                "Vio: Pattern ditemukan. Tinggal exploit-nya."
+            ]
+        }
+    },
+
+    "network_overseer": {
+        "id": "network_overseer",
+        "name": "Network Overseer — Pengawas Jaringan Pulau",
+        "level": 10,
+        "hp": 560,
+        "max_hp": 560,
+        "attack": 24,
+        "defense": 18,
+        "speed": 22,
+        "xp": 300,
+        "dollars": 90,
+        "desc": "Pengawas jaringan data pulau yang menjaga server utama — Vio Ch2",
+        "sprite": "N",
+        "boss": True,
+        "phases": 2,
+        "phase_thresholds": [0.5],
+        "loot": ["Network Master Key", "Server Access Card"],
+        "dialog": {
+            "encounter": [
+                "Overseer: Intrusi terdeteksi di node jaringan utama.",
+                "Overseer: Aku yang membangun arsitektur keamanan ini dari awal.",
+                "Overseer: 256-bit encryption. Firewall berlapis tiga. AI watchdog.",
+                "Overseer: Tidak ada hacker yang pernah menembus layer-3 saya."
+            ],
+            "phase2": [
+                "Overseer: *panik* Bagaimana kamu bisa bypass firewall layer-2?!",
+                "Overseer: SISTEM LOCKDOWN DARURAT — AKTIF!",
+                "Overseer: Saya akan matikan seluruh grid pulau kalau perlu!"
+            ],
+            "defeat": [
+                "Overseer: 256-bit... ditembus... oleh anak 13 tahun...",
+                "*Overseer tumbang. Node jaringan pulau terbuka sepenuhnya.*",
+                "Vio: 256-bit? Ch.1 difficulty di dunia hacking. Terlalu santai."
+            ]
+        }
+    },
+
+    "mercenary_commander": {
+        "id": "mercenary_commander",
+        "name": "Mercenary Commander — Komandan Bayaran Dermaga",
+        "level": 10,
+        "hp": 540,
+        "max_hp": 540,
+        "attack": 27,
+        "defense": 13,
+        "speed": 24,
+        "xp": 310,
+        "dollars": 100,
+        "desc": "Komandan pasukan bayaran yang memblokir jalur dermaga — Arganta Ch2",
+        "sprite": "C",
+        "boss": True,
+        "phases": 2,
+        "phase_thresholds": [0.5],
+        "loot": ["Dock Commander Badge", "Mercenary Contract"],
+        "dialog": {
+            "encounter": [
+                "Commander: Heh. Bocah Italia nyasar di dermaga saya.",
+                "Commander: Keluargamu sudah tidak bisa menolong. Mereka sudah... pergi.",
+                "Commander: Tidak ada kapal keluar tanpa izin saya. Dan kamu tidak punya izin.",
+                "Commander: Bayaran saya terlalu bagus untuk membiarkan kamu hidup."
+            ],
+            "phase2": [
+                "Commander: *menghunus senjata cadangan* BUNUH DIA SEKARANG!",
+                "Commander: Satu bocah tidak mungkin mengalahkan unit saya!",
+                "Commander: Kamu pikir kompas tua itu bisa melawan peluru?!"
+            ],
+            "defeat": [
+                "Commander: Accidenti... figlio di—",
+                "*Commander roboh di dermaga. Peluit komando jatuh ke laut.*",
+                "Arganta: *menggenggam kompas* Per Nonno. La via è sempre avanti."
+            ]
+        }
+    },
+
     "epstein_boss": {
         "id": "epstein_boss",
         "name": "Jeffrey Epstein",
-        "level": 69,
-        "hp": 1666,      # Balance: Final Boss HP
-        "max_hp": 666,
-        "attack": 666,
-        "defense": 666,
-        "speed": 666,
+        "level": 20,
+        "hp": 1666,
+        "max_hp": 1666,
+        "attack": 66,
+        "defense": 33,
+        "speed": 33,
         "xp": 6666,
         "desc": "The predator. The monster. The man who must be stopped.",
         "sprite": "E",
         "boss": True,
         "final_boss": True,
         "ai_style": "final_boss",
-        "phases": 3,
-        "loot": ["Freedom"],
+        "phases": 2,
+        "phase_thresholds": [0.50],
+        "loot": ["Kebebasan"],
         "skills": {
             "corruption": {
                 "name": "Corrupting Influence",
@@ -666,14 +800,10 @@ BOSSES = {
                 "Epstein: *Breathing heavily* Persistent little brats...",
                 "Epstein: But I always win. ALWAYS.",
                 "Epstein: I have too much power, too many connections!",
-                "Epstein: You can't possibly win!"
-            ],
-            "phase3": [
-                "Epstein: ENOUGH! *Rage* I will NOT lose to children!",
+                "Epstein: ENOUGH! I will NOT lose to children!",
                 "Epstein: I am JEFFREY EPSTEIN! I am UNTOUCHABLE!",
                 "Epstein: Even if you kill me, the network survives!",
-                "Epstein: There are others! Worse than me!",
-                "Epstein: You'll never expose them all!"
+                "Epstein: You can't possibly win!"
             ],
             "defeat": [
                 "Epstein: No... no... this isn't... possible...",
@@ -699,9 +829,22 @@ BOSSES = {
 
 
 def create_boss_instance(boss_id):
-    """Create boss instance"""
+    """Create a fully independent boss instance.
+    Uses deepcopy so mutations during combat never bleed back into BOSSES.
+    Also guarantees hp == max_hp at creation time regardless of any typo in
+    the data dict, and initialises the phase-tracking fields combat.py needs.
+    """
+    import copy
     boss = BOSSES.get(boss_id)
-    return boss.copy() if boss else None
+    if boss is None:
+        return None
+    instance = copy.deepcopy(boss)
+    # Safety: always start with full HP (catches any hp/max_hp typo left in data)
+    instance['hp'] = instance['max_hp']
+    # Phase tracking — consumed by check_boss_phase() in combat.py
+    instance.setdefault('current_phase', 1)
+    instance['_phases_triggered'] = set()
+    return instance
 
 def get_enemy_for_location(location, chapter=1):
     """Get appropriate enemy for location based on chapter progression"""
@@ -744,12 +887,11 @@ def get_enemy_for_location(location, chapter=1):
 def get_boss_for_location(location):
     """Get boss for specific location"""
     boss_map = {
-        "dock": "maxwell_enforcer",
+        "dock": "mercenary_commander",          # Ch2 Arganta
         "laboratory": "doctor_rousseau",
-        "mansion_west": "ghislaine_maxwell",
-        "mansion_east": "prince_andrew",
-        "yacht": "bill_clinton",
-        "mansion_final": "epstein_boss"
+        "command_center": "ghislaine_maxwell",  # Ghislaine Maxwell di Pusat Kontrol (Ch4)
+        "mansion_west": "prince_andrew",
+        "mansion_east": "epstein_boss"
     }
     
     return boss_map.get(location)
@@ -845,6 +987,87 @@ def create_enemy_instance(enemy_id, chapter=1, player_level=1):
     # Scale berdasarkan chapter/level
     return scale_enemy_for_chapter(base, chapter, player_level)
 
+
+
+
+def check_boss_phase(enemy):
+    """Called from combat.py each turn after the player deals damage.
+
+    Checks whether the boss HP has crossed a phase threshold and, if so,
+    triggers the phase-transition sequence.  Returns a dict when a new phase
+    fires, None otherwise.
+
+    Return shape:
+        {
+            'new_phase' : int,          # 2 or 3
+            'dialog'    : list[str],    # lines to print
+            'atk_mult'  : float,        # already applied to enemy dict
+            'def_mult'  : float,
+            'spd_mult'  : float,
+            'heal'      : int,          # HP restored (0 if none)
+        }
+
+    Side-effects: mutates enemy['current_phase'], enemy['_phases_triggered'],
+    and the enemy's attack / defense / speed / hp values.
+    Safe to call on regular enemies — returns None immediately.
+    """
+    if not enemy.get('boss'):
+        return None
+
+    thresholds = enemy.get('phase_thresholds', [])
+    total_phases = enemy.get('phases', 1)
+    if total_phases <= 1 or not thresholds:
+        return None
+
+    max_hp = enemy.get('max_hp', 1)
+    hp     = max(0, enemy.get('hp', 0))
+    hp_pct = hp / max(max_hp, 1)
+
+    triggered = enemy.setdefault('_phases_triggered', set())
+
+    for i, threshold in enumerate(thresholds):
+        target_phase = i + 2          # phase indices: 2, 3, ...
+        if hp_pct <= threshold and target_phase not in triggered:
+            triggered.add(target_phase)
+            enemy['current_phase'] = target_phase
+
+            dialog_key = f'phase{target_phase}'
+            dialog = enemy.get('dialog', {}).get(dialog_key, [])
+
+            # Stat multipliers — phase 2 moderate, phase 3 aggressive
+            if target_phase == 2:
+                atk_mult = 1.35
+                def_mult = 1.20
+                spd_mult = 1.10
+                heal     = 0
+            elif target_phase == 3:
+                atk_mult = 1.60
+                def_mult = 1.10
+                spd_mult = 1.25
+                heal     = int(max_hp * 0.08)   # restore 8% max HP
+            else:
+                atk_mult = 1.20
+                def_mult = 1.10
+                spd_mult = 1.05
+                heal     = 0
+
+            # Apply to live enemy dict
+            enemy['attack']  = int(enemy.get('attack',  10) * atk_mult)
+            enemy['defense'] = int(enemy.get('defense',  5) * def_mult)
+            enemy['speed']   = int(enemy.get('speed',   10) * spd_mult)
+            if heal > 0:
+                enemy['hp'] = min(max_hp, enemy['hp'] + heal)
+
+            return {
+                'new_phase': target_phase,
+                'dialog':    dialog,
+                'atk_mult':  atk_mult,
+                'def_mult':  def_mult,
+                'spd_mult':  spd_mult,
+                'heal':      heal,
+            }
+
+    return None
 
 
 # Secret NPC Candala

@@ -66,55 +66,55 @@ PLAYABLE_CHARACTERS = {
             "speed": 21
         },
         "skills": {
-            "system_hack": {
-                "name": "System Hack",
+            "exploit_code": {
+                "name": "Exploit Code",
                 "type": "debuff",
-                "power": 0,
-                "cost": 6,
-                "energy_cost": 6,
-                "cooldown": 3,
+                "power": 35,
+                "cost": 5,
+                "energy_cost": 5,
+                "cooldown": 4,
                 "duration_turns": 3,
-                "desc": "Hack sistem pertahanan musuh: DEF musuh -50% selama 3 turn | CD: 3 turn",
+                "desc": "Eksploitasi kelemahan: 35 DMG langsung + DEF musuh -60% selama 3 turn | EN:5 CD:4t",
                 "effect": "debuff_defense",
                 "target": "enemy",
                 "level_bonus": 5
             },
-            "signal_jam": {
-                "name": "Signal Jam",
-                "type": "debuff",
-                "power": 0,
-                "cost": 2,
-                "energy_cost": 2,
-                "cooldown": 3,
-                "duration_turns": 3,
-                "desc": "Jamming sinyal serangan: ATK musuh -40% selama 3 turn | CD: 3 turn",
-                "effect": "debuff_attack",
-                "target": "enemy",
-                "level_bonus": 5
-            },
-            "gacha_fortune": {
-                "name": "Gacha Fortune",
+            "zero_day_strike": {
+                "name": "Zero-Day Strike",
                 "type": "special",
+                "power": 50,
+                "cost": 6,
+                "energy_cost": 6,
+                "cooldown": 5,
+                "duration_turns": 1,
+                "desc": "Critical exploit ditemukan: 50 DMG + STUN musuh 1 turn | EN:6 CD:5t",
+                "effect": "stun_enemy",
+                "target": "enemy",
+                "level_bonus": 0
+            },
+            "ssr_pity_break": {
+                "name": "SSR Pity Break",
+                "type": "buff",
                 "power": 0,
-                "cost": 3,
-                "energy_cost": 3,
-                "cooldown": 4,
+                "cost": 4,
+                "energy_cost": 4,
+                "cooldown": 5,
                 "duration_turns": 3,
-                "desc": "RNG blessed! Random: ATK buff 3t / DEF buff 3t / Heal HP / Regen Energy | CD: 4 turn",
-                "effect": "gacha_buff",
+                "desc": "Guaranteed SSR pull! ATK +50% + DEF +50% selama 3 turn | EN:4 CD:5t",
+                "effect": "buff_atk_def",
                 "target": "self",
                 "level_bonus": 5
             },
-            "data_overload": {
-                "name": "Data Overload",
+            "data_bomb": {
+                "name": "Data Bomb",
                 "type": "special",
                 "power": 0,
                 "cost": 7,
                 "energy_cost": 7,
-                "cooldown": 3,
+                "cooldown": 5,
                 "duration_turns": 1,
-                "desc": "Injeksi data berlebih: kartu berikutnya damage ×2 + debuff DEF musuh -30% | CD: 3 turn",
-                "effect": "buff_card_power",
+                "desc": "Injeksi virus: kartu berikutnya ×3 DAMAGE (korbankan 10 HP sebagai biaya) | EN:7 CD:5t",
+                "effect": "buff_overload",
                 "target": "self",
                 "level_bonus": 0
             }
@@ -151,9 +151,9 @@ PLAYABLE_CHARACTERS = {
                 "power": 0,
                 "cost": 6,
                 "energy_cost": 6,
-                "cooldown": 3,
+                "cooldown": 5,
                 "duration_turns": 2,
-                "desc": "Analisis kelemahan musuh: DEF -35% + ATK -20% selama 2 turn | CD: 3 turn",
+                "desc": "Analisis kelemahan musuh: DEF -35% + ATK -20% selama 2 turn | CD: 5 turn",
                 "effect": "debuff_def_atk",
                 "target": "enemy",
                 "level_bonus": 5
@@ -164,9 +164,9 @@ PLAYABLE_CHARACTERS = {
                 "power": 0,
                 "cost": 4,
                 "energy_cost": 4,
-                "cooldown": 2,
+                "cooldown": 5,
                 "duration_turns": 2,
-                "desc": "Konsentrasi penuh: ATK diri sendiri +55% selama 2 turn | CD: 2 turn",
+                "desc": "Konsentrasi penuh: ATK diri sendiri +50% selama 2 turn | EN:4 CD:5t",
                 "effect": "buff_attack",
                 "target": "self",
                 "level_bonus": 5
@@ -175,11 +175,11 @@ PLAYABLE_CHARACTERS = {
                 "name": "Strategic Gambit",
                 "type": "special",
                 "power": 0,
-                "cost": 2,
-                "energy_cost": 2,
-                "cooldown": 4,
+                "cost": 5,
+                "energy_cost": 5,
+                "cooldown": 5,
                 "duration_turns": 2,
-                "desc": "Korbankan 20 HP → ATK +65% selama 2 turn + +30 Energy | CD: 4 turn",
+                "desc": "Korbankan 20 HP → ATK +50% selama 2 turn + +30 Energy | EN:5 CD:5t",
                 "effect": "power_up",
                 "target": "self",
                 "level_bonus": 5
@@ -188,11 +188,11 @@ PLAYABLE_CHARACTERS = {
                 "name": "Four-Card Read",
                 "type": "special",
                 "power": 0,
-                "cost": 2,
-                "energy_cost": 2,
-                "cooldown": 3,
+                "cost": 3,
+                "energy_cost": 3,
+                "cooldown": 5,
                 "duration_turns": 1,
-                "desc": "Analisis pola: hand berikutnya bisa Straight dengan 4 kartu saja | CD: 3 turn",
+                "desc": "Analisis pola: hand berikutnya bisa Straight dengan 4 kartu saja | EN:3 CD:5t",
                 "effect": "buff_four_straight",
                 "target": "self",
                 "level_bonus": 5
@@ -226,24 +226,24 @@ PLAYABLE_CHARACTERS = {
             "healing_melody": {
                 "name": "Healing Melody",
                 "type": "heal",
-                "power": 45,
+                "power": 55,
                 "cost": 6,
                 "energy_cost": 6,
-                "cooldown": 3,
-                "desc": "Melodi penyembuh: pulihkan 40-60 HP diri sendiri | CD: 3 turn",
+                "cooldown": 5,
+                "desc": "Melodi penyembuh: pulihkan 55-75 HP diri sendiri | EN:6 CD:5t",
                 "effect": "heal_self",
                 "target": "self",
-                "level_bonus": 8
+                "level_bonus": 10
             },
             "harmonic_shield": {
                 "name": "Harmonic Shield",
                 "type": "buff",
                 "power": 0,
-                "cost": 2,
-                "energy_cost": 2,
-                "cooldown": 3,
+                "cost": 4,
+                "energy_cost": 4,
+                "cooldown": 5,
                 "duration_turns": 3,
-                "desc": "Perisai harmoni: DEF diri sendiri +50% selama 3 turn | CD: 3 turn",
+                "desc": "Perisai harmoni: DEF diri sendiri +50% selama 3 turn | EN:4 CD:5t",
                 "effect": "buff_defense",
                 "target": "self",
                 "level_bonus": 5
@@ -254,9 +254,9 @@ PLAYABLE_CHARACTERS = {
                 "power": 0,
                 "cost": 4,
                 "energy_cost": 4,
-                "cooldown": 3,
+                "cooldown": 5,
                 "duration_turns": 3,
-                "desc": "Irama semangat: ATK +35% selama 3 turn + pulihkan 20 HP | CD: 3 turn",
+                "desc": "Irama semangat: ATK +50% selama 3 turn + pulihkan 20 HP | EN:4 CD:5t",
                 "effect": "buff_atk_heal",
                 "target": "self",
                 "level_bonus": 5
@@ -265,10 +265,10 @@ PLAYABLE_CHARACTERS = {
                 "name": "Discard Rhythm",
                 "type": "special",
                 "power": 0,
-                "cost": 4,
-                "energy_cost": 4,
-                "cooldown": 3,
-                "desc": "Irama baru: pulihkan 1 slot discard + langsung draw 2 kartu tambahan | CD: 3 turn",
+                "cost": 3,
+                "energy_cost": 3,
+                "cooldown": 5,
+                "desc": "Irama baru: pulihkan 1 slot discard + langsung draw 2 kartu tambahan | CD: 5 turn",
                 "effect": "refresh_discard",
                 "target": "self",
                 "level_bonus": 0
@@ -306,9 +306,9 @@ PLAYABLE_CHARACTERS = {
                 "power": 0,
                 "cost": 3,
                 "energy_cost": 3,
-                "cooldown": 2,
+                "cooldown": 5,
                 "duration_turns": 1,
-                "desc": "Satu langkah ke bayangan: 70% dodge serangan musuh giliran ini | CD: 2 turn",
+                "desc": "Satu langkah ke bayangan: 70% dodge serangan musuh giliran ini | CD: 5 turn",
                 "effect": "buff_evade",
                 "target": "self",
                 "level_bonus": 5
@@ -316,24 +316,24 @@ PLAYABLE_CHARACTERS = {
             "survival_instinct": {
                 "name": "Survival Instinct",
                 "type": "heal",
-                "power": 25,
-                "cost": 2,
-                "energy_cost": 2,
-                "cooldown": 2,
-                "desc": "Insting bertahan: pulihkan 25 HP + regen 25 Energy | CD: 2 turn",
+                "power": 30,
+                "cost": 3,
+                "energy_cost": 3,
+                "cooldown": 5,
+                "desc": "Insting bertahan: pulihkan 30 HP + regen 20 Energy | EN:3 CD:5t",
                 "effect": "heal_energy",
                 "target": "self",
-                "level_bonus": 4
+                "level_bonus": 5
             },
             "scout_mark": {
                 "name": "Scout Mark",
                 "type": "debuff",
                 "power": 0,
-                "cost": 2,
-                "energy_cost": 2,
-                "cooldown": 3,
+                "cost": 4,
+                "energy_cost": 4,
+                "cooldown": 5,
                 "duration_turns": 3,
-                "desc": "Tandai target: ATK musuh -45% selama 3 turn | CD: 3 turn",
+                "desc": "Tandai target: ATK musuh -45% selama 3 turn | EN:4 CD:5t",
                 "effect": "debuff_attack",
                 "target": "enemy",
                 "level_bonus": 5
@@ -344,9 +344,9 @@ PLAYABLE_CHARACTERS = {
                 "power": 0,
                 "cost": 6,
                 "energy_cost": 6,
-                "cooldown": 4,
+                "cooldown": 5,
                 "duration_turns": 1,
-                "desc": "Keluar dari bayangan: kartu berikutnya ×2 damage + STUN musuh 1 turn! | CD: 4 turn",
+                "desc": "Keluar dari bayangan: kartu berikutnya ×2 damage + STUN musuh 1 turn! | CD: 5 turn",
                 "effect": "buff_ambush",
                 "target": "self",
                 "level_bonus": 0
@@ -383,9 +383,9 @@ PLAYABLE_CHARACTERS = {
                 "power": 0,
                 "cost": 3,
                 "energy_cost": 3,
-                "cooldown": 4,
+                "cooldown": 5,
                 "duration_turns": 1,
-                "desc": "Pulse elektromagnetik: musuh di-stun, skip serangan 1 turn | CD: 4 turn",
+                "desc": "Pulse elektromagnetik: musuh di-stun, skip serangan 1 turn | CD: 5 turn",
                 "effect": "stun_enemy",
                 "target": "enemy",
                 "level_bonus": 0
@@ -396,9 +396,9 @@ PLAYABLE_CHARACTERS = {
                 "power": 0,
                 "cost": 6,
                 "energy_cost": 6,
-                "cooldown": 3,
+                "cooldown": 5,
                 "duration_turns": 2,
-                "desc": "Overclocking sistem: ATK diri sendiri +60% selama 2 turn + regen 12 Energy | CD: 3 turn",
+                "desc": "Overclocking sistem: ATK diri sendiri +60% selama 2 turn + regen 12 Energy | CD: 5 turn",
                 "effect": "buff_atk_energy",
                 "target": "self",
                 "level_bonus": 5
@@ -407,10 +407,10 @@ PLAYABLE_CHARACTERS = {
                 "name": "Emergency Repair",
                 "type": "heal",
                 "power": 40,
-                "cost": 2,
-                "energy_cost": 2,
-                "cooldown": 3,
-                "desc": "Perbaikan darurat: pulihkan 40 HP + bersihkan semua debuff | CD: 3 turn",
+                "cost": 5,
+                "energy_cost": 5,
+                "cooldown": 5,
+                "desc": "Perbaikan darurat: pulihkan 40 HP + bersihkan semua debuff | EN:5 CD:5t",
                 "effect": "heal_cleanse",
                 "target": "self",
                 "level_bonus": 8
@@ -421,9 +421,9 @@ PLAYABLE_CHARACTERS = {
                 "power": 0,
                 "cost": 5,
                 "energy_cost": 5,
-                "cooldown": 3,
+                "cooldown": 5,
                 "duration_turns": 1,
-                "desc": "Korbankan 15 HP → kartu berikutnya ×2 DAMAGE! (Overload circuit) | CD: 3 turn",
+                "desc": "Korbankan 10 HP → kartu berikutnya ×2.5 DAMAGE! (Overload circuit) | CD: 5 turn",
                 "effect": "buff_overload",
                 "target": "self",
                 "level_bonus": 0
@@ -529,30 +529,30 @@ CHARACTER_MAIN_QUESTS = {
         1: {
             "id":     "vio_ch1_main",
             "title":  "Hack & Escape: Bobol Sistem Mansion",
-            "objective": "Curi Keycard dari loker mansion, hack 2 terminal server, dan kalahkan Maxwell Enforcer",
-            "boss_id":   "maxwell_enforcer",
-            "boss_name": "Maxwell Enforcer",
+            "objective": "Curi Keycard dari loker mansion, hack 2 terminal server, dan kalahkan Maxwell's Agent",
+            "boss_id":   "maxwell_agent",
+            "boss_name": "Maxwell's Agent",
             "steps": [
                 "Temukan Keycard Level 1 di loker mansion (cari ★ di peta)",
                 "Gunakan Keycard untuk hack 2 terminal server di dalam mansion",
-                "Kalahkan Maxwell Enforcer — kepala keamanan digital jaringan Epstein (Boss Ch.1)",
+                "Kalahkan Maxwell's Agent — agen yang menjaga server room mansion (Boss Ch.1)",
             ],
-            "completion_flag": "vio_ch1_complete",
+            "completion_flag": "ch1_vio_complete",
             "next_chapter_msg": "Sistem mansion jebol! Data mulai terbuka. Pulau menantimu.",
         },
         2: {
             "id":     "vio_ch2_main",
-            "title":  "Dominasi Jaringan — Kuasai Pulau, Singkirkan Kepala Penjaga",
-            "objective": "Temukan Keycard Level 2, kuasai 2 terminal pulau, lalu kalahkan Kepala Penjaga",
-            "boss_id":   "kepala_penjaga",
-            "boss_name": "Kepala Penjaga",
+            "title":  "Kuasai Jaringan Pulau — Kalahkan Network Overseer",
+            "objective": "Infiltrasi Command Center, hack 2 node jaringan pulau, dan kalahkan Network Overseer",
+            "boss_id":   "network_overseer",
+            "boss_name": "Network Overseer (Pengawas Jaringan Pulau)",
             "steps": [
-                "Cari Keycard Level 2 di area pulau atau Command Center",
-                "Gunakan Keycard untuk hack 2 terminal jaringan pulau",
-                "Pergi ke Penjara Utara (PRISON NORTH) dan kalahkan Kepala Penjaga (Boss Ch.2)",
+                "Pergi ke COMMAND CENTER (PUSAT KONTROL) — tersedia Ch.2+",
+                "Hack 2 node jaringan di command center (terminal data seluruh pulau)",
+                "Kalahkan Network Overseer — pengawas jaringan yang lindungi semua data pulau (Boss Ch.2)",
             ],
             "completion_flag": "boss_ch2_defeated",
-            "next_chapter_msg": "Kontrol jaringan pulau diambil alih. Saatnya bangun aliansi!",
+            "next_chapter_msg": "Jaringan pulau jebol! Semua data mulai terbuka. Saatnya bangun aliansi!",
         },
         3: {
             "id":     "vio_ch3_main",
@@ -568,17 +568,17 @@ CHARACTER_MAIN_QUESTS = {
         },
         4: {
             "id":     "vio_ch4_main",
-            "title":  "Infiltrasi Lab Maxwell — Jebol Server, Kalahkan Agennya",
-            "objective": "Masuk Laboratorium, aktifkan EMP untuk matikan keamanan, dan kalahkan Maxwell's Agent",
-            "boss_id":   "agen_maxwell",
-            "boss_name":  "Maxwell's Agent",
+            "title":  "Infiltrasi Pusat Kendali — Singkirkan Ghislaine Maxwell",
+            "objective": "Masuk Pusat Kontrol, gunakan akses hack, dan kalahkan Ghislaine Maxwell yang mengendalikan jaringan",
+            "boss_id":   "ghislaine_maxwell",
+            "boss_name":  "Ghislaine Maxwell",
             "steps": [
-                "Masuk ke Laboratorium melalui exit di pulau utama (tersedia Ch.4+)",
-                "Aktifkan EMP Device dari Ignatius untuk melumpuhkan sistem keamanan elektronik lab",
-                "Kalahkan Maxwell's Agent — penjaga server utama yang menyimpan semua rahasia (Boss Ch.4)",
+                "Pergi ke PUSAT KONTROL (COMMAND CENTER) — tersedia Ch.4+",
+                "Gunakan akses jaringan yang didapat dari NPC untuk bypass sistem keamanan Ghislaine",
+                "Kalahkan Ghislaine Maxwell — otak jaringan yang menyembunyikan semua bukti (Boss Ch.4)",
             ],
             "completion_flag": "boss_ch4_defeated",
-            "next_chapter_msg": "Lab dikuasai! Akses server vault terbuka. Satu langkah lagi.",
+            "next_chapter_msg": "Ghislaine dikalahkan! Little Black Book ada di tanganmu. Satu langkah lagi.",
         },
         5: {
             "id":     "vio_ch5_main",
@@ -618,22 +618,22 @@ CHARACTER_MAIN_QUESTS = {
                 "Temukan Kunci Wing-C di loker tersembunyi Wing-C (cari ★ di peta)",
                 "Kalahkan Warden Elite — eksekusi saat posisi blind spot optimal (Boss Ch.1)",
             ],
-            "completion_flag": "haikaru_ch1_complete",
+            "completion_flag": "ch1_haikaru_complete",
             "next_chapter_msg": "Semua kalkulasi tepat. Penjara teratasi. Target: pulau.",
         },
         2: {
             "id":     "haikaru_ch2_main",
-            "title":  "Taktik Superioritas — Petakan Pulau, Netralkan Kepala Penjaga",
-            "objective": "Petakan 2 posisi patroli baru di pulau, lalu kalahkan Kepala Penjaga dengan kalkulasi sempurna",
+            "title":  "Eliminasi Kepala Penjaga — Kuasai Hierarki Penjara",
+            "objective": "Petakan 2 posisi patroli baru, lalu kalahkan Kepala Penjaga yang mengendalikan seluruh penjara",
             "boss_id":   "kepala_penjaga",
             "boss_name": "Kepala Penjaga",
             "steps": [
-                "Jelajahi area pulau dan ambil 2 item intel/peta (posisi patroli baru)",
-                "Pergi ke Penjara Utara (PRISON NORTH)",
-                "Kalahkan Kepala Penjaga — eksekusi sesuai prediksi, probabilitas kemenangan 99.9% (Boss Ch.2)",
+                "Jelajahi area pulau dan ambil 2 item intel/peta — update kalkulasi rute (Ch.2+)",
+                "Pergi ke PRISON NORTH — lokasi Kepala Penjaga, komandan tertinggi penjara pulau",
+                "Kalahkan Kepala Penjaga — eksekusi tepat sesuai 100 langkah prediksi (Boss Ch.2)",
             ],
             "completion_flag": "boss_ch2_defeated",
-            "next_chapter_msg": "Pulau terkendali. Fase rekrutmen dan analisis aliansi dimulai.",
+            "next_chapter_msg": "Kepala Penjaga dinetralkan. Hierarki penjara runtuh. Saatnya bangun aliansi.",
         },
         3: {
             "id":     "haikaru_ch3_main",
@@ -649,17 +649,17 @@ CHARACTER_MAIN_QUESTS = {
         },
         4: {
             "id":     "haikaru_ch4_main",
-            "title":  "Checkmate Maxwell's Agent — Eksekusi Skenario 47 Langkah",
-            "objective": "Masuk lab, gunakan data intel EMP Ignatius, dan eksekusi checkmate Maxwell's Agent",
-            "boss_id":   "agen_maxwell",
-            "boss_name":  "Maxwell's Agent",
+            "title":  "Checkmate Ghislaine — Eksekusi Skenario 61 Langkah",
+            "objective": "Masuk Pusat Kontrol, analisis semua data intel, dan eksekusi checkmate Ghislaine Maxwell",
+            "boss_id":   "ghislaine_maxwell",
+            "boss_name":  "Ghislaine Maxwell",
             "steps": [
-                "Masuk ke Laboratorium melalui exit di pulau utama (tersedia Ch.4+)",
-                "Manfaatkan EMP Device dari Ignatius — lemahkan seluruh sistem pertahanan elektronik lab",
-                "Kalahkan Maxwell's Agent — eksekusi rencana checkmate sesuai kalkulasi (Boss Ch.4)",
+                "Pergi ke PUSAT KONTROL (COMMAND CENTER) — tersedia Ch.4+",
+                "Analisis semua data intel yang dikumpulkan dari NPC — ekspos kelemahan sistem Ghislaine",
+                "Kalahkan Ghislaine Maxwell — eksekusi rencana checkmate, probabilitas 99.9% (Boss Ch.4)",
             ],
             "completion_flag": "boss_ch4_defeated",
-            "next_chapter_msg": "Checkmate! Lab dikuasai. Langkah terakhir menuju Epstein.",
+            "next_chapter_msg": "Checkmate! Ghislaine down. Little Black Book di tangan. Langkah terakhir: Epstein.",
         },
         5: {
             "id":     "haikaru_ch5_main",
@@ -698,22 +698,22 @@ CHARACTER_MAIN_QUESTS = {
                 "Cari dan ambil 2 item clue yang ditinggalkan Jiejie di area teater (★ di peta)",
                 "Kalahkan Theater Master yang mengurung Jiejie di backstage (Boss Ch.1)",
             ],
-            "completion_flag": "aolinh_ch1_complete",
+            "completion_flag": "ch1_aolinh_complete",
             "next_chapter_msg": "Jiejie bebas! 我们一起！ Musik memberi kekuatan — terus maju!",
         },
         2: {
             "id":     "aolinh_ch2_main",
-            "title":  "Simfoni Kebebasan — Lacak Jiejie, Singkirkan Kepala Penjaga",
-            "objective": "Temukan 2 clue lokasi Jiejie di pulau dan kalahkan Kepala Penjaga dengan semangat musikmu",
-            "boss_id":   "kepala_penjaga",
-            "boss_name": "Kepala Penjaga",
+            "title":  "Simfoni Harapan — Selamatkan Jiejie dari Sang Ilmuwan",
+            "objective": "Temukan 2 clue lokasi Jiejie dan kalahkan Dr. Rousseau yang menyembunyikan keberadaannya",
+            "boss_id":   "doctor_rousseau",
+            "boss_name": "Dr. Rousseau",
             "steps": [
-                "Jelajahi area pulau dan temukan 2 clue baru tentang keberadaan Jiejie",
-                "Pergi ke Penjara Utara (PRISON NORTH)",
-                "Kalahkan Kepala Penjaga — mainkan melodi harapan dalam hatimu (Boss Ch.2)",
+                "Jelajahi TEATER dan area sekitarnya — temukan 2 clue lokasi Jiejie tersembunyi",
+                "Lacak Dr. Rousseau di backstage teater — ilmuwan yang menyekap Jiejie",
+                "Kalahkan Dr. Rousseau — bebaskan Jiejie dari eksperimen gelap (Boss Ch.2)",
             ],
             "completion_flag": "boss_ch2_defeated",
-            "next_chapter_msg": "Jalan terbuka! Kini saatnya membangun tim untuk Jiejie.",
+            "next_chapter_msg": "Dr. Rousseau kalah! Jiejie aman. Kini saatnya membangun tim.",
         },
         3: {
             "id":     "aolinh_ch3_main",
@@ -729,17 +729,17 @@ CHARACTER_MAIN_QUESTS = {
         },
         4: {
             "id":     "aolinh_ch4_main",
-            "title":  "Melodi Perlawanan — Distraksi Musik, Jebol Lab Maxwell",
-            "objective": "Masuk lab, aktifkan rekaman distraksi, dan kalahkan Maxwell's Agent selagi penjaga terdistraksi",
-            "boss_id":   "agen_maxwell",
-            "boss_name":  "Maxwell's Agent",
+            "title":  "Simfoni Kebenaran — Distraksi Ghislaine dengan Musik",
+            "objective": "Pergi ke Pusat Kontrol, putar Rekaman Distraksi, dan kalahkan Ghislaine Maxwell",
+            "boss_id":   "ghislaine_maxwell",
+            "boss_name":  "Ghislaine Maxwell",
             "steps": [
-                "Masuk ke Laboratorium melalui exit di pulau utama (tersedia Ch.4+)",
-                "Putar Rekaman Distraksi Aolinh di sistem speaker lab — buat celah 10 menit untuk bergerak",
-                "Kalahkan Maxwell's Agent selagi semua penjaga terpaku oleh musik (Boss Ch.4)",
+                "Pergi ke PUSAT KONTROL (COMMAND CENTER) — tersedia Ch.4+",
+                "Putar Rekaman Distraksi Aolinh di sistem speaker pusat kontrol — buat celah untuk masuk",
+                "Kalahkan Ghislaine Maxwell selagi penjurannya terdistraksi oleh musikmu (Boss Ch.4)",
             ],
             "completion_flag": "boss_ch4_defeated",
-            "next_chapter_msg": "Lab ditaklukkan! Satu langkah lagi menuju kebebasan dan Jiejie.",
+            "next_chapter_msg": "Ghislaine jatuh oleh melodi kebenaran! Satu langkah lagi menuju kebebasan dan Jiejie.",
         },
         5: {
             "id":     "aolinh_ch5_main",
@@ -778,22 +778,22 @@ CHARACTER_MAIN_QUESTS = {
                 "Jelajahi area pantai dan kumpulkan 2 perlengkapan survival (cari ★ di peta)",
                 "Kalahkan Harbor Captain yang memblokir satu-satunya jalur kabur dari pulau (Boss Ch.1)",
             ],
-            "completion_flag": "arganta_ch1_complete",
+            "completion_flag": "ch1_arganta_complete",
             "next_chapter_msg": "Dermaga dikuasai. La via è sempre avanti, Nonno.",
         },
         2: {
             "id":     "arganta_ch2_main",
-            "title":  "Navigator Memimpin — Petakan Jalur Baru, Singkirkan Kepala Penjaga",
-            "objective": "Petakan 2 jalur pelarian baru di pulau, lalu kalahkan Kepala Penjaga",
-            "boss_id":   "kepala_penjaga",
-            "boss_name": "Kepala Penjaga",
+            "title":  "Dermaga di Bawah Cengkeraman — Kalahkan Mercenary Commander",
+            "objective": "Scout 2 jalur pelarian baru, lalu kalahkan Mercenary Commander yang memblokir semua rute laut",
+            "boss_id":   "mercenary_commander",
+            "boss_name": "Mercenary Commander",
             "steps": [
-                "Scout dan ambil 2 item navigasi/peta jalur baru di area pulau",
-                "Pergi ke Penjara Utara (PRISON NORTH)",
-                "Kalahkan Kepala Penjaga — la via è sempre avanti (Boss Ch.2)",
+                "Scout dan ambil 2 item navigasi/peta jalur baru di area DERMAGA dan PANTAI",
+                "Lacak Mercenary Commander di DERMAGA — komandan bayaran yang blokir semua kapal keluar",
+                "Kalahkan Mercenary Commander — buka jalur laut menuju kebebasan (Boss Ch.2)",
             ],
             "completion_flag": "boss_ch2_defeated",
-            "next_chapter_msg": "Pulau terpetakan. Saatnya membangun aliansi untuk keadilan.",
+            "next_chapter_msg": "Dermaga terbuka! Jalur laut tersingkap. Saatnya bangun aliansi untuk keadilan.",
         },
         3: {
             "id":     "arganta_ch3_main",
@@ -809,17 +809,17 @@ CHARACTER_MAIN_QUESTS = {
         },
         4: {
             "id":     "arganta_ch4_main",
-            "title":  "Jalur Rahasia Nonno — Tembus Lab Maxwell, Per Famiglia",
-            "objective": "Gunakan jalur rahasia Nonno, masuk laboratorium, dan kalahkan Maxwell's Agent",
-            "boss_id":   "agen_maxwell",
-            "boss_name":  "Maxwell's Agent",
+            "title":  "Jalur Rahasia Nonno — Tembus Pusat Kontrol, Kalahkan Ghislaine",
+            "objective": "Gunakan Peta Jalur Rahasia Nonno untuk masuk Pusat Kontrol dan kalahkan Ghislaine Maxwell",
+            "boss_id":   "ghislaine_maxwell",
+            "boss_name":  "Ghislaine Maxwell",
             "steps": [
-                "Masuk ke Laboratorium menggunakan Peta Jalur Rahasia untuk bypass semua pos keamanan",
-                "Konfrontasi Maxwell's Agent di jantung laboratorium Maxwell",
-                "Kalahkan Maxwell's Agent — per famiglia, untuk keadilan keluargamu (Boss Ch.4)",
+                "Pergi ke PUSAT KONTROL menggunakan Peta Jalur Rahasia dari Nonno untuk bypass pos keamanan",
+                "Konfrontasi Ghislaine Maxwell di jantung pusat kendali Epstein",
+                "Kalahkan Ghislaine Maxwell — per famiglia, untuk keadilan keluargamu (Boss Ch.4)",
             ],
             "completion_flag": "boss_ch4_defeated",
-            "next_chapter_msg": "Niente è reale. Lab dikuasai. Langkah terakhir: Epstein.",
+            "next_chapter_msg": "Niente è reale. Pusat kontrol jatuh. Langkah terakhir: Epstein.",
         },
         5: {
             "id":     "arganta_ch5_main",
@@ -859,22 +859,22 @@ CHARACTER_MAIN_QUESTS = {
                 "Gunakan komponen EMP untuk sabotase panel alarm utama basement",
                 "Kalahkan AmBOTukam Mk II — robot penjaga sistem keamanan basement (Boss Ch.1)",
             ],
-            "completion_flag": "ignatius_ch1_complete",
+            "completion_flag": "ch1_ignatius_complete",
             "next_chapter_msg": "SISTEM DIRETAS! Generator down. Engineering DONE. Saatnya ke pulau!",
         },
         2: {
             "id":     "ignatius_ch2_main",
-            "title":  "Peta Jaringan Listrik — Sabotase Pulau, Singkirkan Kepala Penjaga",
-            "objective": "Temukan dan petakan 2 node jaringan listrik di pulau, lalu kalahkan Kepala Penjaga",
-            "boss_id":   "kepala_penjaga",
-            "boss_name": "Kepala Penjaga",
+            "title":  "Ancaman Baru — Hancurkan AmBOTukam Mk III",
+            "objective": "Petakan 2 node generator pulau, lalu hancurkan AmBOTukam Mk III yang lebih canggih dari Mk II",
+            "boss_id":   "security_bot",
+            "boss_name": "AmBOTukam Mk III",
             "steps": [
-                "Jelajahi area pulau dan temukan 2 panel/generator listrik (node jaringan)",
-                "Pergi ke Penjara Utara (PRISON NORTH)",
-                "Kalahkan Kepala Penjaga menggunakan strategi sabotase listrik (Boss Ch.2)",
+                "Jelajahi BASEMENT dan area ISLAND — temukan dan petakan 2 generator/panel listrik pulau",
+                "Lacak AmBOTukam Mk III di BASEMENT/ISLAND — versi upgrade yang diaktifkan darurat",
+                "Hancurkan AmBOTukam Mk III dengan EMP upgrade — lebih kuat dari Mk II! (Boss Ch.2)",
             ],
             "completion_flag": "boss_ch2_defeated",
-            "next_chapter_msg": "Grid pulau dipetakan sepenuhnya. Saatnya rekrut tim teknis.",
+            "next_chapter_msg": "AmBOTukam Mk III hancur! Grid pulau terpetakan penuh. Rekrut tim teknis!",
         },
         3: {
             "id":     "ignatius_ch3_main",
@@ -890,17 +890,17 @@ CHARACTER_MAIN_QUESTS = {
         },
         4: {
             "id":     "ignatius_ch4_main",
-            "title":  "EMP Total — Matikan Sistem Lab Maxwell Sepenuhnya",
-            "objective": "Masuk lab, aktifkan EMP Device untuk matikan keamanan, dan kalahkan Maxwell's Agent",
-            "boss_id":   "agen_maxwell",
-            "boss_name":  "Maxwell's Agent",
+            "title":  "EMP Total — Blackout Pusat Kendali, Kalahkan Ghislaine Maxwell",
+            "objective": "Masuk Pusat Kontrol, aktifkan EMP Device untuk matikan jaringan, dan kalahkan Ghislaine Maxwell",
+            "boss_id":   "ghislaine_maxwell",
+            "boss_name":  "Ghislaine Maxwell",
             "steps": [
-                "Masuk ke Laboratorium melalui exit di pulau utama (tersedia Ch.4+)",
-                "Tekan tombol EMP Device di dalam lab — matikan semua sistem elektronik dalam radius 40m",
-                "Kalahkan Maxwell's Agent saat sistemnya down — teknologi beats tyranny (Boss Ch.4)",
+                "Pergi ke PUSAT KONTROL (COMMAND CENTER) — tersedia Ch.4+",
+                "Aktifkan EMP Device di pusat kontrol — matikan SEMUA sistem elektronik Ghislaine dalam radius 40m",
+                "Kalahkan Ghislaine Maxwell saat sistemnya down — engineering beats tyranny (Boss Ch.4)",
             ],
             "completion_flag": "boss_ch4_defeated",
-            "next_chapter_msg": "Lab offline total. Satu sistem terakhir yang harus dimatikan: Epstein.",
+            "next_chapter_msg": "Pusat kontrol offline! Satu sistem terakhir yang harus dimatikan: Epstein.",
         },
         5: {
             "id":     "ignatius_ch5_main",
@@ -933,15 +933,16 @@ CHARACTER_MAIN_QUESTS = {
 # Dipanggil dari _init_location_quests dan _build_main_quest_lines
 CHAPTER_QUEST_TEMPLATES = {
     2: {
-        "id":        "ch2_main_kepala_penjaga",
-        "title":     "Penjara Utara — Singkirkan Kepala Penjaga",
-        "objective": "Pergi ke Penjara Utara dan kalahkan Kepala Penjaga untuk buka akses penuh pulau",
+        "id":        "ch2_main_unique_boss",
+        "title":     "Chapter 2 — Kalahkan Boss Unik Karaktermu",
+        "objective": "Jelajahi ISLAND, pergi ke area boss karaktermu, dan kalahkan Boss Ch.2",
         "steps": [
-            "Pergi ke Penjara Utara (PRISON NORTH) — exit pojok kiri atas pulau",
-            "Kalahkan Kepala Penjaga — Boss Ch.2, akses pulau penuh terbuka setelah menang",
+            "Jelajahi ISLAND — temukan area boss Ch.2 karaktermu (lihat HUD untuk lokasi spesifik)",
+            "Lacak boss Ch.2 di lokasi yang sesuai (area berbeda tiap karakter)",
+            "Kalahkan Boss Ch.2 → flag boss_ch2_defeated aktif → Chapter 3 terbuka",
         ],
         "completion_flag": "boss_ch2_defeated",
-        "next_chapter_msg": "Kepala Penjaga dikalahkan! Akses penuh ke seluruh pulau terbuka.",
+        "next_chapter_msg": "Boss Ch.2 dikalahkan! Chapter 3 terbuka — temui NPC dan bangun aliansi.",
     },
     3: {
         "id":        "ch3_main_sidequest",
@@ -956,16 +957,16 @@ CHAPTER_QUEST_TEMPLATES = {
         "next_chapter_msg": "Aliansi terbentuk! Saatnya infiltrasi laboratorium Maxwell.",
     },
     4: {
-        "id":        "ch4_main_agen_maxwell",
-        "title":     "Infiltrasi Laboratorium — Kalahkan Maxwell's Agent",
-        "objective": "Masuk laboratorium Maxwell dan kalahkan Agennya untuk singkap semua rahasia lab",
+        "id":        "ch4_main_ghislaine",
+        "title":     "Infiltrasi Pusat Kendali — Kalahkan Ghislaine Maxwell",
+        "objective": "Masuk Pusat Kontrol dan kalahkan Ghislaine Maxwell — otak jaringan yang menyembunyikan semua bukti",
         "steps": [
-            "Masuk ke Laboratorium via exit di pulau (tersedia Ch.4+, minimal 2 sidequest selesai)",
-            "Gunakan EMP Device dari Ignatius untuk matikan sistem keamanan elektronik lab",
-            "Kalahkan Maxwell's Agent — Boss Ch.4",
+            "Pergi ke PUSAT KONTROL (COMMAND CENTER) — tersedia Ch.4+ via exit di ISLAND (sudah 2 SQ selesai)",
+            "Gunakan key item dari aliansi NPC (EMP/Rekaman/Peta/Network Key) untuk bypass keamanan Ghislaine",
+            "Kalahkan Ghislaine Maxwell — Boss Ch.4 di Pusat Kendali, buka jalan ke Ch.5",
         ],
         "completion_flag": "boss_ch4_defeated",
-        "next_chapter_msg": "Maxwell's Agent dikalahkan! Satu langkah lagi menuju Epstein.",
+        "next_chapter_msg": "Ghislaine Maxwell dikalahkan! Little Black Book ada di tanganmu. Satu langkah lagi.",
     },
     5: {
         "id":        "ch5_main_evidence",
@@ -1291,54 +1292,54 @@ from constants import (
 )
 
 CHAPTER_OBJECTIVES = {
-    1: "Selesaikan misi area starting — kabur dari lokasi awal",
-    2: "Pergi ke PRISON NORTH → kalahkan Kepala Penjaga (Boss Ch.2)",
-    3: "Temui NPC di pulau → selesaikan 2 sidequest → Chapter 4 terbuka",
-    4: "Pergi ke LABORATORIUM → kalahkan Maxwell's Agent (Boss Ch.4)",
-    5: "Selesaikan 4 sidequest NPC + dapat USB Evidence Drive dari Vio di LABORATORIUM",
-    6: "Pergi ke MANSION EAST (sudut kanan bawah ISLAND) → kalahkan Epstein (Final Boss)",
+    1: "[Ch.1] Selesaikan misi di lokasi starting — kabur, kalahkan Boss Ch.1!",
+    2: "[Ch.2] Pergi ke area boss karaktermu (unik tiap karakter) → kalahkan Boss Ch.2",
+    3: "[Ch.3] Temui NPC di ISLAND → selesaikan ≥2 sidequest → Ch.4 terbuka",
+    4: "[Ch.4] COMMAND CENTER → kalahkan Ghislaine Maxwell (Boss Ch.4) → Ch.5",
+    5: "[Ch.5] Selesaikan ≥4 SQ + USB Evidence Drive dari Vio (LABORATORIUM) → Ch.6",
+    6: "[Ch.6] MANSION EAST (kanan bawah ISLAND) → kalahkan Epstein (Final Boss)",
 }
 
 CHAPTER_OBJECTIVES_BY_CHAR = {
     "vio": {
-        1: "MANSION: Hack 2 terminal server → kalahkan Maxwell Enforcer (Boss Ch.1) → keluar ke ISLAND",
-        2: "PRISON NORTH: Kalahkan Kepala Penjaga (Boss Ch.2) → Chapter 3 terbuka",
-        3: "Temui NPC di ISLAND → selesaikan 2 sidequest → Chapter 4 terbuka",
-        4: "LABORATORIUM: Gunakan EMP Device → kalahkan Maxwell's Agent (Boss Ch.4)",
-        5: "Selesaikan 4 sidequest + terima USB Evidence Drive dari Vio (LABORATORIUM)",
-        6: "MANSION EAST: Kalahkan Epstein → upload bukti → selesai",
+        1: "[Ch.1 MANSION] Hack 2 terminal → kalahkan Maxwell's Agent (Boss) → ke ISLAND",
+        2: "[Ch.2 COMMAND CENTER] Hack 2 node → kalahkan Network Overseer (Boss) → Ch.3",
+        3: "[Ch.3 ISLAND] Temui NPC → selesaikan ≥2 sidequest → Ch.4 terbuka",
+        4: "[Ch.4 COMMAND CENTER] Gunakan Network Key → kalahkan Ghislaine Maxwell (Boss)",
+        5: "[Ch.5] Selesaikan ≥4 SQ + bawa USB Security Drive ke Vio di LAB → USB Evidence Drive",
+        6: "[Ch.6 MANSION EAST] Upload semua bukti → kalahkan Epstein (Final Boss)",
     },
     "haikaru": {
-        1: "PRISON NORTH: Identifikasi 3 blind spot → ambil Kunci Wing-C → kalahkan Warden Elite (Boss Ch.1)",
-        2: "PRISON NORTH: Kalahkan Kepala Penjaga (Boss Ch.2) → Chapter 3 terbuka",
-        3: "Temui NPC di ISLAND → selesaikan 2 sidequest → Chapter 4 terbuka",
-        4: "LABORATORIUM: Kalahkan Maxwell's Agent dengan strategi presisi (Boss Ch.4)",
-        5: "Selesaikan 4 sidequest + terima USB Evidence Drive dari Vio (LABORATORIUM)",
-        6: "MANSION EAST: Checkmate Epstein → eksekusi rencana akhir",
+        1: "[Ch.1 PRISON NORTH] 3 blind spot + Kunci Wing-C → kalahkan Warden Elite (Boss)",
+        2: "[Ch.2 PRISON NORTH] Petakan 2 posisi → kalahkan Kepala Penjaga (Boss) → Ch.3",
+        3: "[Ch.3 ISLAND] Temui NPC → selesaikan ≥2 sidequest → Ch.4 terbuka",
+        4: "[Ch.4 COMMAND CENTER] Gunakan Catatan Sandi → checkmate Ghislaine Maxwell (Boss)",
+        5: "[Ch.5] Selesaikan ≥4 SQ + bawa USB Security Drive ke Vio di LAB → USB Evidence Drive",
+        6: "[Ch.6 MANSION EAST] Eksekusi rencana 61 langkah → checkmate Epstein (Final Boss)",
     },
     "aolinh": {
-        1: "TEATER: Cari 2 jejak Jiejie → kalahkan Theater Master (Boss Ch.1) → keluar ke ISLAND",
-        2: "PRISON NORTH: Kalahkan Kepala Penjaga (Boss Ch.2) → Chapter 3 terbuka",
-        3: "Temui NPC di ISLAND → selesaikan 2 sidequest → Chapter 4 terbuka",
-        4: "LABORATORIUM: Gunakan Rekaman Distraksi → kalahkan Maxwell's Agent (Boss Ch.4)",
-        5: "Selesaikan 4 sidequest + terima USB Evidence Drive dari Vio (LABORATORIUM)",
-        6: "MANSION EAST: Kalahkan Epstein untuk Jiejie dan semua korban",
+        1: "[Ch.1 TEATER] Cari 2 jejak Jiejie → kalahkan Theater Master (Boss) → ke ISLAND",
+        2: "[Ch.2 TEATER] Cari 2 clue Jiejie → kalahkan Dr. Rousseau (Boss) → Ch.3",
+        3: "[Ch.3 ISLAND] Temui NPC → selesaikan ≥2 sidequest → Ch.4 terbuka",
+        4: "[Ch.4 COMMAND CENTER] Putar Rekaman Distraksi → kalahkan Ghislaine Maxwell (Boss)",
+        5: "[Ch.5] Selesaikan ≥4 SQ + bawa USB Security Drive ke Vio di LAB → USB Evidence Drive",
+        6: "[Ch.6 MANSION EAST] Nyanyikan simfoni terakhir → kalahkan Epstein untuk Jiejie (Final)",
     },
     "arganta": {
-        1: "PANTAI: Kumpulkan 2 perlengkapan survival → kalahkan Harbor Captain (Boss Ch.1) → keluar ke ISLAND",
-        2: "PRISON NORTH: Kalahkan Kepala Penjaga (Boss Ch.2) → Chapter 3 terbuka",
-        3: "Temui NPC di ISLAND → selesaikan 2 sidequest → Chapter 4 terbuka",
-        4: "LABORATORIUM: Gunakan Peta Jalur Rahasia → kalahkan Maxwell's Agent (Boss Ch.4)",
-        5: "Selesaikan 4 sidequest + terima USB Evidence Drive dari Vio (LABORATORIUM)",
-        6: "MANSION EAST: Vendetta finale — kalahkan Epstein per Nonno",
+        1: "[Ch.1 PANTAI] 2 perlengkapan survival → kalahkan Harbor Captain (Boss) → ke ISLAND",
+        2: "[Ch.2 DERMAGA] Scout 2 jalur → kalahkan Mercenary Commander (Boss) → Ch.3",
+        3: "[Ch.3 ISLAND] Temui NPC → selesaikan ≥2 sidequest → Ch.4 terbuka",
+        4: "[Ch.4 COMMAND CENTER] Gunakan Peta Jalur Rahasia → kalahkan Ghislaine Maxwell (Boss)",
+        5: "[Ch.5] Selesaikan ≥4 SQ + bawa USB Security Drive ke Vio di LAB → USB Evidence Drive",
+        6: "[Ch.6 MANSION EAST] Per Nonno — vendetta finale → kalahkan Epstein (Final Boss)",
     },
     "ignatius": {
-        1: "BASEMENT: Kumpulkan 3 komponen EMP → sabotase panel alarm → kalahkan AmBOTukam Mk II (Boss Ch.1)",
-        2: "PRISON NORTH: Kalahkan Kepala Penjaga (Boss Ch.2) → Chapter 3 terbuka",
-        3: "Temui NPC di ISLAND → selesaikan 2 sidequest → Chapter 4 terbuka",
-        4: "LABORATORIUM: EMP Device aktif → kalahkan Maxwell's Agent (Boss Ch.4)",
-        5: "Selesaikan 4 sidequest + terima USB Evidence Drive dari Vio (LABORATORIUM)",
-        6: "MANSION EAST: Blackout Epstein — matikan sistem terakhirnya",
+        1: "[Ch.1 BASEMENT] 3 komponen EMP → sabotase panel → kalahkan AmBOTukam Mk II (Boss)",
+        2: "[Ch.2 BASEMENT] Petakan 2 generator → kalahkan AmBOTukam Mk III (Boss) → Ch.3",
+        3: "[Ch.3 ISLAND] Temui NPC → selesaikan ≥2 sidequest → Ch.4 terbuka",
+        4: "[Ch.4 COMMAND CENTER] EMP Device aktif → kalahkan Ghislaine Maxwell (Boss)",
+        5: "[Ch.5] Selesaikan ≥4 SQ + bawa USB Security Drive ke Vio di LAB → USB Evidence Drive",
+        6: "[Ch.6 MANSION EAST] Blackout total → kalahkan Epstein (Final Boss)",
     },
 }
 
@@ -1347,12 +1348,9 @@ BOSS_DATA = {
         'name':       'Kepala Penjaga',
         'chapter':    2,
         'location':   'prison_north',
-        'hp':         350,      # Balance: Boss HP +40%
-        'attack':     22,
-        'defense':    15,
-        'speed':      12,
-        'reward_xp':  300,
-        'reward_dollars': 80,
+        # Stats canonical: lihat enemies.py BOSSES['kepala_penjaga']
+        'reward_xp':  350,
+        'reward_dollars': 100,
         'reward_item': 'Kunci Master Penjara',
         'flag_key':   'boss_ch2_defeated',
         'intro': [
@@ -1365,18 +1363,39 @@ BOSS_DATA = {
             "Jalan menuju chapter berikutnya terbuka.",
         ],
     },
+    'ghislaine_maxwell': {
+        'name':       'Ghislaine Maxwell - The Facilitator',
+        'chapter':    4,
+        'location':   'command_center',
+        # Stats canonical: lihat enemies.py BOSSES['ghislaine_maxwell']
+        'reward_xp':  600,
+        'reward_dollars': 200,
+        'reward_item': 'Little Black Book',
+        'flag_key':   'boss_ch4_defeated',
+        'special':    'Bawa bukti dari NPC untuk melemahkan jaringannya sebelum battle',
+        'intro': [
+            "Ghislaine Maxwell berdiri di pusat kendali, dikelilingi layar monitor.",
+            "'Anak-anak kecil bermain detektif. Menggemaskan.'",
+            "'Jeffrey akan sangat marah mendengar ini. Sayang sekali kalian tidak akan sempat melaporkannya.'",
+            "'Saya sudah mengelola *jaringan* ini selama 30 tahun. Kalian pikir bisa menghentikannya?'",
+        ],
+        'defeat_text': [
+            "Ghislaine jatuh. Little Black Book terlepas dari tangannya.",
+            "Di dalamnya: ribuan nama, kontak, dan transaksi tersembunyi.",
+            "Pintu menuju Epstein kini terbuka.",
+        ],
+    },
     'agen_maxwell': {
+        # Agen Maxwell tersedia sebagai opsional fight di laboratorium Ch4
+        # Bukan boss utama Ch4 lagi — digantikan Ghislaine di command_center
         'name':       "Maxwell's Agent",
         'chapter':    4,
         'location':   'laboratory',
-        'hp':         530,      # Balance: Boss HP +40%
-        'attack':     35,
-        'defense':    22,
-        'speed':      18,
+        # Stats canonical: lihat enemies.py BOSSES['agen_maxwell']
         'reward_xp':  500,
         'reward_dollars': 150,
         'reward_item': 'Kartu Akses Lab',
-        'flag_key':   'boss_ch4_defeated',
+        'flag_key':   'boss_lab_agent_defeated',
         'special': 'Lemah terhadap EMP Device — gunakan sebelum battle',
         'intro': [
             "Maxwell's Agent berdiri di tengah laboratorium.",
@@ -1388,15 +1407,66 @@ BOSS_DATA = {
             "Kartu akses ke vault dokumen kini ada di tanganmu.",
         ],
     },
+    'maxwell_agent': {
+        'name':       "Maxwell's Agent — Penjaga Server Room",
+        'chapter':    1,
+        'location':   'mansion',
+        'reward_xp':  130,
+        'reward_dollars': 110,
+        'reward_item': 'Maxwell Agent Badge',
+        'flag_key':   'boss_ch1_vio_agent_defeated',
+        'intro': [
+            "Maxwell's Agent menghalangi server room.",
+            "'Tidak ada yang keluar dengan data dari sini.'",
+            "'Maxwell memberi instruksi jelas. Kamu harus dihentikan.'",
+        ],
+        'defeat_text': [
+            "Agent jatuh. Server room keycard terlepas dari sakunya.",
+            "Vio: Selalu ada exploit-nya. Tinggal cari pattern-nya.",
+        ],
+    },
+    'network_overseer': {
+        'name':       'Network Overseer — Pengawas Jaringan Pulau',
+        'chapter':    2,
+        'location':   'command_center',
+        'reward_xp':  300,
+        'reward_dollars': 90,
+        'reward_item': 'Network Master Key',
+        'flag_key':   'boss_ch2_defeated',
+        'intro': [
+            "Network Overseer berdiri di depan server utama.",
+            "'Jaringan ini dibangun untuk tidak bisa ditembus.'",
+            "'256-bit encryption. Firewall berlapis. Tidak ada hacker yang lewat sini.'",
+        ],
+        'defeat_text': [
+            "Overseer tumbang. Node jaringan pulau terbuka penuh.",
+            "Vio: 256-bit? Amateur. Semua ada exploit-nya.",
+        ],
+    },
+    'mercenary_commander': {
+        'name':       'Mercenary Commander — Komandan Bayaran Dermaga',
+        'chapter':    2,
+        'location':   'dock',
+        'reward_xp':  310,
+        'reward_dollars': 100,
+        'reward_item': 'Dock Commander Badge',
+        'flag_key':   'boss_ch2_defeated',
+        'intro': [
+            "Mercenary Commander memblokir akses ke dermaga.",
+            "'Tidak ada kapal keluar tanpa izinku.'",
+            "'Bayaran saya terlalu bagus untuk membiarkanmu hidup.'",
+        ],
+        'defeat_text': [
+            "Commander roboh. Dermaga terbuka. Jalur laut tersingkap.",
+            "Arganta: La via è sempre avanti. Per Nonno.",
+        ],
+    },
     'epstein_boss': {
         'name':       'Jeffrey Epstein',
         'chapter':    6,
         'location':   'mansion_east',
-        'hp':         850,      # Balance: Final boss HP +42%
-        'attack':     45,
-        'defense':    30,
-        'speed':      20,
-        'reward_xp':  1000,
+        # Stats canonical: lihat enemies.py BOSSES['epstein_boss'] (2 phase)
+        'reward_xp':  6666,
         'reward_dollars': 0,
         'reward_item': None,
         'flag_key':   'boss_ch6_defeated',
@@ -1478,12 +1548,12 @@ CH1_ITEM_OBJECTIVE_MAP = {
 
 CH1_PRE_BOSS_DIALOGS = {
     'vio': {
-        'maxwell_enforcer': [
+        'maxwell_agent': [
             ('narasi', "Server room utama. Di balik pintu besi... langkah kaki berat."),
             ('dialog', "Vio: *menghentikan langkah* Hmm."),
-            ('inner',  "[Signature langkah. 90kg+. Sepatu militer. Bukan guard biasa.]"),
-            ('dialog', "Vio: Maxwell. Head of Security. Filenya sudah kubaca."),
-            ('dialog', "Vio: Former special forces. Bisa bunuh orang dengan tangan kosong."),
+            ('inner',  "[Agen Maxwell. Bukan yang terkuat, tapi cukup berbahaya.]"),
+            ('dialog', "Vio: Maxwell's Agent. Yang jaga server room. Filenya... tipis."),
+            ('dialog', "Vio: Ex-military security contractor. Bisa bunuh dengan tangan kosong."),
             ('inner',  "[Situasi ini... tidak ideal untuk hacker 13 tahun sendirian.]"),
             ('inner',  "[Tapi data di server ini ada jutaan dollar dan ratusan nama. Harus diekspos.]"),
             ('dialog', "Vio: *mengepalkan tangan* Fine. Selalu ada exploit-nya."),
@@ -1556,11 +1626,11 @@ CH1_QUESTS = {
                 'label':  'Terminal di-hack: {}/{}'
             },
             {
-                'id':     'defeat_maxwell_enforcer',
-                'desc':   'Kalahkan Maxwell Enforcer — kepala keamanan jaringan (Boss Ch.1)',
+                'id':     'defeat_maxwell_agent',
+                'desc':   'Kalahkan Maxwell\'s Agent — penjaga server room mansion (Boss Ch.1)',
                 'target': 1,
                 'type':   'boss',
-                'label':  'Maxwell Enforcer: {}/{}'
+                'label':  'Maxwell Agent: {}/{}'
             },
         ],
         'completion_flag': 'ch1_vio_complete',
@@ -1568,7 +1638,7 @@ CH1_QUESTS = {
         'reward_flag':     'vio_ch1_reward_given',
         'completion_text': [
             "Server ter-hack. Data jutaan dollar mulai mengalir ke USB-mu.",
-            "Maxwell Enforcer sudah dikalahkan. Jalur keluar mansion terbuka.",
+            "Maxwell's Agent sudah dikalahkan. Server room aman. Jalur mansion terbuka.",
             "Kamu menggenggam 'Akses Level 3' — kunci ke area island selanjutnya.",
         ],
         'next_area': 'island',
@@ -1727,11 +1797,11 @@ CHAPTER_REQUIREMENTS = {
         'boss_needed': None,
     },
     3: {
-        'description': 'Kalahkan Kepala Penjaga di PRISON NORTH (Boss Chapter 2)',
+        'description': 'Kalahkan Boss Ch.2 unik karaktermu (boss_ch2_defeated flag)',
         'flags':    ['boss_ch2_defeated'],
         'items':    [],
         'sidequests_needed': 0,
-        'boss_needed': 'kepala_penjaga',
+        'boss_needed': None,   # Tiap karakter boss Ch2 berbeda — cek via flag boss_ch2_defeated
     },
     4: {
         'description': 'Selesaikan minimal 2 sidequest NPC di Chapter 3',
@@ -1741,16 +1811,16 @@ CHAPTER_REQUIREMENTS = {
         'boss_needed': None,
     },
     5: {
-        'description': "Kalahkan Maxwell's Agent di Laboratorium (Boss Chapter 4)",
+        'description': "Kalahkan Ghislaine Maxwell di Pusat Kontrol (Boss Chapter 4)",
         'flags':    ['boss_ch4_defeated'],
         'items':    [],
         'sidequests_needed': 0,
-        'boss_needed': 'agen_maxwell',
+        'boss_needed': 'ghislaine_maxwell',
     },
     6: {
         'description': 'Selesaikan minimal 4 sidequest NPC + miliki USB Evidence Drive dari Vio',
-        'flags':    ['boss_ch4_defeated'],   # Guard: harus sudah kalahkan boss ch4
-        'items':    ['USB Evidence Drive'],
+        'flags':    ['boss_ch4_defeated', 'vio_sidequest_done'],   # Guard: boss ch4 + vio SQ selesai
+        'items':    [],   # USB masuk quest_items, dicek via vio_sidequest_done flag
         'sidequests_needed': SIDEQUESTS_NEEDED_FOR_CH6,  # 4
         'boss_needed': None,
     },
@@ -2048,9 +2118,9 @@ CH1_OBJECTIVE_COMPLETE_DIALOGS = {
             "Vio: Terminal berhasil ditembus. Data jaringan mulai terbuka.",
             "Vio: *menutup laptop sebentar* Oke. Tinggal satu hal lagi.",
         ],
-        'defeat_maxwell_enforcer': [
-            "Vio: Maxwell Enforcer down. Server room bersih.",
-            "Vio: *menghembuskan napas* Ada exploit-nya kan. Selalu ada.",
+        'defeat_maxwell_agent': [
+            "Vio: Maxwell's Agent down. Server room bersih.",
+            "Vio: *menghembuskan napas* Agennya kalah. Maxwell-nya sendiri nanti.",
         ],
     },
     'haikaru': {
@@ -2105,10 +2175,10 @@ CH1_OBJECTIVE_COMPLETE_DIALOGS = {
 
 CH1_NEXT_OBJECTIVE_DIALOGS = {
     'vio': {
-        'defeat_maxwell_enforcer': [
-            "Vio: Maxwell Enforcer masih menghalangi jalan keluar...",
-            "Vio: Former special forces. Bisa bunuh dengan tangan kosong.",
-            "Vio: *mengepalkan tangan* Semua boss ada exploit-nya. Temukan polanya.",
+        'defeat_maxwell_agent': [
+            "Vio: Maxwell's Agent masih menghalangi server room...",
+            "Vio: Contractor ex-militer. Jelas berbahaya. Tapi ada exploit-nya.",
+            "Vio: *mengepalkan tangan* Semua boss ada pattern-nya. Cari dan eksploitasi.",
         ],
     },
     'haikaru': {
@@ -2209,9 +2279,10 @@ def check_chapter_unlock(game_state, target_chapter):
         if not game_state.story_flags.get(flag):
             reasons.append(f"Flag belum terpenuhi: {flag}")
 
-    # Cek items
+    # Cek items — cek inventory DAN quest_items (quest items disimpan di quest_items)
     for item in reqs.get('items', []):
-        if item not in game_state.inventory:
+        has_it = (item in game_state.inventory or item in game_state.quest_items)
+        if not has_it:
             reasons.append(f"Item belum ada: {item}")
 
     # Cek sidequests
@@ -2274,10 +2345,19 @@ def get_chapter_progress_info(game_state):
     }
 
     if chapter in BOSS_CHAPTERS:
-        boss_id   = CHAPTER_BOSSES.get(chapter)
+        boss_id = CHAPTER_BOSSES.get(chapter)
+        if chapter == 2:
+            # Ch2 boss is character-specific — resolve from CHARACTER_MAIN_QUESTS
+            char_id = game_state.player_character
+            ch2_quest = CHARACTER_MAIN_QUESTS.get(char_id, {}).get(2, {})
+            boss_id = ch2_quest.get('boss_id', 'kepala_penjaga')
         boss_data = BOSS_DATA.get(boss_id, {})
         info['boss_name'] = boss_data.get('name', '???')
-        info['boss_done'] = game_state.story_flags.get(boss_data.get('flag_key', ''), False)
+        # Ch2 universal completion flag
+        if chapter == 2:
+            info['boss_done'] = game_state.story_flags.get('boss_ch2_defeated', False)
+        else:
+            info['boss_done'] = game_state.story_flags.get(boss_data.get('flag_key', ''), False)
 
     target = chapter + 1
     if target <= MAX_CHAPTERS:
